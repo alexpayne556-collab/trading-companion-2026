@@ -1,1 +1,129 @@
-[]
+[
+  {
+    "ticker": "MU",
+    "name": "Micron Technology",
+    "sector": "semiconductors",
+    "theme": "AI infrastructure – memory & HBM",
+    "timeframe_months": 36,
+    "core_thesis": "AI training and inference workloads are creating a structural super-cycle in high-bandwidth memory (HBM) and advanced DRAM. Micron is one of a small number of suppliers with sold-out HBM capacity, record AI-driven earnings beats, and growing data-center exposure that position it as a leading memory name in this cycle.",
+    "conviction": "HIGH",
+    "confidence_score": 9,
+    "target_price": null,
+    "key_catalysts": [
+      "Quarterly earnings with AI-driven revenue and EPS beats",
+      "HBM and advanced DRAM supply contract announcements",
+      "Evidence of memory tightness (server shipments limited by memory availability)",
+      "Technology milestones (HBM4 qualification and ramp at leading AI customers)"
+    ],
+    "invalidation": [
+      "HBM and DRAM pricing rolls over, indicating oversupply",
+      "Major technology missteps (yield issues, performance gaps)",
+      "Clear evidence that AI data-center capex is being cut or delayed",
+      "Export controls or geopolitical shocks restricting shipments"
+    ],
+    "portfolio_weight": 0.25,
+    "notes": "Use technicals for entries and trims; avoid exiting on overbought indicators while thesis remains intact."
+  },
+  {
+    "ticker": "RKLB",
+    "name": "Rocket Lab USA",
+    "sector": "aerospace & defense",
+    "theme": "Space, defense, and launch infrastructure",
+    "timeframe_months": 60,
+    "core_thesis": "Rocket Lab is transitioning from a niche small-launch provider into an integrated national-security space prime with multi-hundred-million-dollar Space Force and SDA contracts, a vertically integrated satellite-and-sensor stack, and a path to medium-lift launch (Neutron). This positions it as a durable leader in the next decade of space and missile-defense infrastructure.",
+    "conviction": "HIGH",
+    "confidence_score": 8,
+    "target_price": null,
+    "key_catalysts": [
+      "Milestone announcements and on-time delivery progress for SDA Tracking Layer Tranche 3 and Transport Layer Tranche 2 satellite programs",
+      "Additional Space Force, SDA, or allied government awards",
+      "Successful Neutron development milestones (static-fire tests, first flight) and commercial/government launch contracts",
+      "Sustained or improving launch cadence for Electron with high mission success rates"
+    ],
+    "invalidation": [
+      "Major execution problems on large SDA contracts (schedule slips, cost overruns, technical failures)",
+      "Neutron development running materially over budget or years behind schedule",
+      "Sharp reversal or pause in U.S. missile-defense and LEO-constellation spending",
+      "Escalating competition from larger primes or new-space rivals undercutting on price"
+    ],
+    "portfolio_weight": 0.20,
+    "notes": "Use technicals mainly for timing around contract news and launch milestones; avoid selling on volatility spikes if execution remains on track."
+  },
+  {
+    "ticker": "LUNR",
+    "name": "Intuitive Machines",
+    "sector": "aerospace & space",
+    "theme": "Lunar infrastructure and next-generation space prime",
+    "timeframe_months": 84,
+    "core_thesis": "Intuitive Machines is evolving from a high-risk lunar-lander pure play into a vertically integrated, multi-domain space prime. Anchored on recurring NASA CLPS missions, AFRL nuclear power work, and the pending acquisition of Lanteris Space Systems, the company is positioned at the center of lunar infrastructure, cislunar services, and future missile-defense and deep-space projects.",
+    "conviction": "MEDIUM",
+    "confidence_score": 7,
+    "target_price": null,
+    "key_catalysts": [
+      "Launch and landing outcomes for upcoming lunar missions (IM-2, IM-3, IM-4)",
+      "Mid-decade decision on the Lunar Terrain Vehicle contract",
+      "Regulatory approval and closing of the Lanteris Space Systems acquisition",
+      "Additional AFRL or NASA nuclear power and infrastructure contracts",
+      "Positive analyst initiations or upgrades framing LUNR as a next-generation space prime"
+    ],
+    "invalidation": [
+      "Repeated technical failures on lunar missions causing NASA to reduce or cancel CLPS task orders",
+      "Losing the Lunar Terrain Vehicle down-select and other major lunar infrastructure competitions",
+      "Lanteris acquisition failing to close or suffering major integration problems",
+      "Budget cuts or strategic pivots in NASA's Artemis program reducing commercial lander demand",
+      "Delays or setbacks in AFRL nuclear power work"
+    ],
+    "portfolio_weight": 0.10,
+    "notes": "Expect extreme volatility around launch windows and contract announcements. Look to accumulate on deep pullbacks if infrastructure thesis remains intact."
+  },
+  {
+    "ticker": "KDK",
+    "name": "Kodiak Robotics",
+    "sector": "autonomous vehicles & logistics",
+    "theme": "Autonomous long-haul trucking – virtual driver as a service",
+    "timeframe_months": 84,
+    "core_thesis": "KDK is building a commercially deployed, highway-focused autonomous 'virtual driver' for long-haul trucks. Already generating revenue with major shippers and powered by a Verizon-backed connectivity stack, it has an early lead in real-world autonomous trucking on controlled routes where technical and regulatory hurdles are lower than urban robotaxis.",
+    "conviction": "MEDIUM",
+    "confidence_score": 7,
+    "target_price": null,
+    "key_catalysts": [
+      "Announcements that existing partners (J.B. Hunt, C.R. England, Atlas Energy) are expanding from pilots to larger-scale, multi-lane deployments",
+      "Regulatory or policy moves explicitly permitting driverless commercial trucking on interstate corridors",
+      "Milestones showing growing proportion of freight miles driven without a safety driver on board",
+      "New strategic or equity partnerships (OEM collaborations, logistics-platform integrations)"
+    ],
+    "invalidation": [
+      "Serious safety incidents involving KDK trucks leading to loss of life or high-profile regulatory backlash",
+      "Failure to move beyond small pilots; minimal revenues after years and significant capital deployment",
+      "Competitors securing bulk of large, multi-state freight contracts with top carriers",
+      "Regulatory changes, union pushback, or legal liability rulings restricting driverless commercial trucking"
+    ],
+    "portfolio_weight": 0.15,
+    "notes": "Execution-sensitive; expect periods of extreme optimism and pessimism. Use technicals to avoid chasing post-announcement spikes; add on deep pullbacks if pipeline remains intact."
+  },
+  {
+    "ticker": "UUUU",
+    "name": "Energy Fuels Inc.",
+    "sector": "energy & critical minerals",
+    "theme": "U.S. uranium and rare earths – nuclear, AI power, and supply security",
+    "timeframe_months": 84,
+    "core_thesis": "Energy Fuels is a U.S.-based producer of uranium and rare earth oxides ramping low-cost domestic uranium mines while becoming the first U.S. company to qualify both light and heavy rare earth oxides for permanent magnet use. Positioned as a key beneficiary of the Russian uranium import ban, Western nuclear and SMR buildout for AI power, and efforts to rebuild non-Chinese rare earth supply chains.",
+    "conviction": "MEDIUM",
+    "confidence_score": 7,
+    "target_price": null,
+    "key_catalysts": [
+      "Quarterly results confirming 2025 uranium guidance ramp and margin improvement into 2026",
+      "Announcements that NdPr, Dy, and Tb oxide production moved from pilot to commercial offtake agreements",
+      "Further progress and funding related to the U.S. Russian uranium ban, including DOE contracts",
+      "New project developments such as mine expansions or partnerships enhancing feedstock security"
+    ],
+    "invalidation": [
+      "Sustained decline in uranium prices below economically attractive levels without long-term contracts",
+      "Failure to transition rare earth production from pilot to commercial scale",
+      "Policy reversals or delays weakening practical impact of Russian uranium ban",
+      "Operational or environmental setbacks at key assets leading to regulatory penalties or delays"
+    ],
+    "portfolio_weight": 0.08,
+    "notes": "Higher-volatility commodity play; monitor uranium spot prices, rare earth offtake announcements, and policy developments closely."
+  }
+]
