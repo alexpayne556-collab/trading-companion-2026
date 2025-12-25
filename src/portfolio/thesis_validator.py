@@ -1,76 +1,234 @@
 """
-THESIS VALIDATOR: Score portfolio position alignment against thesis definitions
-
-PURPOSE:
---------
-For each position in the portfolio, compare it against its defined thesis to score:
-1. How close is current price to target price?
-2. How long has the position been held vs. planned timeframe?
-3. Is the conviction level still appropriate?
-4. Has the thesis been invalidated by market events?
-
-INPUT (Example):
-----------------
-position = {
-    "symbol": "MU",
-    "qty": 10,
-    "avg_fill_price": 130.00,
-    "current_price": 132.50,
-    "unrealized_pl": 25.00,
-    "unrealized_plpc": 0.0192
-}
-
-thesis = {
-    "ticker": "MU",
-    "target_price": 150.00,
-    "timeframe_months": 36,
-    "conviction": "HIGH",
-    "confidence_score": 9
-}
-
-OUTPUT (Example):
------------------
-{
-    "ticker": "MU",
-    "alignment_score": 7,  # out of 10
-    "price_progress": 0.48,  # how close to target (current_price - entry) / (target - entry)
-    "conviction_accuracy": "ON_TRACK",  # HIGH conviction, reasonable entry
-    "thesis_intact": True,  # no invalidation signs
-    "days_held": 1,
-    "days_remaining": 1079,  # target timeframe - days held
-    "status": "ALIGNED",  # ALIGNED, CAUTION, BROKEN
-    "warnings": []
-}
-
-CALCULATION LOGIC:
-------------------
-1. PRICE_PROGRESS:
-   - If no target price: assume thesis is long-term, measure by unrealized P&L %
-   - If target price exists: measure progress from entry to target
-   - formula: (current_price - entry_price) / (target_price - entry_price)
-   - capped at 0.0 to 1.0 (overshoot counts as full progress)
-
-2. ALIGNMENT_SCORE (0-10):
-   - Start at 5 (neutral)
-   - Add points: if price progressing toward target (+2)
-   - Add points: if time remaining and thesis not broken (+1)
-   - Add points: if conviction is HIGH (+1)
-   - Add points: if P&L is positive (+1)
-   - Subtract points: if thesis shows invalidation signs (-3)
-   - Subtract points: if deeply underwater (-2)
-   - Result is clamped to 0-10
-
-3. THESIS_INTACT:
-   - Check unrealized P&L % against "invalidation threshold" (typically -30%)
-   - If position is down >30% from entry, thesis may be broken
-   - Return False if any invalidation conditions met
-   - Otherwise True
-
-4. CONVICTION_ACCURACY:
-   - HIGH conviction should show positive P&L or recent entry
-   - MEDIUM conviction should be breakeven or better after 1 month+
-   - LOW conviction should be treated as speculative (higher loss tolerance)
+Thesis Validator Module for Trading Companion 2026
+Implements thesis alignment scoring, conviction, catalyst progress, invalidation risk, and flag generation.
+Production-ready, with all critical fixes and deep seek improvements applied.
 """
+
+from dataclasses import dataclass
+from typing import Optional, List
+from enum import Enum
+from datetime import datetime, date
+from dateutil.relativedelta import relativedelta
+
+class ThesisDirection(Enum):
+    LONG = "long"
+    SHORT = "short"
+
+@dataclass
+class Position:
+    ticker: str
+    entry_price: float
+    current_price: float
+    entry_date: str  # ISO format: "2025-01-15"
+
+@dataclass
+class Thesis:
+    target_price: float
+    timeframe_months: float
+    confidence_score: float  # 0-1
+    invalidation_price: Optional[float] = None
+    direction: ThesisDirection = ThesisDirection.LONG
+
+@dataclass
+class MarketData:
+    sector_performance: Optional[float] = None  # % change
+    volatility_percentile: Optional[float] = None  # 0-100
+
+@dataclass
+class ValidationResult:
+    alignment_score: float      # 0-10 composite
+    conviction_accuracy: int    # 0-100
+    catalyst_progress: int      # 0-100
+    invalidation_risk: int      # 0-100 (higher = more risk)
+    flags: List[str]            # warnings/notes
+
+class ThesisValidator:
+    def __init__(self, today: Optional[str] = None):
+        """Initialize with optional date override for testing."""
+        self.today = (
+            datetime.fromisoformat(today).date() if today else date.today()
+        )
+
+    def validate(
+        self,
+        position: Position,
+        thesis: Thesis,
+        market_data: MarketData
+    ) -> ValidationResult:
+        """Main entry point - returns complete validation."""
+        conviction = self._calc_conviction_accuracy(position, thesis, market_data)
+        progress = self._calc_catalyst_progress(position, thesis)
+        risk = self._calc_invalidation_risk(position, thesis, market_data)
+        alignment = self._composite_score(conviction, progress, risk, thesis.confidence_score)
+        flags = self._generate_flags(position, thesis, conviction, progress, risk)
+        return ValidationResult(
+            alignment_score=round(alignment, 1),
+            conviction_accuracy=conviction,
+            catalyst_progress=progress,
+            invalidation_risk=risk,
+            flags=flags
+        )
+
+    def _calc_conviction_accuracy(self, position: Position, thesis: Thesis, market_data: MarketData) -> int:
+        """
+        How well is price tracking toward target? (0-100)
+        Handles both LONG and SHORT directions, clamps output, and uses sector performance.
+        """
+        entry = position.entry_price
+        current = position.current_price
+        target = thesis.target_price
+        direction = thesis.direction
+
+        if direction == ThesisDirection.LONG:
+            expected_move = max(target - entry, 0.001)
+            actual_move = current - entry
+        else:
+            expected_move = max(entry - target, 0.001)
+            actual_move = entry - current
+
+        if expected_move < 0.001:
+            return 50
+
+        progress_ratio = min(abs(actual_move / expected_move), 2.0)
+
+        # Direction check
+        if actual_move * expected_move < 0:
+            wrong_magnitude = min(abs(actual_move / expected_move), 1.0)
+            score = 50 - (wrong_magnitude * 50)
+        else:
+            score = 50 + (progress_ratio / 2.0) * 50
+
+        # Sector performance adjustment
+        if market_data.sector_performance is not None:
+            score += market_data.sector_performance * 0.5  # modest boost
+        score = max(0, min(100, score))
+        return int(score)
+
+    def _calc_catalyst_progress(self, position: Position, thesis: Thesis) -> int:
+        """
+        Price progress vs time elapsed ratio. (0-100)
+        Handles both LONG and SHORT directions, clamps output.
+        """
+        entry_date = datetime.fromisoformat(position.entry_date).date()
+        days_elapsed = (self.today - entry_date).days
+        total_days = thesis.timeframe_months * 30
+        time_pct = max(days_elapsed / total_days, 0.01)
+
+        direction = thesis.direction
+        entry = position.entry_price
+        current = position.current_price
+        target = thesis.target_price
+
+        if direction == ThesisDirection.LONG:
+            expected_move = max(target - entry, 0.001)
+            actual_move = current - entry
+        else:
+            expected_move = max(entry - target, 0.001)
+            actual_move = entry - current
+
+        if abs(expected_move) < 0.001:
+            return 50
+
+        price_pct = actual_move / expected_move
+        trajectory = price_pct / time_pct
+
+        if trajectory <= 0:
+            score = 0
+        elif trajectory >= 3.0:
+            score = 100
+        else:
+            score = trajectory * 33.3 + 16.7
+        score = max(0, min(100, score))
+        return int(score)
+
+    def _calc_invalidation_risk(self, position: Position, thesis: Thesis, market_data: MarketData) -> int:
+        """
+        Proximity to thesis-killing conditions. (0-100)
+        Handles explicit invalidation price, implied risk, overtime, and volatility.
+        """
+        entry = position.entry_price
+        current = position.current_price
+        target = thesis.target_price
+        direction = thesis.direction
+        risk = 0
+
+        if thesis.invalidation_price is not None:
+            inv = thesis.invalidation_price
+            original_buffer = abs(entry - inv)
+            if original_buffer < 0.001:
+                risk = 100
+            else:
+                current_buffer = abs(current - inv)
+                risk_pct = 1 - (current_buffer / original_buffer)
+                risk = max(0, min(100, risk_pct * 100))
+                if (direction == ThesisDirection.LONG and current <= inv) or (direction == ThesisDirection.SHORT and current >= inv):
+                    risk = 100
+        else:
+            expected_move = max(abs(target - entry), 0.001)
+            wrong_move = (entry - current) if direction == ThesisDirection.LONG else (current - entry)
+            if wrong_move <= 0:
+                base_risk = 10
+            else:
+                risk_threshold = expected_move * 0.5
+                base_risk = min(90, (wrong_move / risk_threshold) * 80 + 10)
+            risk = base_risk
+
+        entry_date = datetime.fromisoformat(position.entry_date).date()
+        days_elapsed = (self.today - entry_date).days
+        deadline_days = thesis.timeframe_months * 30
+        if days_elapsed > deadline_days:
+            overtime_pct = (days_elapsed - deadline_days) / deadline_days
+            time_risk = min(20, overtime_pct * 40)
+            risk = min(100, risk + time_risk)
+
+        # Volatility adjustment
+        if market_data.volatility_percentile is not None:
+            if market_data.volatility_percentile > 75:
+                risk = max(0, risk - 10)
+            elif market_data.volatility_percentile < 25:
+                risk = min(100, risk + 5)
+        risk = max(0, min(100, risk))
+        return int(risk)
+
+    def _composite_score(self, conviction: int, progress: int, risk: int, confidence: float) -> float:
+        """
+        Weighted combination → 0-10 scale.
+        """
+        inverse_risk = 100 - risk
+        raw = conviction * 0.40 + progress * 0.35 + inverse_risk * 0.25
+        scaled = raw / 10
+        confidence_factor = 0.8 + (confidence * 0.4)
+        return max(0, min(10, scaled * confidence_factor))
+
+    def _generate_flags(self, position: Position, thesis: Thesis, conviction: int, progress: int, risk: int) -> List[str]:
+        """
+        Generates human-readable warnings and notes based on scores and status.
+        """
+        flags = []
+        if conviction < 30:
+            flags.append("CONVICTION_DEGRADED")
+        if progress < 25:
+            flags.append("BEHIND_SCHEDULE")
+        if risk > 70:
+            flags.append("HIGH_INVALIDATION_RISK")
+        if risk >= 100:
+            flags.append("INVALIDATION_TRIGGERED")
+        entry_date = datetime.fromisoformat(position.entry_date).date()
+        deadline = entry_date + relativedelta(months=thesis.timeframe_months)
+        if self.today > deadline:
+            flags.append("OVERTIME")
+        if thesis.direction == ThesisDirection.LONG:
+            if position.current_price >= thesis.target_price:
+                flags.append("TARGET_REACHED")
+            elif abs(position.current_price - thesis.target_price) / max(thesis.target_price, 0.01) < 0.05:
+                flags.append("NEAR_TARGET")
+        else:
+            if position.current_price <= thesis.target_price:
+                flags.append("TARGET_REACHED")
+            elif abs(position.current_price - thesis.target_price) / max(thesis.target_price, 0.01) < 0.05:
+                flags.append("NEAR_TARGET")
+        return flags
+
 
 import logging
 from datetime import datetime, timedelta
