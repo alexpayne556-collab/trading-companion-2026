@@ -1,0 +1,881 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║     🌍 2026: THE YEAR EVERYTHING CHANGES                                     ║
+║     A Sector-by-Sector Guide to Transformational Technologies               ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+"During the next five years we can expect a progressive shift from tools 
+that help us into AI systems that think, adapt, and create alongside us."
+
+We are entering the human+machine era. These aren't themes - they're 
+entirely NEW SECTORS that will define the next decade of investing.
+
+================================================================================
+                        THE 12 TRANSFORMATIONAL SECTORS
+================================================================================
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║ SECTOR 1: AUTONOMOUS INTELLIGENCE                                            ║
+║ "From AI assistants to AI that DOES things"                                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+THE TRANSFORMATION:
+- 2023: World discovered generative AI
+- 2024: Integration and experimentation  
+- 2025-2026: AI assistants → Agentic AI (autonomous execution)
+- By 2028: 33% of enterprise software includes agentic AI
+- By 2028: 15% of daily work decisions made autonomously
+
+MARKET SIZE: $7.3B (2025) → $41B (2030) | 41% CAGR
+
+WHAT'S CHANGING:
+- AI agents don't just answer questions - they execute multi-step workflows
+- Self-directing agents plan, negotiate, purchase, schedule, optimize
+- "Reality twins" run simulations before humans make decisions
+- AI-written and maintained code becomes normal
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ AUTONOMOUS INTELLIGENCE - INVESTABLE COMPANIES                               │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ 🔷 ENTERPRISE AI PLATFORMS                                                   │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ CRM   Salesforce         $300B   Agentforce, 150K+ customers, AI agents     │
+│ NOW   ServiceNow         $220B   AI Agent Orchestrator, Moveworks acquired  │
+│ MSFT  Microsoft          $3.1T   Copilot agents, Azure AI, 6 security bots  │
+│ GOOGL Alphabet           $2.3T   Vertex AI Agent Builder, Gemini            │
+│ META  Meta Platforms     $1.5T   Llama models, enterprise AI push           │
+│                                                                              │
+│ 🔷 AUTOMATION SPECIALISTS                                                    │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ PATH  UiPath             $14B    Agentic testing, Autopilot, Agent Builder  │
+│ ZM    Zoom               $25B    AI Companion, multi-step task execution    │
+│ ADBE  Adobe              $180B   Firefly AI, creative automation            │
+│ ADP   ADP                $120B   HR automation, payroll AI                  │
+│                                                                              │
+│ 🔷 AI-NATIVE PLATFORMS                                                       │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ AI    C3.ai              $4B     Enterprise AI applications                 │
+│ PLTR  Palantir           $180B   AIP platform, government + enterprise      │
+│ SNOW  Snowflake          $55B    Data cloud, AI/ML workloads                │
+│                                                                              │
+│ 🔷 VERTICAL AI (Industry-Specific)                                           │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ VEEV  Veeva Systems      $35B    Life sciences AI                           │
+│ DOCS  Doximity           $10B    Healthcare AI for physicians               │
+│ Z     Zillow             $15B    Real estate AI                             │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║ SECTOR 2: PHYSICAL AI (ROBOTICS & EMBODIED INTELLIGENCE)                     ║
+║ "Robots that learn on the job and share skills through the cloud"            ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+THE TRANSFORMATION:
+- Robots stop being tools → become adaptive co-workers
+- 542,000 industrial robots installed in 2024 (4th consecutive year >500K)
+- Humanoid robots: $18B market by 2030 (40% CAGR 2025-2030)
+- AI robots market: $77.73B by 2030 (28.3% CAGR)
+- Generalist robots capable of dozens of tasks, not just one
+- Semi-autonomous factories → fully autonomous "lights-out" factories
+
+WHAT'S CHANGING:
+- Robots learn and share knowledge through cloud-based "robot knowledge bases"
+- Swarm robotics for agriculture, disaster response, construction
+- Cobots boost productivity 200% (welding), 600% (machine tending)
+- Tesla Optimus, Figure AI signal shift to multipurpose automation
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ PHYSICAL AI - INVESTABLE COMPANIES                                           │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ 🤖 HUMANOID ROBOTICS                                                         │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ TSLA  Tesla              $1.3T   Optimus V3 Q1 2026, production EOY 2026    │
+│ NVDA  NVIDIA             $3.4T   GR00T platform, Isaac SDK, Omniverse       │
+│ RTCHY Richtech Robotics  $200M   Dex humanoid, wheeled AMR, production-ready│
+│                                                                              │
+│ 🤖 COLLABORATIVE ROBOTS (COBOTS)                                             │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ TER   Teradyne           $25B    Universal Robots cobots, MiR AMRs          │
+│ ROK   Rockwell Auto      $35B    Otto AMR, NVIDIA partnership               │
+│ ABB   ABB Ltd            $100B   GoFa cobots, industrial robotics           │
+│ FANUY Fanuc ADR          $30B    Japanese robotics leader, global scale     │
+│ IRBT  iRobot             $1B     Consumer robotics, Roomba                  │
+│                                                                              │
+│ 🤖 WAREHOUSE & LOGISTICS AUTOMATION                                          │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ SYM   Symbotic           $15B    Walmart AI orchestration, autonomous AMRs  │
+│ ZBRA  Zebra Technologies $15B    Fetch Robotics, RFID + warehouse bots      │
+│ GXO   GXO Logistics      $10B    Warehouse automation, 3PL                  │
+│ AMZN  Amazon             $2.3T   Proteus/Sparrow robots, internal use       │
+│                                                                              │
+│ 🤖 SURGICAL & MEDICAL ROBOTICS                                               │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ ISRG  Intuitive Surgical $200B   da Vinci 5, 10,763 systems globally        │
+│ SYK   Stryker            $140B   Mako robotic surgery, orthopedics          │
+│ MDT   Medtronic          $110B   Hugo surgical system                       │
+│ MASI  Masimo             $8B     Medical monitoring, Patient SafetyNet      │
+│                                                                              │
+│ 🤖 AGRICULTURAL ROBOTICS                                                     │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ DE    John Deere         $120B   Autonomous tractors, See & Spray AI        │
+│ AGCO  AGCO Corporation   $10B    Fuse platform, precision ag                │
+│ CNHI  CNH Industrial     $15B    Raven Autonomy integration                 │
+│                                                                              │
+│ 🤖 PRIVATE - IPO WATCH                                                       │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ Figure AI    $39B valuation   Figure 03, BMW/OpenAI partnerships            │
+│ Apptronik    $1B+ valuation   Apollo industrial humanoid                    │
+│ 1X Tech      $500M+ val       NEO home robot, OpenAI backed                 │
+│ Agility      $1B+ valuation   Digit, Amazon deployment                      │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║ SECTOR 3: QUANTUM TECHNOLOGIES                                               ║
+║ "Unlocking materials and drugs impossible to invent with classical computers"║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+THE TRANSFORMATION:
+- Quantum computing market: $750M (2024) → $7.3B (2030) | 34.6% CAGR
+- 2026: Not full quantum supremacy, but hybrid quantum-classical workflows
+- Quantum-classical hybrids solve: molecular simulations, cryptanalysis, optimization
+- Quantum sensors improve climate forecasting, brain-computer research, GPS-free nav
+- 61% of CISOs plan PQC adoption within 5 years, only 41% have started
+
+APPLICATIONS NOW WORKING:
+- Drug discovery molecular simulations
+- Logistics optimization
+- Portfolio optimization in finance
+- Cryptanalysis of outdated encryption
+- Materials science breakthroughs
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ QUANTUM TECHNOLOGIES - INVESTABLE COMPANIES                                  │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ ⚛️ QUANTUM COMPUTING HARDWARE                                                │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ IONQ  IonQ               $10B    Trapped ion, 256-qubit target 2026         │
+│ RGTI  Rigetti            $3B     Superconducting, 150+ qubits late 2026     │
+│ QBTS  D-Wave             $3B     Quantum annealing, ACTUAL enterprise users │
+│ QUBT  Quantum Comp Inc   $500M   Photonics approach, smaller cap            │
+│                                                                              │
+│ ⚛️ BIG TECH QUANTUM PROGRAMS                                                 │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ GOOGL Alphabet           $2.3T   Willow chip, 105 qubits, error correction  │
+│ IBM   IBM                $200B   Osprey/Condor, 100K+ qubit roadmap         │
+│ MSFT  Microsoft          $3.1T   Topological qubits (different approach)    │
+│ AMZN  Amazon             $2.3T   Braket quantum service                     │
+│                                                                              │
+│ ⚛️ POST-QUANTUM CRYPTOGRAPHY (NSA mandate coming)                            │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ SEALSQ SEALSQ Corp       $300M   QVault TPM 2026, hardware root of trust    │
+│ ARQQ  Arqit Quantum      $800M   Quantum-safe encryption keys               │
+│ CRWD  CrowdStrike        $100B   Post-quantum security integration          │
+│ PANW  Palo Alto          $130B   Quantum-safe roadmap                       │
+│                                                                              │
+│ ⚛️ QUANTUM SPAC COMPLETIONS Q1 2026                                          │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ CCCX  → Infleqtion       $1.8B   Quantum hardware + sensing                 │
+│ DMYY  → Horizon Quantum  TBD     Quantum software                           │
+│                                                                              │
+│ ⚛️ QUANTUM ENABLING TECHNOLOGIES                                             │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ COHR  Coherent           $10B    Photonic components, quantum hardware      │
+│ NOVT  Novanta            $6B     Precision photonics, lasers                │
+│ II-VI (now Coherent)     ---     Laser and photonic materials               │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║ SECTOR 4: COMPUTE INFRASTRUCTURE                                             ║
+║ "The physical layer enabling everything - chips, cooling, data centers"      ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+THE TRANSFORMATION:
+- Hyperscalers spending $400B+ capex in 2026
+- Custom silicon REPLACING Nvidia for hyperscalers (cost + efficiency)
+- Liquid cooling becoming MANDATORY (water holds heat 3,000x better than air)
+- Edge computing: 75% of enterprise data processed outside data centers by 2026
+- On-device AI: cuts cloud costs 70%, Qualcomm NPUs at 45 TOPS
+
+SUB-SECTORS:
+1. Custom Silicon & ASICs (replacing Nvidia)
+2. Data Center Cooling (liquid cooling mandatory)
+3. Power Infrastructure (grid can't keep up)
+4. Edge AI & On-Device Computing
+5. Neuromorphic Computing (brain-inspired, 1000x less power)
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ COMPUTE INFRASTRUCTURE - INVESTABLE COMPANIES                                │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ 🔌 CUSTOM SILICON DESIGNERS (The Nvidia Decoupling)                          │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ AVGO  Broadcom          $1.1T   Google TPU designer, OpenAI 10GW deal       │
+│ MRVL  Marvell           $100B   Amazon Trainium, Microsoft Maia             │
+│ ARM   ARM Holdings      $180B   Architecture monopoly, 5% royalty (was 2%)  │
+│ CDNS  Cadence           $90B    EDA tools (chip design software)            │
+│ SNPS  Synopsys          $90B    EDA tools, IP licensing                     │
+│                                                                              │
+│ 🔌 SEMICONDUCTOR MANUFACTURING                                               │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ TSM   Taiwan Semi       $900B   90%+ advanced node monopoly, 2nm sold out   │
+│ ASML  ASML              $300B   EUV lithography monopoly, high-NA EUV       │
+│ AMKR  Amkor             $7B     Advanced packaging (chiplets need this)     │
+│ CAMT  Camtek            $5B     Inspection equipment                        │
+│ LRCX  Lam Research      $100B   Etch and deposition equipment               │
+│ AMAT  Applied Materials $170B   Semiconductor equipment leader              │
+│                                                                              │
+│ 🔌 DATA CENTER COOLING (Liquid cooling mandatory for AI)                     │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ VRT   Vertiv            $60B    $9.5B backlog, NVIDIA Titan partner         │
+│ MOD   Modine            $5B     Hyperscale wins, closed-loop water          │
+│ NVT   nVent Electric    $12B    Manifolds, hoses, couplings                 │
+│ FIX   Comfort Systems   $15B    Precision HVAC, data center specialist      │
+│                                                                              │
+│ 🔌 POWER INFRASTRUCTURE                                                      │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ ETN   Eaton             $140B   Switchgear, transformers, $1.2B expansion   │
+│ GEV   GE Vernova        $100B   $200B backlog by 2028, gas turbines + grid  │
+│ PWR   Quanta Services   $50B    Grid modernization, high-voltage linemen    │
+│ STRL  Sterling Infra    $12B    E-Infrastructure, 125% YoY DC growth        │
+│                                                                              │
+│ 🔌 DATA CENTER NETWORKING                                                    │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ ANET  Arista Networks   $120B   Cloud networking, AI cluster switches       │
+│ ALAB  Astera Labs       $15B    PCIe/CXL connectivity                       │
+│ CRDO  Credo Technology  $8B     Optical cables, xAI Colossus uses Credo     │
+│ FN    Fabrinet          $12B    Optical manufacturing                       │
+│ LITE  Lumentum          $5B     Lasers for fiber optics                     │
+│                                                                              │
+│ 🔌 EDGE AI CHIPS                                                             │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ QCOM  Qualcomm          $200B   Snapdragon X, 80 TOPS NPUs, edge AI leader  │
+│ CEVA  CEVA Inc          $700M   DSP/NPU IP licensing, Microchip partner     │
+│ AIP   Arteris           $800M   Network-on-Chip IP                          │
+│ SYNA  Synaptics         $4B     AI edge processing, IoT/automotive          │
+│                                                                              │
+│ 🔌 NEUROMORPHIC COMPUTING (Brain-inspired, 1000x less power)                 │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ BRCHF BrainChip (ASX)   $500M   Akida processor, digital neuromorphic       │
+│ INTC  Intel             $100B   Loihi 2, Hala Point (1.15B neurons)         │
+│ IBM   IBM               $200B   NorthPole chip, 25x energy savings          │
+│                                                                              │
+│ 🔌 DATA CENTER REITs                                                         │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ DLR   Digital Realty    $55B    Hyperscale landlord, global footprint       │
+│ EQIX  Equinix           $90B    Global interconnection, 260+ data centers   │
+│ AMT   American Tower    $95B    Telecom infrastructure + edge               │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║ SECTOR 5: SYNTHETIC BIOLOGY & TECHBIO                                        ║
+║ "Treating cells like code and biological problems like software bugs"        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+THE TRANSFORMATION:
+- CRISPR + AI-driven genomics → cellular factories producing chemicals, food, fuels
+- Personalized gene therapies leaving trials → becoming accessible
+- AI drug discovery: 70% faster, 80% less capital
+- First AI-designed drug (INS018_055) already in Phase 2 trials
+- Synthetic microbes designed to absorb carbon, clean oceans, produce medicines
+- Industrial biotech market: $850B by 2030
+
+WHAT'S CHANGING:
+- Biology becomes "programmable" like software
+- Drug development from 10+ years → 2-3 years
+- Proteins designed "de novo" (from scratch) by AI
+- Biomanufacturing replaces chemical manufacturing
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SYNTHETIC BIOLOGY & TECHBIO - INVESTABLE COMPANIES                           │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ 🧬 AI DRUG DISCOVERY PLATFORMS                                               │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ RXRX  Recursion         $5B     OS platform, CEO transition Jan 2026        │
+│ ABCL  AbCellera         $3B     AI antibody discovery, Phase 1 trials       │
+│ SDGR  Schrodinger       $3B     Physics-based drug design platform          │
+│ RLAY  Relay Therapeutics $2B    Dynamo AI, protein motion modeling          │
+│ EXAI  Exscientia        $1B     70% faster drug discovery, $625M cash       │
+│                                                                              │
+│ 🧬 SYNTHETIC BIOLOGY PLATFORMS                                               │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ TWST  Twist Bioscience  $4B     DNA synthesis platform, RNA + antibodies    │
+│ DNA   Ginkgo Bioworks   $1B     Cell programming platform (struggling)      │
+│ ILMN  Illumina          $20B    Sequencing leader, synthetic biology enable │
+│ A     Agilent Tech      $40B    Life science instruments                    │
+│                                                                              │
+│ 🧬 PROTEIN ENGINEERING                                                       │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ ABSI  Absci             $1B     Zero-shot de novo antibodies, NVIDIA partner│
+│ ENTA  Enanta Pharma     $500M   Computational chemistry                     │
+│                                                                              │
+│ 🧬 GENOMICS & DIAGNOSTICS                                                    │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ WGS   GeneDx            $3B     AI genomic interpretation, Fabric Genomics  │
+│ PACB  PacBio            $1B     Long-read sequencing                        │
+│ NTRA  Natera            $15B    Cell-free DNA testing, oncology             │
+│ GH    Guardant Health   $5B     Liquid biopsy, cancer detection             │
+│ EXAS  Exact Sciences    $12B    Cancer screening (Cologuard)                │
+│                                                                              │
+│ 🧬 GENE EDITING / CRISPR                                                     │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ CRSP  CRISPR Therapeutics $4B   Gene editing therapies, Casgevy approved    │
+│ NTLA  Intellia          $3B     In-vivo gene editing                        │
+│ EDIT  Editas Medicine   $500M   CRISPR platform                             │
+│ BEAM  Beam Therapeutics $1B     Base editing technology                     │
+│ VERV  Verve Therapeutics $500M  Cardiovascular gene editing                 │
+│                                                                              │
+│ 🧬 CELL & GENE THERAPY                                                       │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ BLUE  bluebird bio      $200M   Gene therapies (struggling)                 │
+│ FATE  Fate Therapeutics $200M   iPSC-derived cell therapies                 │
+│ LEGN  Legend Biotech    $15B    CAR-T therapies                             │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║ SECTOR 6: ENERGY TRANSFORMATION                                              ║
+║ "Nuclear is the ONLY baseload solution for AI power demand"                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+THE TRANSFORMATION:
+- AI data centers need 4-6GW NEW power by 2028
+- Grid CAN'T deliver - solar/wind can't scale fast enough for baseload
+- Nuclear: ONLY solution for 24/7 baseload at scale
+- Clean energy investment: $2T (2024) → $3.3T (2025)
+- Battery costs: All-time low of $115/kWh
+- SMRs getting NRC approvals, hyperscaler PPAs signed
+
+SUB-SECTORS:
+1. Small Modular Reactors (SMRs)
+2. Nuclear Utilities
+3. Uranium (fuel supply)
+4. Grid Modernization
+5. Energy Storage
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ ENERGY TRANSFORMATION - INVESTABLE COMPANIES                                 │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ ☢️ SMALL MODULAR REACTORS (SMRs)                                             │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ SMR   NuScale Power     $6B     First NRC-approved SMR, ENTRA1 6GW          │
+│ OKLO  Oklo Inc          $3B     Sam Altman backing, Aurora microreactor     │
+│ BWXT  BWX Technologies  $10B    Naval reactor sole supplier, SMR components │
+│                                                                              │
+│ ☢️ NUCLEAR UTILITIES (Existing capacity)                                     │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ CEG   Constellation     $80B    1.1GW Meta deal, Three Mile Island restart  │
+│ TLN   Talen Energy      $10B    1,920MW Amazon deal, 100%+ earnings growth  │
+│ VST   Vistra Corp       $50B    Nuclear + gas fleet, capacity payments      │
+│ D     Dominion Energy   $45B    SMR exploration, Amazon MOU                 │
+│ NEE   NextEra Energy    $150B   Google Duane Arnold nuclear restart 2029    │
+│                                                                              │
+│ ☢️ URANIUM (Fuel supply - structural shortage)                               │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ CCJ   Cameco            $25B    Vertically integrated, Westinghouse deal    │
+│ UEC   Uranium Energy    $3B     Largest US resource, ISR production ramp    │
+│ UUUU  Energy Fuels      $1.5B   Low-cost + REE diversification, debt-free   │
+│ DNN   Denison Mines     $1.5B   Wheeler River ISL, cheap vs Cameco          │
+│ NXE   NexGen Energy     $5B     Arrow deposit, federal approval Q1 2026     │
+│ LEU   Centrus Energy    $2B     ONLY US enricher, HALEU production          │
+│ LTBR  Lightbridge       $200M   Advanced fuel IP licensing                  │
+│                                                                              │
+│ ⚡ GRID MODERNIZATION                                                        │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ GEV   GE Vernova        $100B   Gas turbines, grid equipment, $200B backlog │
+│ ETN   Eaton             $140B   Switchgear, transformers                    │
+│ PWR   Quanta Services   $50B    High-voltage linemen, grid construction     │
+│ EMR   Emerson Electric  $70B    Automation and power management             │
+│                                                                              │
+│ 🔋 ENERGY STORAGE                                                            │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ ENPH  Enphase Energy    $15B    Microinverters, battery storage             │
+│ SEDG  SolarEdge         $3B     Inverters, storage (recovering)             │
+│ FLUX  Flux Power        $150M   Lithium-ion industrial storage              │
+│ STEM  Stem Inc          $200M   AI-driven energy storage                    │
+│ AES   AES Corporation   $15B    Fluence energy storage JV                   │
+│                                                                              │
+│ ⚡ PRIVATE - IPO WATCH                                                       │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ X-energy      $2B+ valuation   Xe-100 reactor, 2026 SPAC                    │
+│ Last Energy   $500M+ val       PWR microreactor, UK partnership             │
+│ TerraPower    $1B+ valuation   Bill Gates backed, Natrium reactor           │
+│ Commonwealth Fusion  $2B+ val  Fusion energy, MIT spinout                   │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║ SECTOR 7: SPACE ECONOMY                                                      ║
+║ "Space is becoming infrastructure, not exploration"                          ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+THE TRANSFORMATION:
+- Beyond launch → actual space infrastructure buildout
+- Direct-to-device satellite: bypass cell towers entirely
+- Lunar economy starting with NASA Artemis
+- 170+ operator-satellite partnerships for connectivity
+- Space Force PWSA awards accelerating
+
+SUB-SECTORS:
+1. Launch Services
+2. Satellite Communications (including direct-to-device)
+3. Earth Observation & ISR
+4. Space Manufacturing
+5. Lunar Economy
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SPACE ECONOMY - INVESTABLE COMPANIES                                         │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ 🚀 LAUNCH + VERTICAL INTEGRATION                                             │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ RKLB  Rocket Lab        $15B    21/21 success 2025, Neutron 2026, satellites│
+│                                                                              │
+│ 📡 DIRECT-TO-DEVICE SATELLITE (Game changer)                                 │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ ASTS  AST SpaceMobile   $10B    45-60 satellites EOY 2026, Verizon deal     │
+│ GSAT  Globalstar        $3B     Apple partnership for satellite messaging   │
+│                                                                              │
+│ 📡 SATELLITE COMMUNICATIONS                                                  │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ VSAT  Viasat            $4B     ViaSat-3 1Tbps, Inmarsat integration        │
+│ IRDM  Iridium           $4B     STL service, LEO constellation              │
+│                                                                              │
+│ 🌍 EARTH OBSERVATION & ISR                                                   │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ BKSY  BlackSky          $500M   Gen-3 satellites 2026, Spectra AI           │
+│ PL    Planet Labs       $1.5B   Daily Earth imaging, Pelican high-res       │
+│ SPIR  Spire Global      $400M   Weather/maritime, $151B MDA contract        │
+│                                                                              │
+│ 🛰️ SPACE MANUFACTURING                                                       │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ RDW   Redwire           $1B     Satellite buses, RF antenna, $6.9B pipeline │
+│ SIDU  Sidus Space       $50M    Small satellites, NASA SBIR                 │
+│ MNTS  Momentus          $100M   Space transport and infrastructure          │
+│                                                                              │
+│ 🌙 LUNAR ECONOMY                                                             │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ LUNR  Intuitive Machines $3B    NASA LTV frontrunner, $1B backlog           │
+│                                                                              │
+│ 🚀 PRIVATE - IPO WATCH                                                       │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ SpaceX/Starlink  $350B+ val    Starlink spin-off potential                  │
+│ Relativity Space $4B+ val      Terran R 3D-printed rocket                   │
+│ Firefly Aerospace $2B+ val     Alpha rocket, announced IPO                  │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║ SECTOR 8: DEFENSE TECHNOLOGY                                                 ║
+║ "We need what we're winning with in Ukraine"                                 ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+THE TRANSFORMATION:
+- DoD pivoting FROM traditional primes TO Silicon Valley-style contractors
+- Army FUZE program: $750M/year for "bleeding-edge" tech
+- Ukraine proved software-defined weapons work
+- Blue UAS mandate forcing domestic drone procurement
+- "Speed to field" is the new metric
+
+THE SHIFT:
+- Software-defined warfare replacing hardware-centric
+- Autonomous drones replacing manned aircraft
+- AI decision-making at machine speed
+- Commercial solutions beating bespoke military hardware
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ DEFENSE TECHNOLOGY - INVESTABLE COMPANIES                                    │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ 🛩️ AUTONOMOUS DRONES                                                        │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ RCAT  Red Cat Holdings  $800M   Army SRR contract, Palantir partner, Blue US│
+│ KTOS  Kratos Defense    $5B     XQ-58A Valkyrie, CCA program pending        │
+│ AVAV  AeroVironment     $12B    Switchblade, BlueHalo acquisition (ran up)  │
+│ ONDS  Ondas Holdings    $100M   Iron Drone counter-UAS                      │
+│ UMAC  Unusual Machines  $150M   Blue UAS beneficiary, Taiwan facility       │
+│ DPRO  Draganfly         $50M    US Army FPV, NDAA-compliant                 │
+│                                                                              │
+│ 🛩️ DEFENSE AI SOFTWARE                                                      │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ PLTR  Palantir          $180B   $10B Army deal, AIP platform (expensive now)│
+│ BBAI  BigBear.ai        $1.5B   $250M border/biometrics, ConductorOS        │
+│ AI    C3.ai             $4B     Federal agency AI modernization             │
+│ BKSY  BlackSky          $500M   Real-time ISR, Spectra AI, $2.3B contracts  │
+│                                                                              │
+│ 🛩️ COUNTER-UAS & DIRECTED ENERGY                                            │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ DRSHF DroneShield (ASX) AU$1.5B AU$2.3B pipeline, DroneGun/DroneSentry      │
+│ LHX   L3Harris          $50B    Electronic warfare, counter-drone           │
+│ RTX   RTX (Raytheon)    $160B   Directed energy weapons, missiles           │
+│                                                                              │
+│ 🛩️ SPACE DEFENSE                                                            │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ RDW   Redwire           $1B     Space Force satellite buses                 │
+│ RKLB  Rocket Lab        $15B    $816M Space Force contract                  │
+│ LUNR  Intuitive Machines $3B    NASA/defense lunar                          │
+│                                                                              │
+│ 🛩️ ADVANCED WEAPONS                                                         │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ KRMN  Karman Holdings   IPO 25  Missiles, rockets, drones                   │
+│ BWXT  BWX Technologies  $10B    Naval nuclear, weapons components           │
+│                                                                              │
+│ 🛩️ TRADITIONAL PRIMES (Monitor for disruption)                              │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ LMT   Lockheed Martin   $130B   Losing share to startups                    │
+│ NOC   Northrop Grumman  $75B    B-21, but CCA competitor to Kratos          │
+│ GD    General Dynamics  $85B    Software modernization pressure             │
+│                                                                              │
+│ 🛩️ PRIVATE - IPO WATCH                                                      │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ Anduril       $14B+ valuation  Lattice OS, Arsenal-1 factory, Fury drone    │
+│ Shield AI     $3B+ valuation   Hivemind autonomy, V-BAT                     │
+│ Epirus        $1B+ valuation   Directed energy, high-power microwave        │
+│ Saronic       $500M+ val       Autonomous boats, Series B                   │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║ SECTOR 9: SPATIAL COMPUTING & EXTENDED REALITY                               ║
+║ "Post-screen computing interfaces that react to speech and gestures"         ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+THE TRANSFORMATION:
+- XR revenue: $1.07 trillion by 2030
+- AR/VR shipments: 38.6% CAGR through 2029
+- 2025 pause → 87% growth expected 2026
+- Meta Ray-Ban glasses: 2M+ units sold, tripled Q2 2025
+- Apple smart glasses launching 2026
+- AR training cuts onboarding 75%, improves accuracy 33%
+- Walmart deployed 17,000 VR headsets for training
+
+WHAT'S CHANGING:
+- From "gamer toy" → to "productivity tool"
+- Spatial computing replaces AR/VR/MR terminology
+- Enterprise adoption for training, collaboration, design
+- AI-powered avatars as digital workers
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SPATIAL COMPUTING - INVESTABLE COMPANIES                                     │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ 🕶️ PLATFORM LEADERS                                                          │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ META  Meta Platforms    $1.5T   Quest 3/4, Ray-Ban glasses, 74.6% share     │
+│ AAPL  Apple             $3.8T   Vision Pro M5, smart glasses 2026           │
+│ MSFT  Microsoft         $3.1T   Mesh, HoloLens (enterprise focus)           │
+│ GOOGL Alphabet          $2.3T   Android XR, Project Iris                    │
+│ SONY  Sony              $100B   PlayStation VR2, gaming focus               │
+│                                                                              │
+│ 🕶️ XR CHIP ENABLERS                                                          │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ QCOM  Qualcomm          $200B   Snapdragon XR2/AR1+, powers most headsets   │
+│ NVDA  NVIDIA            $3.4T   Omniverse, rendering for XR                 │
+│                                                                              │
+│ 🕶️ OPTICS & DISPLAYS                                                         │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ KOPN  Kopin Corp        $300M   Micro-displays for AR/VR                    │
+│ HIMX  Himax Tech        $1B     Display drivers, AR waveguides              │
+│ VUZI  Vuzix             $200M   Enterprise smart glasses                    │
+│ OLED  Universal Display $7B     OLED materials for displays                 │
+│                                                                              │
+│ 🕶️ SOFTWARE & CONTENT PLATFORMS                                              │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ U     Unity Software    $25B    Game engine, spatial computing tools        │
+│ RBLX  Roblox            $35B    Metaverse platform, younger demographic     │
+│ MTTR  Matterport        $1.5B   Digital twin technology                     │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║ SECTOR 10: ADVANCED CONNECTIVITY                                             ║
+║ "5G reaching ubiquity, 6G research accelerating"                             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+THE TRANSFORMATION:
+- 5G: Near-ubiquitous coverage in urban centers by 2026
+- 6G research: terahertz frequencies, AI-native network management
+- Non-terrestrial networks (NTN): 170+ operator-satellite partnerships
+- Private 5G for smart factories and campus networks
+- Edge computing + connectivity = real-time AI at the edge
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ ADVANCED CONNECTIVITY - INVESTABLE COMPANIES                                 │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ 📶 5G/6G INFRASTRUCTURE                                                      │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ ERIC  Ericsson          $25B    5G infrastructure leader                    │
+│ NOK   Nokia             $25B    5G networks, private 5G                     │
+│ QCOM  Qualcomm          $200B   5G modems, chipsets                         │
+│ MRVL  Marvell           $100B   5G infrastructure chips                     │
+│                                                                              │
+│ 📶 TELECOM INFRASTRUCTURE                                                    │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ AMT   American Tower    $95B    Cell towers, edge infrastructure            │
+│ CCI   Crown Castle      $45B    Cell towers, fiber                          │
+│ SBAC  SBA Communications $25B   Cell tower operator                         │
+│                                                                              │
+│ 📶 SATELLITE CONNECTIVITY                                                    │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ ASTS  AST SpaceMobile   $10B    Direct-to-device satellite                  │
+│ GSAT  Globalstar        $3B     Apple satellite messaging                   │
+│ IRDM  Iridium           $4B     LEO satellite connectivity                  │
+│                                                                              │
+│ 📶 OPTICAL NETWORKING                                                        │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ LITE  Lumentum          $5B     Optical components, 1.6T transceivers       │
+│ COHR  Coherent          $10B    Optical networking, photonics               │
+│ INFN  Infinera          $1.5B   Optical transport systems                   │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║ SECTOR 11: DIGITAL TRUST & CYBERSECURITY                                     ║
+║ "81% of organizations plan zero-trust by 2026"                               ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+THE TRANSFORMATION:
+- 1 billion+ people using passkeys (13 billion accounts)
+- 81% of enterprises implementing zero-trust by 2026
+- 96% of security decision-makers prioritize zero-trust
+- AI-driven detection systems identifying anomalies in real-time
+- Post-quantum cryptography: 61% of CISOs plan adoption in 5 years
+- Deepfake phishing and autonomous malware require AI defense
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ DIGITAL TRUST & CYBERSECURITY - INVESTABLE COMPANIES                         │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ 🔐 PLATFORM LEADERS                                                          │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ CRWD  CrowdStrike       $100B   Falcon Flex, Charlotte AI, 29 modules       │
+│ PANW  Palo Alto Networks $130B  Platform consolidation, zero trust leader   │
+│ ZS    Zscaler           $35B    $500M AI Security ARR target 2026           │
+│ FTNT  Fortinet          $60B    FortiOS unified platform                    │
+│                                                                              │
+│ 🔐 ZERO TRUST & IDENTITY                                                     │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ OKTA  Okta              $15B    Zero trust identity, IAM leader             │
+│ CYBR  CyberArk          $15B    Privileged access management                │
+│ ZS    Zscaler           $35B    Zero Trust Everywhere                       │
+│ NET   Cloudflare        $35B    Zero trust network access                   │
+│                                                                              │
+│ 🔐 AI-NATIVE SECURITY                                                        │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ S     SentinelOne       $8B     AI-native XDR, Purple AI                    │
+│ CRWD  CrowdStrike       $100B   Charlotte AI agentic security               │
+│ TENB  Tenable           $5B     Vulnerability management, AI                │
+│ QLYS  Qualys            $6B     VMDR platform                               │
+│                                                                              │
+│ 🔐 POST-QUANTUM SECURITY                                                     │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ SEALSQ SEALSQ Corp      $300M   QVault TPM, hardware root of trust          │
+│ ARQQ  Arqit Quantum     $800M   Quantum-safe encryption keys                │
+│                                                                              │
+│ 🔐 DATA SECURITY                                                             │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ ZS    Zscaler           $35B    Data protection, cloud security             │
+│ VRNS  Varonis           $5B     Data security platform                      │
+│ RPD   Rapid7            $3B     Threat detection and response               │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║ SECTOR 12: ADVANCED MATERIALS & MANUFACTURING                                ║
+║ "Self-healing composites and cyber-physical factories"                       ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+THE TRANSFORMATION:
+- Self-healing composites, shape-memory alloys
+- 3D printing moving to production scale
+- Cyber-physical factories (digital twins running in real-time)
+- Manufacturing reshoring accelerating
+- Advanced packaging for chiplets becoming critical
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ ADVANCED MATERIALS & MANUFACTURING - INVESTABLE COMPANIES                    │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ 🏭 3D PRINTING / ADDITIVE MANUFACTURING                                      │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ DDD   3D Systems        $800M   $7.65M Air Force contract, healthcare       │
+│ SSYS  Stratasys         $900M   Production-scale AM, Navy/Toyota            │
+│ NNDM  Nano Dimension    $300M   Desktop Metal acquisition, electronics      │
+│ PRLB  Proto Labs        $2B     Axtra3D HPS, 250K+ parts/month              │
+│ XMTR  Xometry           $1B     AI-driven manufacturing marketplace         │
+│ VLD   Velo3D            $200M   SpaceX supplier, hypersonics                │
+│ MTLS  Materialise       $400M   3D printing software/solutions              │
+│                                                                              │
+│ 🏭 ADVANCED MATERIALS                                                        │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ ATI   ATI Inc           $8B     Large-format metal 3D printing, specialty   │
+│ HXL   Hexcel            $6B     Carbon fiber composites, aerospace          │
+│ KREF  Kforce            ---     (workforce for manufacturing)               │
+│ MP    MP Materials      $4B     Rare earth magnets, US-based                │
+│                                                                              │
+│ 🏭 SEMICONDUCTOR PACKAGING                                                   │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ AMKR  Amkor             $7B     Advanced packaging for chiplets             │
+│ CAMT  Camtek            $5B     Inspection for advanced packaging           │
+│ ONTO  Onto Innovation   $8B     Process control for packaging               │
+│                                                                              │
+│ 🏭 INDUSTRIAL AUTOMATION                                                     │
+│ ────────────────────────────────────────────────────────────────────────────│
+│ ROK   Rockwell Auto     $35B    Factory automation, digital twin            │
+│ EMR   Emerson Electric  $70B    Industrial automation                       │
+│ HON   Honeywell         $150B   Forge AI software, industrial IoT           │
+│ KEYS  Keysight          $30B    Test and measurement                        │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+================================================================================
+                     📊 MASTER TICKER LISTS BY SECTOR
+================================================================================
+
+Simply copy these into Fidelity Active Trader Pro:
+
+SECTOR 1 - AUTONOMOUS INTELLIGENCE:
+CRM, NOW, MSFT, GOOGL, META, PATH, ZM, ADBE, AI, PLTR, SNOW, VEEV
+
+SECTOR 2 - PHYSICAL AI (ROBOTICS):
+TSLA, NVDA, TER, ROK, ABB, SYM, ZBRA, ISRG, SYK, DE, AGCO
+
+SECTOR 3 - QUANTUM TECHNOLOGIES:
+IONQ, RGTI, QBTS, QUBT, GOOGL, IBM, SEALSQ, ARQQ, COHR
+
+SECTOR 4 - COMPUTE INFRASTRUCTURE:
+VRT, MOD, NVT, ETN, GEV, PWR, ANET, ALAB, CRDO, AVGO, MRVL, ARM, TSM, ASML, QCOM
+
+SECTOR 5 - SYNTHETIC BIOLOGY:
+RXRX, ABCL, SDGR, TWST, ABSI, ILMN, WGS, CRSP, NTLA, NTRA
+
+SECTOR 6 - ENERGY TRANSFORMATION:
+SMR, OKLO, CEG, TLN, CCJ, UEC, UUUU, DNN, NXE, LEU, GEV, ETN
+
+SECTOR 7 - SPACE ECONOMY:
+RKLB, ASTS, GSAT, BKSY, PL, SPIR, RDW, LUNR, VSAT, IRDM
+
+SECTOR 8 - DEFENSE TECHNOLOGY:
+RCAT, KTOS, AVAV, BBAI, BKSY, RDW, RKLB, PLTR, LHX, DRSHF
+
+SECTOR 9 - SPATIAL COMPUTING:
+META, AAPL, MSFT, QCOM, KOPN, HIMX, VUZI, U, RBLX
+
+SECTOR 10 - ADVANCED CONNECTIVITY:
+QCOM, MRVL, ERIC, NOK, AMT, ASTS, GSAT, LITE, COHR
+
+SECTOR 11 - DIGITAL TRUST:
+CRWD, PANW, ZS, FTNT, OKTA, CYBR, S, SEALSQ, NET
+
+SECTOR 12 - ADVANCED MANUFACTURING:
+DDD, SSYS, NNDM, PRLB, XMTR, AMKR, ATI, ROK, HON
+
+
+================================================================================
+                          🎯 TOP 30 EMERGING PICKS
+================================================================================
+
+Companies in transformational sectors that HAVEN'T fully run yet:
+
+┌────┬────────┬─────────────────────────────────┬────────────────────────────┐
+│ #  │ TICKER │ SECTOR                          │ WHY NOW                    │
+├────┼────────┼─────────────────────────────────┼────────────────────────────┤
+│ 1  │ VRT    │ Compute Infrastructure          │ $9.5B backlog, NVIDIA Titan│
+│ 2  │ MRVL   │ Compute Infrastructure          │ Custom silicon for AMZN/MSFT│
+│ 3  │ RCAT   │ Defense Technology              │ Army SRR, Blue UAS, early  │
+│ 4  │ SMR    │ Energy Transformation           │ -63% from high, NRC approved│
+│ 5  │ IONQ   │ Quantum Technologies            │ 256-qubit target 2026      │
+│ 6  │ ASTS   │ Space Economy                   │ Direct-to-device game change│
+│ 7  │ TER    │ Physical AI (Robotics)          │ Universal Robots, pure-play│
+│ 8  │ RXRX   │ Synthetic Biology               │ AI drug discovery platform │
+│ 9  │ BBAI   │ Defense Technology              │ $250M contract, breaking out│
+│ 10 │ UEC    │ Energy Transformation           │ US uranium production ramp │
+│ 11 │ PATH   │ Autonomous Intelligence         │ Agentic AI leader          │
+│ 12 │ CRDO   │ Compute Infrastructure          │ xAI Colossus uses Credo    │
+│ 13 │ TLN    │ Energy Transformation           │ Amazon deal, 100%+ growth  │
+│ 14 │ KTOS   │ Defense Technology              │ CCA decision 2026          │
+│ 15 │ LUNR   │ Space Economy                   │ NASA LTV, $1B backlog      │
+│ 16 │ SEALSQ │ Digital Trust                   │ Post-quantum hardware      │
+│ 17 │ ALAB   │ Compute Infrastructure          │ AI connectivity leader     │
+│ 18 │ MOD    │ Compute Infrastructure          │ Hyperscale cooling wins    │
+│ 19 │ OKLO   │ Energy Transformation           │ Sam Altman backing         │
+│ 20 │ RGTI   │ Quantum Technologies            │ 150+ qubits, cheaper       │
+│ 21 │ TWST   │ Synthetic Biology               │ DNA platform, diversified  │
+│ 22 │ DNN    │ Energy Transformation           │ Wheeler River, cheap       │
+│ 23 │ ABCL   │ Synthetic Biology               │ AI antibody, Phase 1       │
+│ 24 │ RDW    │ Space/Defense                   │ $6.9B pipeline             │
+│ 25 │ BKSY   │ Space/Defense                   │ Spectra AI, dual exposure  │
+│ 26 │ NOW    │ Autonomous Intelligence         │ AI Agent Orchestrator      │
+│ 27 │ LEU    │ Energy Transformation           │ ONLY US enricher           │
+│ 28 │ ABSI   │ Synthetic Biology               │ Zero-shot antibodies       │
+│ 29 │ RKLB   │ Space Economy                   │ 21/21 success, Neutron 2026│
+│ 30 │ QBTS   │ Quantum Technologies            │ Actual enterprise customers│
+└────┴────────┴─────────────────────────────────┴────────────────────────────┘
+
+
+================================================================================
+                     🗓️ 2026 CATALYST CALENDAR
+================================================================================
+
+Q1 2026:
+├─ Tesla Optimus V3 prototype
+├─ NuScale ENTRA1 decisions
+├─ Recursion CEO transition (Jan 1)
+├─ Infleqtion/Horizon SPAC completions
+├─ NexGen federal approval hearing
+├─ Viridian TED Phase 3 readout
+└─ Apple smart glasses announcement?
+
+Q2 2026:
+├─ Revolution Medicines pancreatic data
+├─ Rocket Lab Neutron commercial launch
+├─ UroGen permanent billing code
+└─ More humanoid robot demonstrations
+
+H2 2026:
+├─ Air Force CCA decision (KTOS critical)
+├─ Tesla Optimus production ramp
+├─ IonQ 256-qubit system
+├─ AST 45-60 satellites deployed
+├─ NSA CNSA 2.0 quantum-safe mandate
+└─ China Linglong One SMR commercial ops
+
+
+================================================================================
+                          THE THESIS
+================================================================================
+
+2026 is the year AI moves from ASSISTANTS to AGENTS.
+2026 is the year ROBOTS enter production (not just demos).
+2026 is the year QUANTUM hits commercial applications.
+2026 is the year NUCLEAR becomes the only answer for AI power.
+2026 is the year BIOLOGY becomes programmable like software.
+2026 is the year SPACE becomes infrastructure.
+2026 is the year DEFENSE shifts to software-defined warfare.
+
+These 12 sectors will define the next decade of investing.
+Your edge: Position BEFORE the crowd catches on.
+
+================================================================================

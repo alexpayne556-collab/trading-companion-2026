@@ -1,0 +1,240 @@
+# COPY-PASTE TICKER LISTS FOR FIDELITY
+## Just copy the tickers, paste into Fidelity
+
+---
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# NEW WATCHLIST: CORE_POSITIONS
+# ═══════════════════════════════════════════════════════════════════════════════
+# (Create this watchlist first - your daily must-watch list)
+
+RCAT
+UEC
+DNN
+RGTI
+SEALSQ
+SMR
+LUNR
+QBTS
+BBAI
+CATX
+APLD
+LLAP
+
+# Total: 12 tickers
+# These are your HIGHEST conviction plays across all sectors
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# WATCHLIST: DEFENSE_TECHNOLOGY
+# ═══════════════════════════════════════════════════════════════════════════════
+
+RCAT
+KTOS
+BBAI
+EVLV
+UMAC
+DRSHF
+VISL
+AIRO
+ZENA
+DPRO
+TATT
+VSEC
+AVAV
+PLTR
+LHX
+
+# Total: 15 tickers
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# WATCHLIST: ENERGY_TRANSFORMATION
+# ═══════════════════════════════════════════════════════════════════════════════
+
+SMR
+OKLO
+LTBR
+UEC
+DNN
+UUUU
+URG
+EU
+NXE
+PALAF
+DYL
+UROY
+URNJ
+CCJ
+LEU
+CEG
+
+# Total: 16 tickers
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# WATCHLIST: QUANTUM_TECHNOLOGIES
+# ═══════════════════════════════════════════════════════════════════════════════
+
+RGTI
+QBTS
+IONQ
+QUBT
+SEALSQ
+ARQQ
+LAES
+BTQ
+
+# Total: 8 tickers
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# WATCHLIST: SPACE_ECONOMY
+# ═══════════════════════════════════════════════════════════════════════════════
+
+RKLB
+ASTS
+IRDM
+GSAT
+BKSY
+PL
+SATL
+LLAP
+LUNR
+RDW
+MNTS
+SPIR
+
+# Total: 12 tickers
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# WATCHLIST: NEXT_GEN_BIOTECH
+# ═══════════════════════════════════════════════════════════════════════════════
+
+RXRX
+SDGR
+EXAI
+ABCL
+EDIT
+NTLA
+BEAM
+VERV
+CRSP
+CATX
+BCAB
+FOLD
+DNA
+SANA
+TWST
+
+# Total: 15 tickers
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# WATCHLIST: COMPUTE_INFRASTRUCTURE
+# ═══════════════════════════════════════════════════════════════════════════════
+
+IREN
+APLD
+CORZ
+CIFR
+CRDO
+ALAB
+VRT
+MOD
+
+# Total: 8 tickers
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# WATCHLIST: BATTERY_METALS / critical minerals
+# ═══════════════════════════════════════════════════════════════════════════════
+
+MP
+UUUU
+LAC
+PLL
+LTHM
+AG
+HL
+KGC
+
+# Total: 8 tickers
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# WATCHLIST: DIGITAL_TRUST_CYBERSECURITY
+# ═══════════════════════════════════════════════════════════════════════════════
+
+SEALSQ
+ARQQ
+LAES
+S
+CRWD
+PANW
+ZS
+
+# Total: 7 tickers
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# WATCHLIST: PHYSICAL_AI_ROBOTICS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+SYM
+PATH
+TER
+ISRG
+
+# Total: 4 tickers
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# WATCHLIST: AUTONOMOUS_INTELLIGENCE
+# ═══════════════════════════════════════════════════════════════════════════════
+
+BBAI
+PATH
+AI
+PLTR
+UPST
+SOUN
+
+# Total: 6 tickers
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SUMMARY
+# ═══════════════════════════════════════════════════════════════════════════════
+
+CORE_POSITIONS:          12 tickers (NEW - create this)
+DEFENSE_TECHNOLOGY:      15 tickers
+ENERGY_TRANSFORMATION:   16 tickers
+QUANTUM_TECHNOLOGIES:     8 tickers
+SPACE_ECONOMY:           12 tickers
+NEXT_GEN_BIOTECH:        15 tickers
+COMPUTE_INFRASTRUCTURE:   8 tickers
+BATTERY_METALS:           8 tickers
+DIGITAL_TRUST:            7 tickers
+PHYSICAL_AI_ROBOTICS:     4 tickers
+AUTONOMOUS_INTELLIGENCE:  6 tickers
+
+TOTAL: ~111 tickers across 11 watchlists
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# HOW TO ADD IN FIDELITY:
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Option 1: One at a time
+# - Click watchlist
+# - Click "+" or "Add Symbol"
+# - Type ticker, hit Enter
+# - Repeat
+
+# Option 2: If Fidelity allows bulk add
+# - Copy the list above
+# - Paste into add symbols field
+# - Some platforms accept comma-separated: RCAT,UEC,DNN,RGTI
+
+# ═══════════════════════════════════════════════════════════════════════════════

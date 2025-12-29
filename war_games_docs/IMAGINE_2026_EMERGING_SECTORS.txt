@@ -1,0 +1,611 @@
+================================================================================
+🔮 IMAGINE 2026: THE WORLD IS CHANGING
+================================================================================
+A Strategic Vision for Emerging Sectors with Multiple Investable Companies
+
+Your father's wisdom: "Master trading before inheriting." 
+Your edge: Unlimited time to monitor + systematic approach
+Your opportunity: Position BEFORE these sectors explode
+
+================================================================================
+THE BIG PICTURE: WHAT'S HAPPENING IN 2026
+================================================================================
+
+Mid-2026 will look radically different than today. Here's what's unfolding:
+
+1. AI moves from "chatbots" to "AGENTS" that autonomously run businesses
+2. Data centers hit POWER CRISIS - nuclear/SMR only solution at scale  
+3. AI chips generate so much HEAT that liquid cooling becomes mandatory
+4. HUMANOID ROBOTS enter production (not just prototypes)
+5. QUANTUM computers hit 256+ qubits - real commercial applications
+6. SYNTHETIC BIOLOGY becomes "programmable" like software
+7. Custom silicon REPLACES Nvidia for hyperscalers (Broadcom, Marvell win)
+8. Space becomes INFRASTRUCTURE (not exploration)
+9. Defense shifts to SOFTWARE-DEFINED warfare (drones, autonomy)
+10. AR/VR hits INFLECTION - Apple smart glasses, Meta 2M+ Ray-Bans sold
+
+================================================================================
+🧠 MEGA-THEME 1: AGENTIC AI (AI That DOES Things)
+================================================================================
+Market: $7.3B → $41B by 2030 (41% CAGR)
+What's happening: AI shifts from "generate content" to "autonomously execute"
+By 2028: 33% of enterprise software will include agentic AI
+78% of Fortune 500 will have active agentic deployments by EOY 2026
+
+THE SHIFT: From chatbots → to autonomous digital workers
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ AGENTIC AI PLAYS                                                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ PLATFORM LEADERS (Building the agent infrastructure)                        │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ CRM  - Salesforce      - Agentforce platform, 150K+ customers               │
+│ NOW  - ServiceNow      - AI Agent Orchestrator, Moveworks acquisition       │
+│ MSFT - Microsoft       - Copilot agents, Azure AI, 6 security agents        │
+│ GOOGL- Alphabet        - Vertex AI Agent Builder, "citizen agents"          │
+│                                                                             │
+│ AUTOMATION PURE-PLAYS                                                       │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ PATH - UiPath          - Agentic testing, Autopilot, Agent Builder          │
+│ ZM   - Zoom            - AI Companion, multi-step task execution            │
+│                                                                             │
+│ AGENTIC SECURITY                                                            │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ CRWD - CrowdStrike     - Charlotte AI "agentic security analyst"            │
+│ PANW - Palo Alto       - Cortex XDR autonomous threat response              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+WHY THIS MATTERS: Enterprises will pay for AI that WORKS autonomously
+WATCH FOR: ServiceNow and Salesforce competing for "enterprise AI OS" position
+
+================================================================================
+⚡ MEGA-THEME 2: AI INFRASTRUCTURE (The Physical Layer)
+================================================================================
+The bottleneck has shifted: From chips → to POWER + COOLING + DEPLOYMENT
+$400B+ hyperscaler capex in 2026
+Liquid cooling becoming MANDATORY for AI clusters
+
+THE PHYSICS PROBLEM: AI chips generate HEAT. Water holds heat 3,000x better than air.
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ AI INFRASTRUCTURE - THE PICKS & SHOVELS                                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ LIQUID COOLING (Mandatory for Blackwell/Rubin)                              │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ VRT  - Vertiv          - $9.5B backlog, NVIDIA Titan partner, 1,100% 3yr    │
+│ MOD  - Modine          - Hyperscale wins, closed-loop water systems         │
+│ NVT  - nVent Electric  - Manifolds, hoses, couplings (no leaks)             │
+│ FIX  - Comfort Systems - Precision HVAC, data center specialist             │
+│                                                                             │
+│ POWER INFRASTRUCTURE                                                        │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ ETN  - Eaton           - Switchgear, transformers, $1.2B expansion          │
+│ GEV  - GE Vernova      - $200B backlog by 2028, gas turbines + grid         │
+│ PWR  - Quanta Services - Grid modernization, high-voltage linemen           │
+│ STRL - Sterling Infra  - E-Infrastructure, 125% YoY data center growth      │
+│                                                                             │
+│ DATA CENTER DEPLOYMENT                                                      │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ EME  - EMCOR Group     - Construction/systems integration                   │
+│ DLR  - Digital Realty  - Data center REIT, hyperscale landlord              │
+│ EQIX - Equinix         - Global interconnection, 260+ data centers          │
+│                                                                             │
+│ NETWORKING & INTERCONNECTS                                                  │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ ANET - Arista Networks - Cloud networking leader, AI cluster switches       │
+│ ALAB - Astera Labs     - PCIe/CXL connectivity, Morgan Stanley AI pick      │
+│ CRDO - Credo Technology- Optical cables, xAI Colossus uses Credo            │
+│ FN   - Fabrinet        - Optical manufacturing, transceiver assembly        │
+│ LITE - Lumentum        - Lasers for fiber optics (1.6T upgrade coming)      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+THE INSIGHT: Vertiv is the "picks and shovels" of AI infrastructure
+CATALYST: Liquid-to-chip cooling becomes standard in 2026 new builds
+
+================================================================================
+🔬 MEGA-THEME 3: CUSTOM SILICON (The Great Nvidia Decoupling)
+================================================================================
+Hyperscalers are DONE paying Nvidia's 75% margins
+Google, Amazon, Microsoft, Meta all building in-house chips
+2026 is when custom silicon hits CRITICAL MASS
+
+THE SHIFT: From GPU rental → to purpose-built ASICs
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ CUSTOM SILICON ENABLERS                                                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ THE ARCHITECTS (Design the custom chips)                                    │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ AVGO - Broadcom        - Google TPU designer, OpenAI 10GW deal              │
+│ MRVL - Marvell         - Amazon Trainium, Microsoft Maia designer           │
+│ ARM  - ARM Holdings    - Architecture monopoly, 5% royalty vs 2%            │
+│ CDNS - Cadence         - EDA tools (chip design software)                   │
+│ SNPS - Synopsys        - EDA tools, IP licensing                            │
+│                                                                             │
+│ THE MANUFACTURERS                                                           │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ TSM  - Taiwan Semi     - 90%+ advanced node monopoly, 2nm sold out          │
+│ AMKR - Amkor           - Advanced packaging (chiplets need this)            │
+│ CAMT - Camtek          - Inspection equipment for advanced packaging        │
+│                                                                             │
+│ EDGE AI CHIPS (On-device, not cloud)                                        │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ QCOM - Qualcomm        - Snapdragon X, 80 TOPS NPUs, edge AI leader         │
+│ CEVA - CEVA Inc        - DSP/NPU IP licensing, Microchip partnership        │
+│ AIP  - Arteris         - Network-on-Chip IP (data traffic in silicon)       │
+│ SYNA - Synaptics       - AI edge processing, IoT/automotive                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+THE INSIGHT: Broadcom + Marvell capture the shift away from Nvidia
+CATALYST: Google Tensor G5, Amazon Trainium3, OpenAI custom chip 2026
+
+================================================================================
+🧬 MEGA-THEME 4: AI + BIOLOGY (Programmable Life)
+================================================================================
+The convergence: AI designs proteins, drugs, organisms
+Market: Industrial biotech → $850B by 2030
+First AI-designed drug (INS018_055) already in Phase 2 trials
+
+THE REVOLUTION: Biology becomes "programmable" like software
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ AI + BIOLOGY CONVERGENCE                                                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ AI DRUG DISCOVERY (Drug development 70% faster)                             │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ RXRX - Recursion       - OS platform, CEO transition Jan 2026               │
+│ ABCL - AbCellera       - AI antibody discovery, Phase 1 trials 2025         │
+│ SDGR - Schrodinger     - Physics-based drug design platform                 │
+│ RLAY - Relay Therapeutics- Dynamo AI platform, protein motion modeling      │
+│ EXAI - Exscientia      - 70% faster drug discovery, $625M cash runway       │
+│                                                                             │
+│ SYNTHETIC BIOLOGY (Engineering organisms)                                   │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ TWST - Twist Bioscience- DNA synthesis platform, RNA + antibody proteins    │
+│ ILMN - Illumina        - Sequencing leader, synthetic biology enabler       │
+│ WGS  - GeneDx          - AI genomic interpretation, Fabric Genomics acq     │
+│                                                                             │
+│ PROTEIN ENGINEERING                                                         │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ ABSI - Absci           - Zero-shot de novo antibody design, NVIDIA partner  │
+│ DNA  - Ginkgo Bioworks - Cell programming platform (but struggling)         │
+│                                                                             │
+│ CRISPR / GENE EDITING                                                       │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ CRSP - CRISPR Therapeutics- Gene editing therapies                          │
+│ NTLA - Intellia        - In-vivo gene editing                               │
+│ EDIT - Editas Medicine - CRISPR platform                                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+THE INSIGHT: AI + biology is like internet + commerce in 1998
+WATCH FOR: First AI-designed drug approvals, protein engineering breakthroughs
+
+================================================================================
+🧠 MEGA-THEME 5: NEUROMORPHIC COMPUTING (Brain-Inspired Chips)
+================================================================================
+Market: $330M → $11.77B by 2030 (104.7% CAGR!) 
+Problem: AI inference consumes MASSIVE power
+Solution: Brain-inspired chips use 1,000x LESS energy
+
+THE PHYSICS: Event-based processing (only fires when something changes)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ NEUROMORPHIC COMPUTING                                                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ PURE-PLAY NEUROMORPHIC                                                      │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ BRCHF- BrainChip (ASX) - Akida processor, digital approach, standard fabs   │
+│                          "Sensory inference" - vibration, voice, visual     │
+│                                                                             │
+│ MAJOR PLAYERS WITH NEUROMORPHIC                                             │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ INTC - Intel           - Loihi 2, Hala Point (1.15B neurons), research      │
+│ IBM  - IBM             - NorthPole chip, 25x energy savings vs GPUs         │
+│ QCOM - Qualcomm        - Zeroth neural processing, mobile neuromorphic      │
+│ SSNLF- Samsung         - Neuromorphic R&D, memory integration               │
+│                                                                             │
+│ COMPUTE-IN-MEMORY (Eliminates data movement bottleneck)                     │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ MU   - Micron          - HBM3E, exploring CIM architectures                 │
+│ (Private: Rain AI, Mythic, Syntiant - watch for IPOs)                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+THE INSIGHT: This is EARLY - like quantum was 3 years ago
+USE CASE: Edge AI, drones, satellites, always-on sensors, wearables
+
+================================================================================
+☢️ MEGA-THEME 6: NUCLEAR RENAISSANCE (AI's Power Solution)
+================================================================================
+The math: AI data centers need 4-6GW NEW power by 2028
+The problem: Grid can't deliver. Solar/wind can't scale fast enough.
+The solution: Nuclear (SMRs, existing plants, uranium)
+
+BIPARTISAN SUPPORT + HYPERSCALER DEMAND = Nuclear bull market
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ NUCLEAR RENAISSANCE - FULL STACK                                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ SMALL MODULAR REACTORS (The future)                                         │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ SMR  - NuScale Power   - First NRC-approved SMR, ENTRA1 6GW, -63% from high │
+│ OKLO - Oklo Inc        - Sam Altman backing, Aurora microreactor            │
+│ BWXT - BWX Technologies- Naval reactor sole supplier, SMR components        │
+│                                                                             │
+│ NUCLEAR UTILITIES (Existing capacity)                                       │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ CEG  - Constellation   - 1.1GW Meta deal, Three Mile Island restart         │
+│ TLN  - Talen Energy    - 1,920MW Amazon deal, 100%+ earnings growth         │
+│ VST  - Vistra Corp     - Nuclear + gas fleet, capacity payments             │
+│                                                                             │
+│ URANIUM (Fuel the reactors)                                                 │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ CCJ  - Cameco          - Vertically integrated, $80B Westinghouse deal      │
+│ UEC  - Uranium Energy  - Largest US resource, ISR production ramp           │
+│ UUUU - Energy Fuels    - Low-cost + REE diversification, debt-free          │
+│ DNN  - Denison Mines   - Wheeler River ISL, cheap vs Cameco                 │
+│ NXE  - NexGen Energy   - Arrow deposit, federal approval Q1 2026            │
+│ LEU  - Centrus Energy  - ONLY US enricher, HALEU production                 │
+│                                                                             │
+│ NUCLEAR SERVICES                                                            │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ FLR  - Fluor           - Nuclear construction/engineering                   │
+│ GEV  - GE Vernova      - BWRX-300 SMR design                                │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+THE INSIGHT: Nuclear is the ONLY baseload solution for AI power demand
+CATALYST: Palisades restart, SMR orders, hyperscaler PPA announcements
+
+================================================================================
+🤖 MEGA-THEME 7: HUMANOID ROBOTS (Labor Crisis Solution)
+================================================================================
+The problem: Labor shortage across manufacturing, logistics, healthcare
+The solution: Humanoids that can use human tools/spaces
+Timeline: 2026 is first PRODUCTION year (not just demos)
+
+TESLA: Optimus V3 Q1 2026, production ramp EOY 2026
+FIGURE: $39B valuation, 12K units/year capacity planned
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ HUMANOID ROBOTS & AUTOMATION                                                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ HUMANOID LEADERS (The big bets)                                             │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ TSLA - Tesla           - Optimus, FSD AI transfer, vertical integration     │
+│ NVDA - NVIDIA          - GR00T platform, Isaac SDK, Omniverse simulation    │
+│ RTCHY- Richtech Robotics- Dex humanoid, wheeled AMR base, production-ready  │
+│                                                                             │
+│ COLLABORATIVE ROBOTS (Cobots - working now)                                 │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ TER  - Teradyne        - Universal Robots cobots, MiR AMRs, pure-play       │
+│ ROK  - Rockwell Auto   - Otto AMR, NVIDIA partnership, new facility         │
+│ ABB  - ABB Ltd         - Industrial robotics, GoFa cobots                   │
+│ FANUY- Fanuc ADR       - Japanese robotics leader, global scale             │
+│                                                                             │
+│ WAREHOUSE AUTOMATION                                                        │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ SYM  - Symbotic        - Walmart deployment, AI orchestration               │
+│ ZBRA - Zebra Tech      - Fetch Robotics, RFID + warehouse robots            │
+│ AMZN - Amazon          - Proteus/Sparrow robots, massive internal use       │
+│                                                                             │
+│ SURGICAL ROBOTICS                                                           │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ ISRG - Intuitive Surgical- da Vinci 5, 10,763 systems, 23% procedure growth │
+│ SYK  - Stryker         - Mako robotic surgery, orthopedics                  │
+│                                                                             │
+│ PRIVATE (IPO Watch)                                                         │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ Figure AI ($39B) - Figure 03, BMW/OpenAI partnerships                       │
+│ Apptronik ($1B+) - Apollo industrial humanoid                               │
+│ 1X Technologies - NEO home robot, $20K pre-orders 2026                      │
+│ Agility Robotics - Digit, Amazon deployment                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+THE INSIGHT: Teradyne is the safest pure-play on collaborative robotics
+CATALYST: Tesla Optimus V3 demo Q1 2026, Figure production announcements
+
+================================================================================
+🔐 MEGA-THEME 8: QUANTUM + POST-QUANTUM SECURITY
+================================================================================
+Quantum: 2026 is "prove it" year - 256+ qubits, commercial applications
+Post-Quantum: NSA CNSA 2.0 mandate coming - quantum-safe required
+SPACs: Infleqtion + Horizon Quantum completing Q1 2026
+
+THE DUAL OPPORTUNITY: Quantum hardware + defense against quantum attacks
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ QUANTUM COMPUTING + POST-QUANTUM SECURITY                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ QUANTUM HARDWARE (High risk/reward)                                         │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ IONQ - IonQ            - Trapped ion, 256-qubit target 2026, room temp      │
+│ RGTI - Rigetti         - Superconducting, 150+ qubits late 2026             │
+│ QBTS - D-Wave          - Annealing leader, actual enterprise customers      │
+│ QUBT - Quantum Comp Inc- Photonics approach, smaller cap                    │
+│                                                                             │
+│ POST-QUANTUM SECURITY (NSA mandate beneficiaries)                           │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ SEALSQ- SEALSQ Corp    - QVault TPM 2026, hardware root of trust            │
+│ ARQQ - Arqit Quantum   - Quantum-safe encryption keys, cloud pivot          │
+│                                                                             │
+│ SPAC COMPLETIONS Q1 2026                                                    │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ CCCX → Infleqtion      - Quantum hardware + sensing, $1.8B valuation        │
+│ DMYY → Horizon Quantum - Quantum software                                   │
+│                                                                             │
+│ BIG TECH QUANTUM PROGRAMS                                                   │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ GOOGL- Google          - Willow chip, 105 qubits, error correction          │
+│ IBM  - IBM             - Osprey/Condor, 100K+ qubits roadmap                │
+│ MSFT - Microsoft       - Topological qubits (different approach)            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+THE INSIGHT: D-Wave has REAL customers now; IONQ has best technology
+WATCH FOR: NSA quantum-safe mandate timeline, enterprise pilot conversions
+
+================================================================================
+🛡️ MEGA-THEME 9: SOFTWARE-DEFINED DEFENSE
+================================================================================
+The shift: DoD pivoting FROM primes TO Silicon Valley contractors
+Army FUZE: $750M/year for "bleeding-edge" tech
+Blue UAS mandate: Only domestic drone suppliers
+
+"We need what we're winning with in Ukraine"
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ SOFTWARE-DEFINED DEFENSE                                                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ AUTONOMOUS DRONES                                                           │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ RCAT - Red Cat Holdings- Army SRR contract, Palantir partner, Blue UAS      │
+│ KTOS - Kratos Defense  - XQ-58A Valkyrie, CCA program pending               │
+│ AVAV - AeroVironment   - Switchblade, BlueHalo deal (already ran up)        │
+│ ONDS - Ondas Holdings  - Iron Drone counter-UAS                             │
+│ UMAC - Unusual Machines- Blue UAS beneficiary, Taiwan facility              │
+│                                                                             │
+│ DEFENSE AI SOFTWARE                                                         │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ PLTR - Palantir        - $10B Army deal, AIP platform (expensive now)       │
+│ BBAI - BigBear.ai      - $250M border contract, ConductorOS                 │
+│ AI   - C3.ai           - Federal agency modernization                       │
+│ BKSY - BlackSky        - Real-time ISR, Spectra AI, $2.3B contracts         │
+│                                                                             │
+│ COUNTER-UAS / DIRECTED ENERGY                                               │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ DRSHF- DroneShield (ASX)- AU$2.3B pipeline, DroneGun/DroneSentry            │
+│ LHX  - L3Harris        - Electronic warfare, counter-drone                  │
+│                                                                             │
+│ SPACE DEFENSE                                                               │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ RDW  - Redwire         - Space Force satellite buses, $6.9B pipeline        │
+│ RKLB - Rocket Lab      - $816M Space Force contract, 21/21 success          │
+│ LUNR - Intuitive Machines- NASA LTV frontrunner, lunar infrastructure       │
+│                                                                             │
+│ PRIVATE (IPO Watch)                                                         │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ Anduril ($14B+) - Lattice OS, Arsenal-1 factory, Fury drone                 │
+│ Shield AI ($3B+) - Hivemind autonomy, V-BAT                                 │
+│ Epirus ($1B+) - Directed energy, high-power microwave                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+THE INSIGHT: RCAT and KTOS haven't fully run like PLTR/AVAV
+CATALYST: Air Force CCA decision 2026, Army FUZE contracts, Ukraine lessons
+
+================================================================================
+🕶️ MEGA-THEME 10: SPATIAL COMPUTING (AR/VR Inflection)
+================================================================================
+2026: Apple smart glasses launch, Valve Steam Frame, Quest 4
+Meta Ray-Bans: 2M+ units sold, tripled Q2 2025
+XR shipments: 87% growth expected 2026 after 2025 pause
+
+THE INFLECTION: From "gamer toy" → to "productivity tool"
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ SPATIAL COMPUTING / AR / VR                                                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ PLATFORM LEADERS                                                            │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ META - Meta Platforms  - Quest 3/4, Ray-Ban glasses (2M+ sold), 74.6% share │
+│ AAPL - Apple           - Vision Pro M5, smart glasses 2026                  │
+│ MSFT - Microsoft       - Mesh, HoloLens (enterprise focus)                  │
+│ GOOGL- Alphabet        - Android XR, Project Iris                           │
+│                                                                             │
+│ CHIP ENABLERS                                                               │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ QCOM - Qualcomm        - Snapdragon XR2/AR1+, powers most headsets          │
+│ NVDA - NVIDIA          - Omniverse, rendering for XR                        │
+│                                                                             │
+│ OPTICS & DISPLAYS                                                           │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ KOPN - Kopin Corp      - Micro-displays for AR/VR                           │
+│ HIMX - Himax Tech      - Display drivers, AR waveguides                     │
+│ VUZI - Vuzix           - Enterprise smart glasses                           │
+│                                                                             │
+│ SOFTWARE/CONTENT                                                            │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ U    - Unity Software  - Game engine, spatial computing tools               │
+│ RBLX - Roblox          - Metaverse platform, younger demographic            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+THE INSIGHT: Qualcomm is the "picks and shovels" - powers META/AAPL/others
+CATALYST: Apple smart glasses 2026, Quest 4, enterprise adoption
+
+================================================================================
+🌌 MEGA-THEME 11: SPACE INFRASTRUCTURE (Beyond Launch)
+================================================================================
+The shift: Space moves from "launch" to "build infrastructure"
+Direct-to-device satellite: Bypass cell towers entirely
+Lunar economy: NASA Artemis contracts accelerating
+
+"Space is becoming infrastructure, not exploration"
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ SPACE INFRASTRUCTURE                                                        │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ LAUNCH + VERTICAL INTEGRATION                                               │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ RKLB - Rocket Lab      - 21/21 success 2025, Neutron 2026, satellites too   │
+│                                                                             │
+│ DIRECT-TO-DEVICE (Game changer)                                             │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ ASTS - AST SpaceMobile - 45-60 satellites by EOY 2026, Verizon deal         │
+│ GSAT - Globalstar      - Apple partnership for satellite messaging          │
+│                                                                             │
+│ EARTH OBSERVATION / ISR                                                     │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ BKSY - BlackSky        - Gen-3 satellites 2026, Spectra AI                  │
+│ PL   - Planet Labs     - Daily Earth imaging, Pelican high-res              │
+│ SPIR - Spire Global    - Weather/maritime data, $151B MDA contract          │
+│                                                                             │
+│ SPACE MANUFACTURING                                                         │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ RDW  - Redwire         - Satellite buses, RF antenna, $6.9B pipeline        │
+│ SIDU - Sidus Space     - Small satellites, NASA SBIR                        │
+│                                                                             │
+│ LUNAR ECONOMY                                                               │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ LUNR - Intuitive Machines- NASA LTV frontrunner, $1B backlog                │
+│                                                                             │
+│ LEGACY SATCOM                                                               │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ VSAT - Viasat          - ViaSat-3 1Tbps, Inmarsat integration               │
+│ IRDM - Iridium         - STL service, LEO constellation                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+THE INSIGHT: ASTS could be massive if direct-to-device works at scale
+CATALYST: AST constellation deployment, Rocket Lab Neutron launch
+
+================================================================================
+📊 FIDELITY MISSION CONTROL - WATCHLIST STRUCTURE
+================================================================================
+
+For your Fidelity Active Trader Pro setup:
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ WATCHLIST NAME          │ TICKERS                                           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ AGENTIC_AI              │ CRM NOW PATH ZM CRWD PANW                         │
+│ AI_INFRA_COOLING        │ VRT MOD NVT ETN GEV PWR STRL                      │
+│ AI_INFRA_NETWORK        │ ANET ALAB CRDO FN LITE                            │
+│ CUSTOM_SILICON          │ AVGO MRVL ARM TSM QCOM CEVA                       │
+│ AI_BIOTECH              │ RXRX ABCL SDGR TWST ABSI                          │
+│ NEUROMORPHIC            │ BRCHF INTC IBM MU                                 │
+│ NUCLEAR_AI              │ SMR OKLO TLN CEG CCJ UEC DNN LEU                  │
+│ HUMANOID_ROBOTS         │ TSLA TER ROK SYM ISRG                             │
+│ QUANTUM_2026            │ IONQ RGTI QBTS SEALSQ                             │
+│ DEFENSE_SOFTWARE        │ RCAT KTOS BBAI BKSY RDW                           │
+│ SPATIAL_COMPUTING       │ META AAPL QCOM U KOPN                             │
+│ SPACE_INFRA             │ RKLB ASTS LUNR BKSY PL                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ TOP_EMERGING_2026       │ VRT RCAT SMR IONQ ASTS RXRX TER BBAI              │
+│ MOONSHOTS               │ IONQ RGTI SEALSQ SMR OKLO ASTS LUNR ABSI          │
+│ QUALITY_INFRASTRUCTURE  │ VRT ETN ANET CCJ TER ISRG AVGO                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+🎯 TOP 25 HIGH CONVICTION - THE EMERGING WATCHLIST
+================================================================================
+
+These are companies in EMERGING sectors that haven't fully run yet:
+
+┌────┬────────┬─────────────────────────────────┬────────────────────────────┐
+│ #  │ TICKER │ THEME                           │ WHY NOW                    │
+├────┼────────┼─────────────────────────────────┼────────────────────────────┤
+│ 1  │ VRT    │ AI Infrastructure (Cooling)     │ $9.5B backlog, NVIDIA part │
+│ 2  │ RCAT   │ Defense Drones                  │ Army contract, hasn't run  │
+│ 3  │ SMR    │ Nuclear SMR                     │ -63% from high, ENTRA1     │
+│ 4  │ IONQ   │ Quantum Computing               │ 256-qubit 2026             │
+│ 5  │ MRVL   │ Custom Silicon                  │ Amazon/Microsoft chips     │
+│ 6  │ ASTS   │ Space Direct-to-Device          │ 45-60 sats by EOY 2026     │
+│ 7  │ TER    │ Robotics Pure-Play              │ Universal Robots, safe bet │
+│ 8  │ RXRX   │ AI Drug Discovery               │ CEO transition, platform   │
+│ 9  │ BBAI   │ Defense AI Software             │ $250M contract, breaking   │
+│ 10 │ UEC    │ Uranium Production              │ ISR ramp, US production    │
+│ 11 │ CRDO   │ AI Interconnects                │ xAI Colossus uses Credo    │
+│ 12 │ TLN    │ Nuclear Utility                 │ Amazon deal, 100%+ growth  │
+│ 13 │ KTOS   │ Defense Drones                  │ CCA decision coming        │
+│ 14 │ LUNR   │ Lunar Infrastructure            │ NASA LTV, $1B backlog      │
+│ 15 │ SEALSQ │ Post-Quantum Security           │ NSA mandate coming         │
+│ 16 │ ALAB   │ AI Connectivity                 │ Morgan Stanley top pick    │
+│ 17 │ MOD    │ Data Center Cooling             │ Hyperscale wins            │
+│ 18 │ PATH   │ Agentic AI Automation           │ Test Cloud, Agent Builder  │
+│ 19 │ DNN    │ Uranium (Cheap)                 │ Wheeler River, vs Cameco   │
+│ 20 │ TWST   │ Synthetic Biology               │ DNA platform, diversified  │
+│ 21 │ RGTI   │ Quantum (Cheaper)               │ 150+ qubits, lower price   │
+│ 22 │ OKLO   │ Nuclear SMR (Altman)            │ Sam Altman backing         │
+│ 23 │ ABCL   │ AI Antibody Discovery           │ Phase 1 trials, platform   │
+│ 24 │ RDW    │ Space Manufacturing             │ $6.9B pipeline             │
+│ 25 │ BKSY   │ Defense + Space ISR             │ Spectra AI, dual exposure  │
+└────┴────────┴─────────────────────────────────┴────────────────────────────┘
+
+================================================================================
+⚠️ WHAT TO AVOID - ALREADY RAN / TOO EXPENSIVE
+================================================================================
+
+│ PLTR  │ 368% in 12 months, 208x forward PE                                  │
+│ AVAV  │ $12B market cap, BlueHalo done                                      │
+│ NVDA  │ Great company but $3.5T, not "emerging"                             │
+│ CEG   │ $80B, Meta deal priced in                                           │
+│ TSLA  │ If buying for Optimus, fine. But $1T+ already.                      │
+
+================================================================================
+📅 KEY CATALYST CALENDAR 2026
+================================================================================
+
+Q1 2026:
+- Tesla Optimus V3 prototype reveal
+- NuScale ENTRA1 decisions
+- Viridian TED Phase 3 readout
+- Infleqtion/Horizon SPAC completions
+- NexGen federal approval hearing
+- Recursion CEO transition (Jan 1)
+
+Q2 2026:
+- Revolution Medicines pancreatic data
+- UroGen permanent billing code
+- Apple smart glasses announcement?
+- Rocket Lab Neutron commercial launch
+
+H2 2026:
+- Air Force CCA decision (KTOS critical)
+- Tesla Optimus production ramp
+- IonQ 256-qubit system
+- AST 45-60 satellites deployed
+- NSA CNSA 2.0 quantum-safe mandate
+
+================================================================================
+🧭 THE THESIS: WHERE TO FOCUS
+================================================================================
+
+HIGHEST CONVICTION EMERGING THEMES (Multiple companies, not yet run):
+1. AI Infrastructure Cooling (VRT, MOD, NVT)
+2. Custom Silicon Enablers (MRVL, AVGO, ARM)
+3. Nuclear/SMR + Uranium (SMR, OKLO, UEC, DNN)
+4. Software-Defined Defense (RCAT, KTOS, BBAI)
+5. Quantum + Post-Quantum (IONQ, RGTI, SEALSQ)
+
+EMERGING BUT EARLIER STAGE:
+6. Neuromorphic Computing (BRCHF - pure play, but risky)
+7. AI + Biology (RXRX, ABCL, TWST)
+8. Agentic AI Software (PATH, NOW, CRM)
+9. Space Infrastructure (ASTS, LUNR, RKLB)
+10. Spatial Computing (QCOM as enabler)
+
+================================================================================
+FINAL THOUGHT
+================================================================================
+
+The world in mid-2026 will run on:
+- AI agents doing work autonomously
+- Liquid-cooled data centers powered by nuclear
+- Custom silicon replacing Nvidia for hyperscalers
+- Robots starting to enter production
+- Quantum computers hitting real commercial applications
+- Software-defined defense winning contracts
+
+Your edge: You have unlimited time to monitor these themes.
+Your mission: Position in the NEXT wave, not the wave that already broke.
+
+This is your father's wisdom manifested: Master the emerging themes
+before the crowd catches on.
+
+================================================================================

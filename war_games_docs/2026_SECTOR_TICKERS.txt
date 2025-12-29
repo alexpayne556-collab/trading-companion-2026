@@ -1,0 +1,655 @@
+================================================================================
+2026 TRANSFORMATIONAL SECTORS - FIDELITY WATCHLIST SETUP
+================================================================================
+One ticker per line. Copy each section into a separate watchlist.
+
+================================================================================
+SECTOR 1: AUTONOMOUS INTELLIGENCE
+================================================================================
+CRM
+NOW
+MSFT
+GOOGL
+META
+PATH
+ZM
+ADBE
+ADP
+AI
+PLTR
+SNOW
+VEEV
+DOCS
+Z
+
+================================================================================
+SECTOR 2: PHYSICAL AI (ROBOTICS)
+================================================================================
+TSLA
+NVDA
+TER
+ROK
+ABB
+FANUY
+IRBT
+SYM
+ZBRA
+GXO
+ISRG
+SYK
+MDT
+DE
+AGCO
+CNHI
+RTCHY
+
+================================================================================
+SECTOR 3: QUANTUM TECHNOLOGIES
+================================================================================
+IONQ
+RGTI
+QBTS
+QUBT
+SEALSQ
+ARQQ
+GOOGL
+IBM
+MSFT
+COHR
+NOVT
+
+================================================================================
+SECTOR 4: COMPUTE INFRASTRUCTURE
+================================================================================
+--- Custom Silicon ---
+AVGO
+MRVL
+ARM
+CDNS
+SNPS
+TSM
+ASML
+AMKR
+CAMT
+LRCX
+AMAT
+
+--- Data Center Cooling ---
+VRT
+MOD
+NVT
+FIX
+
+--- Power Infrastructure ---
+ETN
+GEV
+PWR
+STRL
+
+--- Networking ---
+ANET
+ALAB
+CRDO
+FN
+LITE
+
+--- Edge AI ---
+QCOM
+CEVA
+AIP
+SYNA
+
+--- Neuromorphic ---
+BRCHF
+INTC
+IBM
+
+--- Data Center REITs ---
+DLR
+EQIX
+AMT
+
+================================================================================
+SECTOR 5: SYNTHETIC BIOLOGY / TECHBIO
+================================================================================
+--- AI Drug Discovery ---
+RXRX
+ABCL
+SDGR
+RLAY
+EXAI
+
+--- Synthetic Biology ---
+TWST
+DNA
+ILMN
+A
+
+--- Protein Engineering ---
+ABSI
+ENTA
+
+--- Genomics ---
+WGS
+PACB
+NTRA
+GH
+EXAS
+
+--- Gene Editing ---
+CRSP
+NTLA
+EDIT
+BEAM
+VERV
+
+--- Cell/Gene Therapy ---
+LEGN
+FATE
+
+================================================================================
+SECTOR 6: ENERGY TRANSFORMATION
+================================================================================
+--- SMRs ---
+SMR
+OKLO
+BWXT
+
+--- Nuclear Utilities ---
+CEG
+TLN
+VST
+D
+NEE
+
+--- Uranium ---
+CCJ
+UEC
+UUUU
+DNN
+NXE
+LEU
+LTBR
+
+--- Grid Modernization ---
+GEV
+ETN
+PWR
+EMR
+
+--- Energy Storage ---
+ENPH
+SEDG
+STEM
+AES
+
+================================================================================
+SECTOR 7: SPACE ECONOMY
+================================================================================
+--- Launch ---
+RKLB
+
+--- Direct-to-Device ---
+ASTS
+GSAT
+
+--- Satellite Comms ---
+VSAT
+IRDM
+
+--- Earth Observation ---
+BKSY
+PL
+SPIR
+
+--- Space Manufacturing ---
+RDW
+SIDU
+MNTS
+
+--- Lunar Economy ---
+LUNR
+
+================================================================================
+SECTOR 8: DEFENSE TECHNOLOGY
+================================================================================
+--- Autonomous Drones ---
+RCAT
+KTOS
+AVAV
+ONDS
+UMAC
+DPRO
+
+--- Defense AI Software ---
+PLTR
+BBAI
+AI
+BKSY
+
+--- Counter-UAS ---
+DRSHF
+LHX
+
+--- Space Defense ---
+RDW
+RKLB
+LUNR
+
+--- Traditional Primes ---
+LMT
+NOC
+GD
+RTX
+
+================================================================================
+SECTOR 9: SPATIAL COMPUTING
+================================================================================
+--- Platforms ---
+META
+AAPL
+MSFT
+GOOGL
+SONY
+
+--- XR Chips ---
+QCOM
+NVDA
+
+--- Optics/Displays ---
+KOPN
+HIMX
+VUZI
+OLED
+
+--- Software/Content ---
+U
+RBLX
+MTTR
+
+================================================================================
+SECTOR 10: ADVANCED CONNECTIVITY
+================================================================================
+--- 5G/6G Infrastructure ---
+ERIC
+NOK
+QCOM
+MRVL
+
+--- Telecom Infrastructure ---
+AMT
+CCI
+SBAC
+
+--- Satellite Connectivity ---
+ASTS
+GSAT
+IRDM
+
+--- Optical Networking ---
+LITE
+COHR
+INFN
+
+================================================================================
+SECTOR 11: DIGITAL TRUST & CYBERSECURITY
+================================================================================
+--- Platform Leaders ---
+CRWD
+PANW
+ZS
+FTNT
+
+--- Zero Trust/Identity ---
+OKTA
+CYBR
+NET
+
+--- AI-Native Security ---
+S
+TENB
+QLYS
+
+--- Post-Quantum ---
+SEALSQ
+ARQQ
+
+--- Data Security ---
+VRNS
+RPD
+
+================================================================================
+SECTOR 12: ADVANCED MANUFACTURING
+================================================================================
+--- 3D Printing ---
+DDD
+SSYS
+NNDM
+PRLB
+XMTR
+VLD
+MTLS
+
+--- Advanced Materials ---
+ATI
+HXL
+MP
+
+--- Semiconductor Packaging ---
+AMKR
+CAMT
+ONTO
+
+--- Industrial Automation ---
+ROK
+EMR
+HON
+KEYS
+
+================================================================================
+CURATED LISTS
+================================================================================
+
+--- TOP 30 EMERGING (High Conviction) ---
+VRT
+MRVL
+RCAT
+SMR
+IONQ
+ASTS
+TER
+RXRX
+BBAI
+UEC
+PATH
+CRDO
+TLN
+KTOS
+LUNR
+SEALSQ
+ALAB
+MOD
+OKLO
+RGTI
+TWST
+DNN
+ABCL
+RDW
+BKSY
+NOW
+LEU
+ABSI
+RKLB
+QBTS
+
+--- MOONSHOTS (High Risk/Reward) ---
+IONQ
+RGTI
+QBTS
+SEALSQ
+SMR
+OKLO
+ASTS
+LUNR
+ABSI
+BRCHF
+RCAT
+QUBT
+DNN
+RXRX
+
+--- QUALITY INFRASTRUCTURE ---
+VRT
+ETN
+GEV
+ANET
+CCJ
+TER
+ISRG
+AVGO
+MRVL
+TSM
+CRWD
+PANW
+
+--- PICKS & SHOVELS ---
+VRT
+AVGO
+MRVL
+TSM
+QCOM
+ASML
+TER
+ANET
+CCJ
+ETN
+
+--- ROBOTICS FULL STACK ---
+TSLA
+NVDA
+TER
+ROK
+ABB
+SYM
+ZBRA
+ISRG
+SYK
+DE
+
+--- NUCLEAR FULL STACK ---
+SMR
+OKLO
+CEG
+TLN
+CCJ
+UEC
+UUUU
+DNN
+NXE
+LEU
+BWXT
+
+--- AI INFRASTRUCTURE ---
+VRT
+MOD
+NVT
+ETN
+GEV
+PWR
+ANET
+ALAB
+CRDO
+LITE
+AVGO
+MRVL
+
+--- DEFENSE DISRUPTION ---
+RCAT
+KTOS
+BBAI
+BKSY
+RDW
+ONDS
+PLTR
+LHX
+
+================================================================================
+ALPHABETICAL MASTER LIST (All Unique Tickers)
+================================================================================
+A
+AAPL
+ABCL
+ABB
+ABSI
+ADBE
+ADP
+AGCO
+AI
+AIP
+ALAB
+AMAT
+AMKR
+AMT
+ANET
+ARQQ
+ARM
+ASML
+ASTS
+ATI
+AVAV
+AVGO
+BBAI
+BEAM
+BKSY
+BRCHF
+BWXT
+CAMT
+CCJ
+CCI
+CDNS
+CEVA
+CNHI
+COHR
+CRDO
+CRSP
+CRWD
+CYBR
+D
+DDD
+DE
+DLR
+DNN
+DOCS
+DPRO
+DRSHF
+EDIT
+EMR
+ENPH
+ENTA
+EQIX
+ERIC
+ETN
+EXAI
+EXAS
+FANUY
+FATE
+FIX
+FN
+FTNT
+GD
+GEV
+GH
+GOOGL
+GSAT
+GXO
+HIMX
+HON
+HXL
+IBM
+ILMN
+INFN
+INTC
+IONQ
+IRBT
+IRDM
+ISRG
+KEYS
+KOPN
+KTOS
+LRCX
+LEU
+LEGN
+LHX
+LITE
+LMT
+LRCX
+LTBR
+LUNR
+MDT
+META
+MNTS
+MOD
+MP
+MRVL
+MSFT
+MTLS
+MTTR
+NEE
+NET
+NNDM
+NOC
+NOK
+NOVT
+NTRA
+NVDA
+NVT
+NXE
+OKLO
+OKTA
+OLED
+ONDS
+ONTO
+PACB
+PANW
+PATH
+PL
+PLTR
+PRLB
+PWR
+QBTS
+QCOM
+QLYS
+QUBT
+RBLX
+RCAT
+RDW
+RGTI
+RKLB
+RLAY
+ROK
+RPD
+RTX
+RTCHY
+RXRX
+S
+SBAC
+SDGR
+SEALSQ
+SEDG
+SIDU
+SMR
+SNOW
+SNPS
+SONY
+SPIR
+SSYS
+STEM
+STRL
+SYK
+SYM
+SYNA
+TENB
+TER
+TLN
+TSM
+TWST
+U
+UEC
+UMAC
+UUUU
+VEEV
+VERV
+VLD
+VRNS
+VRT
+VSAT
+VST
+VUZI
+WGS
+XMTR
+Z
+ZBRA
+ZM
+ZS
+
+================================================================================

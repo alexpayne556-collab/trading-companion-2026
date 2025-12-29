@@ -1,0 +1,111 @@
+================================================================================
+FIDELITY WATCHLIST SETUP - ONE TICKER PER LINE
+================================================================================
+
+------- WATCHLIST: DEFENSE_DISRUPT -------
+RCAT
+KTOS
+BBAI
+BKSY
+RDW
+LMT
+RTX
+
+------- WATCHLIST: NUCLEAR_AI -------
+SMR
+OKLO
+TLN
+LEU
+UEC
+UUUU
+DNN
+NXE
+CCJ
+CEG
+
+------- WATCHLIST: QUANTUM_2026 -------
+IONQ
+RGTI
+QBTS
+SEALSQ
+ARQQ
+
+------- WATCHLIST: SPACE_INFRA -------
+RKLB
+LUNR
+ASTS
+BKSY
+PL
+SPIR
+RDW
+
+------- WATCHLIST: ROBOTS_AUTO -------
+TSLA
+NVDA
+TER
+SYM
+ROK
+ZBRA
+
+------- WATCHLIST: BIOTECH_CATALYST -------
+RVMD
+KURA
+VRDN
+VERA
+URGN
+
+------- WATCHLIST: CYBER_PLATFORM -------
+CRWD
+ZS
+PANW
+S
+OKTA
+
+------- WATCHLIST: MOONSHOTS (high risk/reward) -------
+RCAT
+OKLO
+IONQ
+RGTI
+QBTS
+SEALSQ
+VRDN
+DNN
+LUNR
+
+------- WATCHLIST: QUALITY_GROWTH (safer) -------
+CCJ
+CEG
+ASML
+TSM
+CRWD
+PANW
+ISRG
+ROK
+TER
+
+------- TOP 15 HIGH CONVICTION -------
+RCAT
+SMR
+KTOS
+BBAI
+IONQ
+UEC
+ASTS
+TLN
+BKSY
+RVMD
+RGTI
+SEALSQ
+LUNR
+KURA
+DNN
+
+------- COMPETITORS TO WATCH -------
+LMT
+RTX
+NOC
+GD
+
+------- ALREADY RAN / AVOID CHASING -------
+PLTR
+AVAV

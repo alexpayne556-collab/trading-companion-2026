@@ -1,0 +1,262 @@
+================================================================================
+🎯 2026 MISSION CONTROL - STRATEGIC WATCHLIST SETUP
+================================================================================
+Built for Fidelity Active Trader Pro
+Focus: Emerging themes, competitive dynamics, companies that HAVEN'T fully run
+
+================================================================================
+THEME 1: DEFENSE TECH DISRUPTION
+================================================================================
+WHY NOW: DoD pivoting away from primes to Silicon Valley-style contractors
+         Army FUZE program: $750M/year for emerging tech
+         Ukraine proved software-defined weapons work
+         Blue UAS mandate forcing domestic drone procurement
+
+🔥 THE DISRUPTORS (public plays on private momentum)
+-------------------------------------------------
+RCAT    - Red Cat Holdings - Army SRR contract, Palantir partner, Blue UAS play
+KTOS    - Kratos Defense - CCA contract pending, attritable drones
+BBAI    - BigBear.ai - $250M border/biometrics, Ask Sage acquisition
+BKSY    - BlackSky - Real-time ISR, Spectra AI platform, $2.3B contracts
+RDW     - Redwire - Space Force satellite buses, $6.9B pipeline
+
+⚔️ VS THE INCUMBENTS (monitor for contract losses)
+-------------------------------------------------
+LMT     - Lockheed Martin - Losing share to startups
+RTX     - RTX/Raytheon - Traditional prime under pressure
+NOC     - Northrop Grumman - CCA competitor to Kratos
+GD      - General Dynamics - Software modernization pressure
+
+🎯 THE ALREADY-RAN (monitor but don't chase)
+-------------------------------------------------
+PLTR    - Palantir - $10B Army deal locked, 208x forward earnings
+AVAV    - AeroVironment - Already $12B, BlueHalo deal done
+
+📡 PRIVATE IPO WATCH (for when they go public)
+-------------------------------------------------
+Anduril - $14B valuation, Arsenal-1 factory, Fury drone
+Shield AI - Hivemind autonomy, V-BAT, Boeing partner
+Epirus - $250M Series D, directed energy C-UAS
+
+================================================================================
+THEME 2: AI POWER CRISIS
+================================================================================
+WHY NOW: AI data centers need 4-6GW NEW power by 2028
+         Grid can't handle it - nuclear is only answer
+         Bipartisan support for nuclear renaissance
+         Hyperscalers (Meta, Amazon, Google, Microsoft) signing PPAs
+
+⚡ NUCLEAR PURE PLAYS (the emerging opportunity)
+-------------------------------------------------
+SMR     - NuScale Power - First NRC-approved SMR, ENTRA1 pending
+OKLO    - Oklo Inc - Sam Altman backing, Aurora microreactor
+TLN     - Talen Energy - 1,920MW Amazon deal, 100%+ earnings growth
+LEU     - Centrus Energy - ONLY US enricher, HALEU for SMRs
+
+⛏️ URANIUM SUPPLY CHAIN (fuel the reactors)
+-------------------------------------------------
+UEC     - Uranium Energy - Largest US resource, ISR ramp
+UUUU    - Energy Fuels - Low-cost production + REE diversification
+DNN     - Denison Mines - Wheeler River ISL tech
+NXE     - NexGen Energy - Arrow deposit, federal approval Q1 2026
+
+🏭 ESTABLISHED NUCLEAR (safer but slower)
+-------------------------------------------------
+CCJ     - Cameco - Vertically integrated, $80B Westinghouse deal
+CEG     - Constellation - Largest US fleet, Three Mile Island restart
+D       - Dominion - SMR exploration, Amazon MOU
+
+================================================================================
+THEME 3: QUANTUM COMMERCIALIZATION
+================================================================================
+WHY NOW: 2026 is "prove it" year - lab to enterprise
+         NSA CNSA 2.0 mandate coming - quantum-safe security required
+         SPACs completing Q1 2026 (Infleqtion, Horizon Quantum)
+         Enterprise pilots going production
+
+🔮 QUANTUM HARDWARE (high risk/high reward)
+-------------------------------------------------
+IONQ    - IonQ - Trapped ion, 256-qubit target 2026, room temp
+RGTI    - Rigetti - Superconducting, 150+ qubits late 2026
+QBTS    - D-Wave - Annealing leader, ACTUAL customers, Italy hub
+
+🔐 POST-QUANTUM SECURITY (NSA mandate beneficiaries)
+-------------------------------------------------
+SEALSQ  - SEALSQ Corp - QVault TPM 2026, hardware root of trust
+ARQQ    - Arqit Quantum - Quantum-safe keys, cloud pivot
+
+⌛ SPAC COMPLETIONS Q1 2026
+-------------------------------------------------
+CCCX → Infleqtion - Quantum hardware/sensing
+DMYY → Horizon Quantum - Quantum software
+
+================================================================================
+THEME 4: SPACE INFRASTRUCTURE BUILDOUT
+================================================================================
+WHY NOW: Space Force PWSA Tranche 3 awards coming
+         Beyond launch → actual space economy infrastructure
+         Direct-to-device satellite (bypass cell towers)
+         Lunar economy starting (NASA Artemis)
+
+🚀 LAUNCH + BEYOND (vertical integration)
+-------------------------------------------------
+RKLB    - Rocket Lab - 21/21 success 2025, Neutron 2026, satellites
+LUNR    - Intuitive Machines - Lunar lander, NASA LTV frontrunner
+
+📡 SATELLITE CONSTELLATIONS (the network builders)
+-------------------------------------------------
+ASTS    - AST SpaceMobile - Direct-to-device, 45-60 sats by EOY 2026
+BKSY    - BlackSky - Gen-3 satellites 2026, Spectra AI
+PL      - Planet Labs - Daily Earth imaging, Pelican high-res
+SPIR    - Spire Global - Weather/maritime, $151B MDA contract
+
+🛠️ SPACE MANUFACTURING (picks & shovels)
+-------------------------------------------------
+RDW     - Redwire - Satellite buses, RF antenna, $6.9B pipeline
+SIDU    - Sidus Space - Small sats, NASA SBIR awards
+
+📶 LEGACY SATCOM (monitor for disruption)
+-------------------------------------------------
+VSAT    - Viasat - ViaSat-3, Inmarsat integration
+IRDM    - Iridium - Stable but slow growth
+GSAT    - Globalstar - Apple partnership
+
+================================================================================
+THEME 5: HUMANOID ROBOTS EMERGE
+================================================================================
+WHY NOW: Labor shortage crisis accelerating
+         Tesla Optimus V3 Q1 2026, production EOY 2026
+         Figure AI at $39B valuation
+         Warehouse automation proven, humanoids next
+
+🤖 PUBLIC PLAYS
+-------------------------------------------------
+TSLA    - Tesla - Optimus humanoid, vertically integrated AI/FSD
+NVDA    - NVIDIA - GR00T platform, Isaac SDK, Omniverse
+TER     - Teradyne - Universal Robots cobots, MiR AMRs
+SYM     - Symbotic - Walmart warehouse AI, path to humanoid
+
+🏭 INDUSTRIAL AUTOMATION (current wave)
+-------------------------------------------------
+ROK     - Rockwell Automation - Otto AMR, NVIDIA partner
+ZBRA    - Zebra Technologies - Fetch Robotics, RFID+bots
+FANUY   - Fanuc ADR - Japanese leader, global scale
+
+🚀 PRIVATE (IPO Watch)
+-------------------------------------------------
+Figure AI - $39B, Figure 03, 12K units/year capacity
+Apptronik - Apollo industrial humanoid
+1X Technologies - NEO home robot, OpenAI backed
+
+================================================================================
+THEME 6: BIOTECH M&A WAVE
+================================================================================
+WHY NOW: Big pharma needs pipelines (patent cliffs)
+         FDA approval pace normalizing
+         Rate cuts helping valuations
+         GLP-1 next-gen coming (oral pills)
+
+🎯 M&A TARGETS (Phase 3 catalysts 2026)
+-------------------------------------------------
+RVMD    - Revolution Medicines - RAS inhibitor, pancreatic cancer
+KURA    - Kura Oncology - Ziftomenib AML, big pharma wants hematology
+VRDN    - Viridian Therapeutics - TED Phase 3 Q1-Q2 2026
+VERA    - Vera Therapeutics - IgA nephropathy Phase 3
+
+⚡ CATALYST TRADES (binary events)
+-------------------------------------------------
+URGN    - UroGen Pharma - Billing code Q1 2026
+TSHA    - Taysha Gene Therapies - CNS gene therapy
+ARQT    - Arcutis - Dermatology expansion
+
+================================================================================
+THEME 7: CYBERSECURITY CONSOLIDATION
+================================================================================
+WHY NOW: Zero trust now mandatory for enterprise
+         AI security emerging as new category
+         Post-quantum mandates coming
+         Platform consolidation (one vendor vs many)
+
+🏆 PLATFORM WINNERS
+-------------------------------------------------
+CRWD    - CrowdStrike - Falcon Flex, 29 modules, AI threat
+ZS      - Zscaler - $500M AI Security ARR target
+PANW    - Palo Alto Networks - Platform consolidation leader
+
+🎯 M&A TARGETS
+-------------------------------------------------
+S       - SentinelOne - AI-native XDR, Purple AI
+OKTA    - Okta - Zero trust identity
+
+================================================================================
+FIDELITY WATCHLIST SETUP - RECOMMENDED STRUCTURE
+================================================================================
+
+📁 WATCHLIST 1: "DEFENSE_DISRUPT"
+RCAT KTOS BBAI BKSY RDW LMT RTX
+
+📁 WATCHLIST 2: "NUCLEAR_AI"
+SMR OKLO TLN LEU UEC UUUU DNN NXE CCJ CEG
+
+📁 WATCHLIST 3: "QUANTUM_2026"
+IONQ RGTI QBTS SEALSQ ARQQ
+
+📁 WATCHLIST 4: "SPACE_INFRA"
+RKLB LUNR ASTS BKSY PL SPIR RDW
+
+📁 WATCHLIST 5: "ROBOTS_AUTO"
+TSLA NVDA TER SYM ROK ZBRA
+
+📁 WATCHLIST 6: "BIOTECH_CATALYST"
+RVMD KURA VRDN VERA URGN
+
+📁 WATCHLIST 7: "CYBER_PLATFORM"
+CRWD ZS PANW S OKTA
+
+📁 WATCHLIST 8: "MOONSHOTS"
+RCAT OKLO IONQ RGTI QBTS SEALSQ VRDN
+
+📁 WATCHLIST 9: "QUALITY_GROWTH"
+CCJ CEG ASML TSM CRWD PANW ISRG ROK
+
+================================================================================
+TOP 15 HIGH CONVICTION - NOT YET FULLY RUN
+================================================================================
+1.  RCAT  - Red Cat       - Army contract + Blue UAS, hasn't run like AVAV
+2.  SMR   - NuScale       - Pulled back 63%, ENTRA1 catalyst coming
+3.  KTOS  - Kratos        - CCA decision 2026, consolidating
+4.  BBAI  - BigBear.ai    - $250M contract, breaking out
+5.  IONQ  - IonQ          - 256-qubit 2026, quantum leader
+6.  UEC   - Uranium Energy- ISR ramp starting, US production
+7.  ASTS  - AST SpaceMobile- 45-60 sats 2026, direct-to-device
+8.  TLN   - Talen Energy  - Amazon deal, 100%+ earnings growth
+9.  BKSY  - BlackSky      - $2.3B contracts, Spectra AI
+10. RVMD  - Revolution Med- RAS pancreatic cancer, M&A target
+11. RGTI  - Rigetti       - 150+ qubits 2026, cheaper than IONQ
+12. SEALSQ- SEALSQ Corp   - Post-quantum hardware, NSA mandate
+13. LUNR  - Intuitive     - Lunar lander, NASA LTV
+14. KURA  - Kura Oncology - Ziftomenib AML, big pharma wants it
+15. DNN   - Denison Mines - Wheeler River, cheap vs CCJ
+
+================================================================================
+WHAT TO AVOID / ALREADY RAN
+================================================================================
+PLTR - 368% in 12 months, 208x forward PE, priced for perfection
+AVAV - $12B market cap, BlueHalo done, less upside
+NVDA - Great company but $3.5T, not "emerging"
+TSM  - Quality but $900B, use for stability not alpha
+CEG  - $80B, Meta deal priced in, use for defense
+
+================================================================================
+KEY DATES TO MONITOR
+================================================================================
+Q1 2026: NuScale ENTRA1 decisions
+Q1 2026: Tesla Optimus V3 prototype
+Q1 2026: Viridian TED Phase 3 readout
+Q1 2026: Infleqtion/Horizon SPAC closes
+Q1 2026: NexGen federal approval hearing
+Q2 2026: Revolution Medicines pancreatic data
+2026:    Air Force CCA decision (KTOS critical)
+2026:    NSA CNSA 2.0 post-quantum mandate
+2026:    IonQ 256-qubit system
+Late 2026: Tesla Optimus production ramp

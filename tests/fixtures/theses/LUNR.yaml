@@ -1,0 +1,35 @@
+ticker: LUNR
+name: Intuitive Machines
+sector: aerospace
+thesis: "Successful lunar lander + Space Force contracts = 10x growth"
+reasoning: "NASA track record solid, Verizon partnership shows real revenue intent"
+
+catalysts:
+  - event: "Lunar landing Jan 8 2026"
+    probability: 0.8
+    timeline: "immediate"
+    impact: "validates tech + attracts partners"
+  - event: "NASA partnership announcement"
+    probability: 0.7
+    timeline: "30-60 days post-landing"
+    impact: "revenue visible"
+
+invalidation:
+  - "Launch failure or major malfunction"
+  - "Competitor wins exclusive Space Force deal"
+  - "Congress defunds lunar program"
+
+target_price: 15.0
+timeframe_months: 12
+conviction: HIGH
+confidence_score: 8
+
+portfolio_weight: 0.05
+entry_price: 5.2
+entry_date: "2025-12-15"
+
+related_tickers:
+  - RKLB
+  - SPCE
+
+red_team_notes: "What if landing delays 6+ months? Does conviction hold?"
