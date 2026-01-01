@@ -1,0 +1,6 @@
+AR
+EQT
+RRC
+SWN
+CHK
+LNG
