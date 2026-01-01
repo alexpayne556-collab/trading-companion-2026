@@ -27,13 +27,14 @@ from bs4 import BeautifulSoup
 import time
 
 class Form4Validator:
-    def __init__(self):
+    def __init__(self, debug=False):
         self.base_url = "https://www.sec.gov"
         self.headers = {
             'User-Agent': 'Trading Companion research@example.com',
             'Accept-Encoding': 'gzip, deflate',
             'Host': 'www.sec.gov'
         }
+        self.debug = debug
         
     def get_cik(self, ticker):
         """Get CIK number for ticker from SEC"""
@@ -121,78 +122,135 @@ class Form4Validator:
     def parse_form4_transactions(self, filing_url):
         """Parse Form 4 to extract transaction details"""
         try:
+            if self.debug:
+                print(f"\n🔍 DEBUG: Fetching {filing_url}")
+            
             response = requests.get(filing_url, headers=self.headers)
             response.raise_for_status()
             time.sleep(0.2)
             
             soup = BeautifulSoup(response.content, 'html.parser')
             
-            # Find the actual Form 4 XML document
+            # Find the actual Form 4 XML document - IMPROVED LOGIC
             xml_link = None
+            
+            # Strategy 1: Look for primary document or .xml files
             for link in soup.find_all('a'):
                 href = link.get('href', '')
-                if 'primary_doc.xml' in href.lower() or href.endswith('.xml'):
+                text = link.get_text().strip().lower()
+                
+                # Primary document is usually the Form 4
+                if 'primary' in text or 'form 4' in text.lower() or 'wf-form4' in href.lower():
+                    if '.xml' in href.lower() or '.htm' in href.lower():
+                        xml_link = self.base_url + href if not href.startswith('http') else href
+                        if self.debug:
+                            print(f"   Found primary doc: {xml_link}")
+                        break
+                        
+                # Fallback: any XML with 'form' in name
+                if 'form' in href.lower() and '.xml' in href.lower():
                     xml_link = self.base_url + href if not href.startswith('http') else href
+                    if self.debug:
+                        print(f"   Found form XML: {xml_link}")
                     break
             
+            # Strategy 2: Just grab first .xml or .htm file
             if not xml_link:
-                # Try to find first XML document
                 for link in soup.find_all('a'):
                     href = link.get('href', '')
-                    if '.xml' in href.lower():
+                    if href.endswith('.xml') or href.endswith('.htm'):
                         xml_link = self.base_url + href if not href.startswith('http') else href
+                        if self.debug:
+                            print(f"   Found XML/HTM: {xml_link}")
                         break
             
             if not xml_link:
+                if self.debug:
+                    print("   ❌ No XML link found in filing")
                 return []
             
-            # Get and parse the XML
+            # Get and parse the XML - IMPROVED PARSING
+            if self.debug:
+                print(f"   Fetching XML: {xml_link}")
+            
             xml_response = requests.get(xml_link, headers=self.headers)
             xml_response.raise_for_status()
             time.sleep(0.2)
             
-            xml_soup = BeautifulSoup(xml_response.content, 'xml')
+            # Try both XML and HTML parsers
+            xml_soup = None
+            try:
+                xml_soup = BeautifulSoup(xml_response.content, 'xml')
+            except:
+                xml_soup = BeautifulSoup(xml_response.content, 'html.parser')
+            
+            if not xml_soup:
+                if self.debug:
+                    print("   ❌ Could not parse XML")
+                return []
+            
+            if self.debug:
+                print(f"   Parsed XML, looking for transactions...")
             
             transactions = []
             
-            # Get reporting owner info
+            # Get reporting owner info - IMPROVED
             owner_name = "Unknown"
             owner_title = "Unknown"
             
-            reporting_owner = xml_soup.find('reportingOwner')
+            # Try multiple tag formats (SEC uses different versions)
+            reporting_owner = xml_soup.find('reportingOwner') or xml_soup.find('reportingowner')
             if reporting_owner:
-                name_tag = reporting_owner.find('rptOwnerName')
+                # Try different name tag formats
+                name_tag = (reporting_owner.find('rptOwnerName') or 
+                           reporting_owner.find('rptownername') or
+                           reporting_owner.find('name'))
                 if name_tag:
                     owner_name = name_tag.text.strip()
                     
-                title_tag = reporting_owner.find('officerTitle')
+                # Try different title formats
+                title_tag = (reporting_owner.find('officerTitle') or 
+                            reporting_owner.find('officertitle') or
+                            reporting_owner.find('relationship'))
                 if title_tag:
                     owner_title = title_tag.text.strip()
                 else:
                     # Check if director
-                    is_director = reporting_owner.find('isDirector')
+                    is_director = reporting_owner.find('isDirector') or reporting_owner.find('isdirector')
                     if is_director and is_director.text.strip() == '1':
                         owner_title = "Director"
             
-            # Parse non-derivative transactions
-            for transaction in xml_soup.find_all('nonDerivativeTransaction'):
-                trans_code = transaction.find('transactionCode')
-                trans_date = transaction.find('transactionDate')
-                trans_shares = transaction.find('transactionShares')
-                trans_price = transaction.find('transactionPricePerShare')
+            # Parse non-derivative transactions - IMPROVED
+            # Try multiple tag formats (case-insensitive)
+            non_deriv_trans = (xml_soup.find_all('nonDerivativeTransaction') or 
+                              xml_soup.find_all('nonderivativetransaction') or
+                              xml_soup.find_all('nonDerivativeTable'))
+            
+            for transaction in non_deriv_trans:
+                # Find transaction code - multiple formats
+                trans_code = (transaction.find('transactionCode') or 
+                             transaction.find('transactioncode'))
+                trans_date = (transaction.find('transactionDate') or 
+                             transaction.find('transactiondate'))
+                trans_shares = (transaction.find('transactionShares') or 
+                               transaction.find('transactionshares') or
+                               transaction.find('shares'))
+                trans_price = (transaction.find('transactionPricePerShare') or 
+                              transaction.find('transactionpricepershare') or
+                              transaction.find('price'))
                 
                 if trans_code and trans_date and trans_shares:
-                    code = trans_code.find('value')
+                    code = trans_code.find('value') or trans_code
                     code_text = code.text.strip() if code else "?"
                     
-                    shares = trans_shares.find('value')
-                    shares_num = float(shares.text.strip()) if shares else 0
+                    shares = trans_shares.find('value') or trans_shares
+                    shares_num = float(shares.text.strip()) if shares and shares.text else 0
                     
                     price = "N/A"
                     value = 0
                     if trans_price:
-                        price_val = trans_price.find('value')
-                        if price_val:
+                        price_val = trans_price.find('value') or trans_price
+                        if price_val and price_val.text:
                             try:
                                 price_num = float(price_val.text.strip())
                                 price = f"${price_num:.2f}"
@@ -200,43 +258,66 @@ class Form4Validator:
                             except:
                                 pass
                     
+                    date_val = trans_date.find('value') or trans_date
+                    date_text = date_val.text.strip() if date_val and date_val.text else "?"
+                    
                     transactions.append({
                         'name': owner_name,
                         'title': owner_title,
                         'code': code_text,
-                        'date': trans_date.find('value').text.strip() if trans_date.find('value') else "?",
-                        'shares': int(shares_num),
+                        'date': date_text,
+                        'shares': int(shares_num) if shares_num else 0,
                         'price': price,
                         'value': value
                     })
             
-            # Parse derivative transactions (options)
-            for transaction in xml_soup.find_all('derivativeTransaction'):
-                trans_code = transaction.find('transactionCode')
-                trans_date = transaction.find('transactionDate')
-                trans_shares = transaction.find('transactionShares')
+            # Parse derivative transactions (options) - IMPROVED
+            deriv_trans = (xml_soup.find_all('derivativeTransaction') or 
+                          xml_soup.find_all('derivativetransaction') or
+                          xml_soup.find_all('derivativeTable'))
+            
+            for transaction in deriv_trans:
+                trans_code = (transaction.find('transactionCode') or 
+                             transaction.find('transactioncode'))
+                trans_date = (transaction.find('transactionDate') or 
+                             transaction.find('transactiondate'))
+                trans_shares = (transaction.find('transactionShares') or 
+                               transaction.find('transactionshares') or
+                               transaction.find('shares'))
                 
                 if trans_code and trans_date and trans_shares:
-                    code = trans_code.find('value')
+                    code = trans_code.find('value') or trans_code
                     code_text = code.text.strip() if code else "?"
                     
-                    shares = trans_shares.find('value')
-                    shares_num = float(shares.text.strip()) if shares else 0
+                    shares = trans_shares.find('value') or trans_shares
+                    shares_num = float(shares.text.strip()) if shares and shares.text else 0
+                    
+                    date_val = trans_date.find('value') or trans_date
+                    date_text = date_val.text.strip() if date_val and date_val.text else "?"
                     
                     transactions.append({
                         'name': owner_name,
                         'title': owner_title,
                         'code': code_text,
-                        'date': trans_date.find('value').text.strip() if trans_date.find('value') else "?",
-                        'shares': int(shares_num),
+                        'date': date_text,
+                        'shares': int(shares_num) if shares_num else 0,
                         'price': "OPTION",
                         'value': 0
                     })
             
+            if self.debug and transactions:
+                print(f"   ✅ Found {len(transactions)} transaction(s)")
+            elif self.debug:
+                print(f"   ⚠️  No transactions found in this filing")
+            
+            return transactions
             return transactions
             
         except Exception as e:
+            # More detailed error for debugging
+            import traceback
             print(f"⚠️  Could not parse Form 4: {e}")
+            print(f"⚠️  Traceback: {traceback.format_exc()[:200]}")
             return []
     
     def validate_ticker(self, ticker, days_back=365):
@@ -403,10 +484,12 @@ def main():
     parser.add_argument('ticker', help='Stock ticker symbol')
     parser.add_argument('--recent', type=int, default=365, 
                        help='Days back to search (default: 365)')
+    parser.add_argument('--debug', action='store_true',
+                       help='Enable debug output')
     
     args = parser.parse_args()
     
-    validator = Form4Validator()
+    validator = Form4Validator(debug=args.debug)
     result = validator.validate_ticker(args.ticker, args.recent)
     
     if result:
