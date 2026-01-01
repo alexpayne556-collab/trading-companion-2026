@@ -18,6 +18,7 @@ Status: **OPERATIONAL** ✅
 | 5 | Backtest System (Notebook) | ✅ READY | - | 0ba8d8b |
 | 6 | ATP Watchlist Generator | ✅ READY | 16K | 2ed306c |
 | 7 | **Command Center** | ✅ READY | 15K | a015db6 |
+| 8 | **Volume Spike Detector** | ✅ READY | 13K | 5244f8c |
 
 ---
 
@@ -169,6 +170,21 @@ python3 command_center.py thesis SIDU
 
 # Get AI coordination prompts
 python3 command_center.py prompt fenrir_research
+```
+
+### Volume Analysis
+```bash
+# Scan watchlist for volume spikes
+python3 volume_detector.py
+
+# Deep dive single ticker
+python3 volume_detector.py --ticker SIDU
+
+# Only show 3x+ volume spikes
+python3 volume_detector.py --threshold 3
+
+# Continuous monitoring (every 30 minutes)
+python3 volume_detector.py --continuous 30
 ```
 
 ---
