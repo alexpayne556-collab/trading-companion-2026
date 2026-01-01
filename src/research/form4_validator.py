@@ -30,7 +30,7 @@ class Form4Validator:
     def __init__(self, debug=False):
         self.base_url = "https://www.sec.gov"
         self.headers = {
-            'User-Agent': 'Trading Companion research@example.com',
+            'User-Agent': 'Wolf Pack Trading Companion tyr@wolfpack.trading',
             'Accept-Encoding': 'gzip, deflate',
             'Host': 'www.sec.gov'
         }
@@ -131,37 +131,32 @@ class Form4Validator:
             
             soup = BeautifulSoup(response.content, 'html.parser')
             
-            # Find the actual Form 4 XML document - IMPROVED LOGIC
+            # Find the actual Form 4 XML document - PREFER RAW XML over XSLT
             xml_link = None
             
-            # Strategy 1: Look for primary document or .xml files
+            # Strategy 1: Look for raw form_4.xml (NOT the xslF345X05 version)
             for link in soup.find_all('a'):
                 href = link.get('href', '')
-                text = link.get_text().strip().lower()
                 
-                # Primary document is usually the Form 4
-                if 'primary' in text or 'form 4' in text.lower() or 'wf-form4' in href.lower():
-                    if '.xml' in href.lower() or '.htm' in href.lower():
-                        xml_link = self.base_url + href if not href.startswith('http') else href
-                        if self.debug:
-                            print(f"   Found primary doc: {xml_link}")
-                        break
-                        
-                # Fallback: any XML with 'form' in name
-                if 'form' in href.lower() and '.xml' in href.lower():
+                # Skip XSLT transformed versions
+                if 'xslF345X05' in href or 'xslF345X03' in href:
+                    continue
+                    
+                # Look for raw form_4.xml
+                if href.endswith('form_4.xml') or href.endswith('wf-form4.xml'):
                     xml_link = self.base_url + href if not href.startswith('http') else href
                     if self.debug:
-                        print(f"   Found form XML: {xml_link}")
+                        print(f"   Found raw XML: {xml_link}")
                     break
             
-            # Strategy 2: Just grab first .xml or .htm file
+            # Strategy 2: Look for any .xml file (not XSLT)
             if not xml_link:
                 for link in soup.find_all('a'):
                     href = link.get('href', '')
-                    if href.endswith('.xml') or href.endswith('.htm'):
+                    if href.endswith('.xml') and 'xsl' not in href.lower():
                         xml_link = self.base_url + href if not href.startswith('http') else href
                         if self.debug:
-                            print(f"   Found XML/HTM: {xml_link}")
+                            print(f"   Found XML: {xml_link}")
                         break
             
             if not xml_link:
@@ -227,24 +222,29 @@ class Form4Validator:
                               xml_soup.find_all('nonDerivativeTable'))
             
             for transaction in non_deriv_trans:
-                # Find transaction code - multiple formats
-                trans_code = (transaction.find('transactionCode') or 
-                             transaction.find('transactioncode'))
-                trans_date = (transaction.find('transactionDate') or 
-                             transaction.find('transactiondate'))
-                trans_shares = (transaction.find('transactionShares') or 
-                               transaction.find('transactionshares') or
-                               transaction.find('shares'))
-                trans_price = (transaction.find('transactionPricePerShare') or 
-                              transaction.find('transactionpricepershare') or
-                              transaction.find('price'))
+                # Find transaction code - nested inside transactionCoding
+                trans_coding = transaction.find('transactionCoding') or transaction.find('transactioncoding')
+                trans_code = None
+                if trans_coding:
+                    trans_code = trans_coding.find('transactionCode') or trans_coding.find('transactioncode')
+                
+                trans_date = transaction.find('transactionDate') or transaction.find('transactiondate')
+                
+                # Shares nested inside transactionAmounts
+                trans_amounts = transaction.find('transactionAmounts') or transaction.find('transactionamounts')
+                trans_shares = None
+                trans_price = None
+                if trans_amounts:
+                    trans_shares = (trans_amounts.find('transactionShares') or 
+                                   trans_amounts.find('transactionshares'))
+                    trans_price = (trans_amounts.find('transactionPricePerShare') or 
+                                  trans_amounts.find('transactionpricepershare'))
                 
                 if trans_code and trans_date and trans_shares:
-                    code = trans_code.find('value') or trans_code
-                    code_text = code.text.strip() if code else "?"
+                    code_text = trans_code.text.strip() if trans_code.text else "?"
                     
-                    shares = trans_shares.find('value') or trans_shares
-                    shares_num = float(shares.text.strip()) if shares and shares.text else 0
+                    shares_val = trans_shares.find('value') or trans_shares
+                    shares_num = float(shares_val.text.strip()) if shares_val and shares_val.text else 0
                     
                     price = "N/A"
                     value = 0
@@ -261,6 +261,9 @@ class Form4Validator:
                     date_val = trans_date.find('value') or trans_date
                     date_text = date_val.text.strip() if date_val and date_val.text else "?"
                     
+                    if self.debug:
+                        print(f"   ✅ Found transaction: {code_text} code, {int(shares_num)} shares @ {price}")
+                    
                     transactions.append({
                         'name': owner_name,
                         'title': owner_title,
@@ -273,27 +276,35 @@ class Form4Validator:
             
             # Parse derivative transactions (options) - IMPROVED
             deriv_trans = (xml_soup.find_all('derivativeTransaction') or 
-                          xml_soup.find_all('derivativetransaction') or
-                          xml_soup.find_all('derivativeTable'))
+                          xml_soup.find_all('derivativetransaction'))
             
             for transaction in deriv_trans:
-                trans_code = (transaction.find('transactionCode') or 
-                             transaction.find('transactioncode'))
-                trans_date = (transaction.find('transactionDate') or 
-                             transaction.find('transactiondate'))
-                trans_shares = (transaction.find('transactionShares') or 
-                               transaction.find('transactionshares') or
-                               transaction.find('shares'))
+                # Same nested structure as non-derivative
+                trans_coding = transaction.find('transactionCoding') or transaction.find('transactioncoding')
+                trans_code = None
+                if trans_coding:
+                    trans_code = trans_coding.find('transactionCode') or trans_coding.find('transactioncode')
+                
+                trans_date = transaction.find('transactionDate') or transaction.find('transactiondate')
+                
+                # Shares nested inside transactionAmounts
+                trans_amounts = transaction.find('transactionAmounts') or transaction.find('transactionamounts')
+                trans_shares = None
+                if trans_amounts:
+                    trans_shares = (trans_amounts.find('transactionShares') or 
+                                   trans_amounts.find('transactionshares'))
                 
                 if trans_code and trans_date and trans_shares:
-                    code = trans_code.find('value') or trans_code
-                    code_text = code.text.strip() if code else "?"
+                    code_text = trans_code.text.strip() if trans_code.text else "?"
                     
-                    shares = trans_shares.find('value') or trans_shares
-                    shares_num = float(shares.text.strip()) if shares and shares.text else 0
+                    shares_val = trans_shares.find('value') or trans_shares
+                    shares_num = float(shares_val.text.strip()) if shares_val and shares_val.text else 0
                     
                     date_val = trans_date.find('value') or trans_date
                     date_text = date_val.text.strip() if date_val and date_val.text else "?"
+                    
+                    if self.debug:
+                        print(f"   ✅ Found derivative: {code_text} code, {int(shares_num)} shares (option)")
                     
                     transactions.append({
                         'name': owner_name,
@@ -306,7 +317,7 @@ class Form4Validator:
                     })
             
             if self.debug and transactions:
-                print(f"   ✅ Found {len(transactions)} transaction(s)")
+                print(f"   ✅ Total {len(transactions)} transaction(s) from this filing")
             elif self.debug:
                 print(f"   ⚠️  No transactions found in this filing")
             
