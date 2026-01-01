@@ -109,9 +109,14 @@ def get_price_data(ticker: str) -> Dict:
         return {'error': str(e)}
 
 
-def calculate_signal_score(ticker: str, data: Dict) -> Dict:
+def calculate_signal_score(ticker: str, data: Dict, strategy: str = 'dual') -> Dict:
     """
     Calculate aggregate signal score for a ticker.
+    
+    Strategy options:
+    - 'dual': Combined momentum + wounded prey scoring (DEFAULT)
+    - 'momentum': Pure momentum/running prey plays
+    - 'wounded': Pure wounded prey/tax loss bounce plays
     
     Score 0-100:
     - 80-100: STRONG BUY signal
@@ -122,54 +127,133 @@ def calculate_signal_score(ticker: str, data: Dict) -> Dict:
     """
     score = 0
     signals = []
+    momentum_score = 0
+    wounded_score = 0
     
-    # Volume signal
+    # ============================================================
+    # MOMENTUM SCORING (Running Prey)
+    # ============================================================
+    
+    # Volume signal (momentum indicator)
     vol_ratio = data.get('volume_ratio', 0)
     if vol_ratio >= 3:
-        score += 20
+        momentum_score += 25
         signals.append(f"🔥 Volume {vol_ratio}x average (STRONG)")
     elif vol_ratio >= 2:
-        score += 15
+        momentum_score += 20
         signals.append(f"📈 Volume {vol_ratio}x average")
     elif vol_ratio >= 1.5:
-        score += 10
+        momentum_score += 10
         signals.append(f"📊 Volume elevated {vol_ratio}x")
     
-    # Momentum signal
+    # Recent momentum
     change_5d = data.get('change_5d', 0)
     if change_5d >= 10:
-        score += 15
+        momentum_score += 20
         signals.append(f"🚀 +{change_5d}% in 5 days (MOMENTUM)")
     elif change_5d >= 5:
-        score += 10
+        momentum_score += 15
         signals.append(f"📈 +{change_5d}% in 5 days")
-    elif change_5d <= -10:
-        score -= 10
-        signals.append(f"📉 {change_5d}% in 5 days (WEAKNESS)")
     
-    # Distance from 52w high (bounce potential)
-    from_high = data.get('from_high', 0)
-    if from_high <= -40:
-        score += 15
-        signals.append(f"💎 {from_high}% from 52w high (DEEP VALUE)")
-    elif from_high <= -25:
-        score += 10
-        signals.append(f"📉 {from_high}% from 52w high (VALUE)")
-    elif from_high >= -5:
-        signals.append(f"⚠️ Near 52w high (EXTENDED)")
+    # Monthly momentum
+    change_1m = data.get('change_1m', 0)
+    if change_1m >= 20:
+        momentum_score += 15
+        signals.append(f"🔥 +{change_1m}% in 1 month (HOT)")
+    elif change_1m >= 10:
+        momentum_score += 10
+        signals.append(f"📈 +{change_1m}% this month")
     
     # Price action today
     change_1d = data.get('change_1d', 0)
     if change_1d >= 5:
-        score += 10
+        momentum_score += 10
         signals.append(f"🟢 +{change_1d}% today")
-    elif change_1d <= -5:
-        score -= 5
-        signals.append(f"🔴 {change_1d}% today")
+    elif change_1d >= 3:
+        momentum_score += 5
+    
+    # ============================================================
+    # WOUNDED PREY SCORING (Tax Loss Bounce)
+    # ============================================================
+    
+    # Distance from 52w high (CRITICAL for wounded prey)
+    from_high = data.get('from_high', 0)
+    if from_high <= -60:
+        wounded_score += 30
+        signals.append(f"💀 {from_high}% from 52w high (DESTROYED)")
+    elif from_high <= -50:
+        wounded_score += 25
+        signals.append(f"🩸 {from_high}% from 52w high (WOUNDED)")
+    elif from_high <= -40:
+        wounded_score += 20
+        signals.append(f"💎 {from_high}% from 52w high (DEEP VALUE)")
+    elif from_high <= -30:
+        wounded_score += 15
+        signals.append(f"📉 {from_high}% from 52w high (VALUE)")
+    elif from_high <= -20:
+        wounded_score += 10
+        signals.append(f"📉 {from_high}% from 52w high (PULLBACK)")
+    elif from_high >= -5:
+        wounded_score -= 10
+        signals.append(f"⚠️ Near 52w high (EXTENDED)")
+    
+    # December tax loss selling (CRITICAL for wounded prey)
+    if change_1m <= -15:
+        wounded_score += 25
+        signals.append(f"🐺 {change_1m}% in Dec (TAX LOSS SELLOFF)")
+    elif change_1m <= -10:
+        wounded_score += 20
+        signals.append(f"📉 {change_1m}% in Dec (WOUNDED)")
+    elif change_1m <= -5:
+        wounded_score += 15
+        signals.append(f"📉 {change_1m}% in Dec (WEAK)")
+    
+    # Recent weakness = buying opportunity for wounded prey
+    if change_5d <= -10:
+        wounded_score += 15
+        signals.append(f"💎 {change_5d}% in 5d (OVERSOLD)")
+    elif change_5d <= -5:
+        wounded_score += 10
+        signals.append(f"📉 {change_5d}% in 5d (PULLBACK)")
+    
+    # Volume stability (wounded prey shouldn't be panicking)
+    if 0.5 <= vol_ratio <= 1.5:
+        wounded_score += 10
+        signals.append(f"✅ Volume stable (NO PANIC)")
+    elif vol_ratio < 0.5:
+        wounded_score += 5
+        signals.append(f"📊 Volume low (QUIET)")
+    
+    # Price in tradeable range ($2-20)
+    price = data.get('price', 0)
+    if 2 <= price <= 20:
+        wounded_score += 10
+        signals.append(f"✅ ${price:.2f} in range ($2-20)")
+    
+    # ============================================================
+    # STRATEGY SELECTION
+    # ============================================================
+    
+    if strategy == 'momentum':
+        score = momentum_score
+        signals.insert(0, "🚀 MOMENTUM STRATEGY")
+    elif strategy == 'wounded':
+        score = wounded_score
+        signals.insert(0, "🐺 WOUNDED PREY STRATEGY")
+    else:  # dual
+        # Use the HIGHER of the two scores
+        if momentum_score >= wounded_score:
+            score = momentum_score
+            signals.insert(0, f"🚀 MOMENTUM {momentum_score} (Wounded: {wounded_score})")
+        else:
+            score = wounded_score
+            signals.insert(0, f"🐺 WOUNDED PREY {wounded_score} (Momentum: {momentum_score})")
     
     return {
         'ticker': ticker,
         'score': max(0, min(100, score)),  # Clamp 0-100
+        'momentum_score': momentum_score,
+        'wounded_score': wounded_score,
         'signals': signals,
         'rating': get_rating(score),
         **data
@@ -194,9 +278,14 @@ def get_rating(score: int) -> str:
 # BRIEFING GENERATORS
 # ============================================================
 
-def generate_morning_briefing(watchlist: List[str] = None) -> str:
+def generate_morning_briefing(watchlist: List[str] = None, strategy: str = 'dual') -> str:
     """
     Generate comprehensive morning briefing.
+    
+    Strategy options:
+    - 'dual': Both momentum and wounded prey (DEFAULT)
+    - 'momentum': Focus on running prey
+    - 'wounded': Focus on tax loss bounce candidates
     """
     if watchlist is None:
         watchlist = CORE_WATCHLIST
@@ -205,6 +294,7 @@ def generate_morning_briefing(watchlist: List[str] = None) -> str:
     briefing.append("=" * 70)
     briefing.append("🐺 WOLF PACK MORNING BRIEFING")
     briefing.append(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    briefing.append(f"Strategy: {strategy.upper()}")
     briefing.append("=" * 70)
     
     # Market overview
@@ -225,23 +315,28 @@ def generate_morning_briefing(watchlist: List[str] = None) -> str:
     for ticker in watchlist:
         data = get_price_data(ticker)
         if data and 'price' in data:
-            scored = calculate_signal_score(ticker, data)
+            scored = calculate_signal_score(ticker, data, strategy)
             results.append(scored)
     
-    # Sort by score
-    results.sort(key=lambda x: x['score'], reverse=True)
     
-    # Top opportunities
-    briefing.append("\n🔥 TOP OPPORTUNITIES (by signal score):")
-    briefing.append("-" * 50)
-    briefing.append(f"{'Ticker':<8} {'Price':>8} {'1D':>7} {'5D':>7} {'Vol':>6} {'Score':>6} {'Rating'}")
-    briefing.append("-" * 70)
-    
-    for r in results[:10]:
-        briefing.append(
-            f"{r['ticker']:<8} ${r['price']:>7.2f} {r['change_1d']:>+6.2f}% {r['change_5d']:>+6.2f}% "
-            f"{r['volume_ratio']:>5.1f}x {r['score']:>5} {r['rating']}"
-        )
+    if strategy == 'dual':
+        briefing.append(f"{'Ticker':<8} {'Price':>8} {'1D':>7} {'1M':>7} {'Vol':>6} {'Score':>6} {'M':>3} {'W':>3} {'Rating'}")
+        briefing.append("-" * 80)
+        
+        for r in results[:10]:
+            briefing.append(
+                f"{r['ticker']:<8} ${r['price']:>7.2f} {r['change_1d']:>+6.2f}% {r['change_1m']:>+6.2f}% "
+                f"{r['volume_ratio']:>5.1f}x {r['score']:>5} {r['momentum_score']:>3} {r['wounded_score']:>3} {r['rating']}"
+            )
+    else:
+        briefing.append(f"{'Ticker':<8} {'Price':>8} {'1D':>7} {'1M':>7} {'Vol':>6} {'Score':>6} {'Rating'}")
+        briefing.append("-" * 75)
+        
+        for r in results[:10]:
+            briefing.append(
+                f"{r['ticker']:<8} ${r['price']:>7.2f} {r['change_1d']:>+6.2f}% {r['change_1m']:>+6.2f}% "
+                f"{r['volume_ratio']:>5.1f}x {r['score']:>5} {r['rating']}"
+            )
     
     # Detailed signals for top 3
     briefing.append("\n📋 DETAILED SIGNALS (Top 3):")
@@ -471,14 +566,19 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Commands:
-    morning          Full morning briefing with all signals
+    morning          Full morning briefing with all signals (dual strategy)
+    momentum         Morning briefing - focus on running prey
+    wounded          Morning briefing - focus on tax loss bounce candidates
     scan             Quick scan of watchlist
-    signals          Show current signal scores
+    signals          Show current signal scores (dual strategy)
     thesis TICKER    Generate trade thesis for ticker
     prompt TYPE      Get AI prompt (fenrir_research, copilot_code, perplexity_news)
 
 Examples:
     python command_center.py morning
+    python command_center.py wounded
+    python command_center.py momentum
+    python command_center.py signals
     python command_center.py thesis BBAI
     python command_center.py prompt fenrir_research --ticker MU
 
@@ -494,11 +594,31 @@ AWOOOO 🐺
                         help='Ticker for prompt')
     parser.add_argument('--output', type=str,
                         help='Output file')
+    parser.add_argument('--strategy', type=str, choices=['dual', 'momentum', 'wounded'],
+                        default='dual', help='Scoring strategy')
     
     args = parser.parse_args()
     
     if args.command == 'morning':
-        briefing = generate_morning_briefing()
+        briefing = generate_morning_briefing(strategy='dual')
+        print(briefing)
+        
+        if args.output:
+            with open(args.output, 'w') as f:
+                f.write(briefing)
+            print(f"\n💾 Saved to {args.output}")
+    
+    elif args.command == 'momentum':
+        briefing = generate_morning_briefing(strategy='momentum')
+        print(briefing)
+        
+        if args.output:
+            with open(args.output, 'w') as f:
+                f.write(briefing)
+            print(f"\n💾 Saved to {args.output}")
+    
+    elif args.command == 'wounded':
+        briefing = generate_morning_briefing(strategy='wounded')
         print(briefing)
         
         if args.output:
@@ -508,16 +628,20 @@ AWOOOO 🐺
     
     elif args.command == 'scan':
         print("🐺 Quick scan running...")
-        briefing = generate_morning_briefing()
+        briefing = generate_morning_briefing(strategy=args.strategy)
         print(briefing)
     
     elif args.command == 'signals':
-        print("🐺 Current signals:")
+        strategy = args.strategy
+        print(f"🐺 Current signals ({strategy} strategy):")
+        print(f"{'Ticker':<8} {'Momentum':>9} {'Wounded':>8} {'Final':>6} {'Rating'}")
+        print("-" * 55)
+        
         for ticker in CORE_WATCHLIST:
             data = get_price_data(ticker)
             if data and 'price' in data:
-                scored = calculate_signal_score(ticker, data)
-                print(f"   {ticker:<6} Score: {scored['score']:>3} {scored['rating']}")
+                scored = calculate_signal_score(ticker, data, strategy)
+                print(f"   {ticker:<6} {scored.get('momentum_score', 0):>7} {scored.get('wounded_score', 0):>8} {scored['score']:>6} {scored['rating']}")
     
     elif args.command == 'thesis':
         if args.target:
