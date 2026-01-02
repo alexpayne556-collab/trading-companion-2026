@@ -300,24 +300,24 @@ try:
         else:
             # Show each ticker
             for ticker, data in watchlist_data.items():
-            col1, col2, col3, col4 = st.columns(4)
-            
-            with col1:
-                st.metric(ticker, f"${data.get('price', 'N/A')}")
-            with col2:
-                change = data.get('change_pct', '0%')
-                st.metric("Change", change)
-            with col3:
-                volume = data.get('volume', 'N/A')
-                st.metric("Volume", f"{volume:,}" if isinstance(volume, int) else volume)
-            with col4:
-                status = data.get('status', 'UNKNOWN')
-                if status == 'GO':
-                    st.success(status)
-                elif status == 'NO-GO':
-                    st.error(status)
-                else:
-                    st.warning(status)
+                col1, col2, col3, col4 = st.columns(4)
+                
+                with col1:
+                    st.metric(ticker, f"${data.get('price', 'N/A')}")
+                with col2:
+                    change = data.get('change_pct', '0%')
+                    st.metric("Change", change)
+                with col3:
+                    volume = data.get('volume', 'N/A')
+                    st.metric("Volume", f"{volume:,}" if isinstance(volume, int) else volume)
+                with col4:
+                    status = data.get('status', 'UNKNOWN')
+                    if status == 'GO':
+                        st.success(status)
+                    elif status == 'NO-GO':
+                        st.error(status)
+                    else:
+                        st.warning(status)
             
             # Reason
             if 'reason' in data:
