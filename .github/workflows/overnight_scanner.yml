@@ -1,0 +1,41 @@
+# 🐺 OVERNIGHT SCANNER - Runs at 4:00 AM EST
+# Checks for AISP 8-K filings, news, pre-market movement
+# Sends Discord alert if action needed
+
+name: Overnight Scanner
+
+on:
+  schedule:
+    # 4:00 AM EST = 9:00 AM UTC
+    - cron: '0 9 * * 1-5'  # Mon-Fri
+  workflow_dispatch:  # Manual trigger for testing
+
+jobs:
+  overnight_scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        pip install requests yfinance pandas python-dotenv
+    
+    - name: Run overnight scanner
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      run: |
+        python3 src/automation/overnight_scanner.py
+    
+    - name: Commit logs
+      run: |
+        git config user.name "Wolf Pack Scanner"
+        git config user.email "scanner@wolfpack.dev"
+        git add logs/overnight_*.json
+        git commit -m "🐺 Overnight scan $(date +%Y-%m-%d)" || echo "No changes"
+        git push || echo "No push needed"

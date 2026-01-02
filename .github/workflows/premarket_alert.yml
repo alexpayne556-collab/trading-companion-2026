@@ -1,0 +1,43 @@
+# 🐺 PRE-MARKET ALERT - Runs at 6:30 AM EST
+# Checks AISP pre-market price, volume, gaps
+# WAKES YOU UP if action needed
+
+name: Pre-Market Alert
+
+on:
+  schedule:
+    # 6:30 AM EST = 11:30 AM UTC
+    - cron: '30 11 * * 1-5'  # Mon-Fri
+  workflow_dispatch:
+
+jobs:
+  premarket_alert:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        pip install requests yfinance pandas python-dotenv
+    
+    - name: Run pre-market scanner
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+        ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      run: |
+        python3 src/automation/premarket_alert.py
+    
+    - name: Commit logs
+      run: |
+        git config user.name "Wolf Pack Scanner"
+        git config user.email "scanner@wolfpack.dev"
+        git add logs/premarket_*.json
+        git commit -m "🐺 Pre-market alert $(date +%Y-%m-%d)" || echo "No changes"
+        git push || echo "No push needed"
