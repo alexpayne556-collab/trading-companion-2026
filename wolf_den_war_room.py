@@ -197,10 +197,10 @@ with tab_overview:
     st.markdown("---")
 
 #==========================================================================
-# TAB 2: LIVE CHART
+# TAB 2: LIVE CHART - WOLF LEVEL ANALYSIS
 #==========================================================================
 with tab_chart:
-    st.header(f"📊 {selected_ticker} - Real-Time Analysis")
+    st.header(f"📊 {selected_ticker} - Professional Technical Analysis")
 
 @st.cache_data(ttl=60)
 def load_price_data(ticker, period):
@@ -210,23 +210,192 @@ def load_price_data(ticker, period):
     info = stock.info
     return hist, info
 
+def detect_support_resistance(hist, num_levels=3):
+    """Detect key support and resistance levels"""
+    prices = hist['Close'].values
+    levels = []
+    
+    # Find local maxima and minima
+    for i in range(2, len(prices) - 2):
+        if prices[i] > prices[i-1] and prices[i] > prices[i-2] and \
+           prices[i] > prices[i+1] and prices[i] > prices[i+2]:
+            levels.append(('resistance', prices[i]))
+        elif prices[i] < prices[i-1] and prices[i] < prices[i-2] and \
+             prices[i] < prices[i+1] and prices[i] < prices[i+2]:
+            levels.append(('support', prices[i]))
+    
+    # Cluster similar levels
+    if levels:
+        levels.sort(key=lambda x: x[1])
+        clustered = []
+        current_level = levels[0][1]
+        current_type = levels[0][0]
+        count = 1
+        
+        for i in range(1, len(levels)):
+            if abs(levels[i][1] - current_level) / current_level < 0.02:  # 2% threshold
+                current_level = (current_level * count + levels[i][1]) / (count + 1)
+                count += 1
+            else:
+                if count >= 2:  # Only keep levels tested multiple times
+                    clustered.append((current_type, current_level, count))
+                current_level = levels[i][1]
+                current_type = levels[i][0]
+                count = 1
+        
+        # Sort by strength (number of tests)
+        clustered.sort(key=lambda x: x[2], reverse=True)
+        return clustered[:num_levels]
+    
+    return []
+
+def detect_patterns(hist):
+    """Detect chart patterns automatically"""
+    patterns = []
+    close = hist['Close'].values
+    high = hist['High'].values
+    low = hist['Low'].values
+    
+    # Bull Flag/Pennant
+    if len(close) >= 20:
+        first_half = close[:len(close)//2]
+        second_half = close[len(close)//2:]
+        
+        first_trend = (first_half[-1] - first_half[0]) / first_half[0]
+        second_range = (max(second_half) - min(second_half)) / min(second_half)
+        
+        if first_trend > 0.10 and second_range < 0.05:
+            patterns.append({
+                'name': '🚀 BULL FLAG',
+                'signal': 'BULLISH',
+                'description': f'Strong rally (+{first_trend*100:.1f}%) followed by tight consolidation. Breakout imminent.',
+                'confidence': 'HIGH'
+            })
+    
+    # Descending Triangle (Bearish)
+    if len(close) >= 15:
+        recent_lows = [low[i] for i in range(len(low)-15, len(low)) if low[i] == min(low[max(0,i-2):i+3])]
+        if len(recent_lows) >= 3:
+            low_range = (max(recent_lows) - min(recent_lows)) / min(recent_lows)
+            if low_range < 0.03:  # Flat bottom
+                patterns.append({
+                    'name': '⚠️ DESCENDING TRIANGLE',
+                    'signal': 'BEARISH',
+                    'description': 'Lower highs with flat support. Watch for breakdown or reversal.',
+                    'confidence': 'MEDIUM'
+                })
+    
+    # Higher Lows (Uptrend)
+    if len(close) >= 10:
+        recent_lows_idx = []
+        for i in range(len(low)-10, len(low)):
+            if i > 2 and i < len(low)-2:
+                if low[i] <= min(low[i-2:i]) and low[i] <= min(low[i+1:min(i+3, len(low))]):
+                    recent_lows_idx.append(i)
+        
+        if len(recent_lows_idx) >= 3:
+            lows = [low[i] for i in recent_lows_idx[-3:]]
+            if lows[1] > lows[0] and lows[2] > lows[1]:
+                patterns.append({
+                    'name': '💪 HIGHER LOWS',
+                    'signal': 'BULLISH',
+                    'description': 'Strong uptrend established. Each dip is getting bought.',
+                    'confidence': 'HIGH'
+                })
+    
+    # Breakout above resistance
+    if len(close) >= 20:
+        recent_high = max(high[-20:-5])
+        current = close[-1]
+        if current > recent_high * 1.02:
+            patterns.append({
+                'name': '🔥 BREAKOUT',
+                'signal': 'BULLISH',
+                'description': f'Broke above resistance at ${recent_high:.2f}. Momentum building.',
+                'confidence': 'HIGH'
+            })
+    
+    # Breakdown below support
+    if len(close) >= 20:
+        recent_low = min(low[-20:-5])
+        current = close[-1]
+        if current < recent_low * 0.98:
+            patterns.append({
+                'name': '📉 BREAKDOWN',
+                'signal': 'BEARISH',
+                'description': f'Broke below support at ${recent_low:.2f}. Caution advised.',
+                'confidence': 'HIGH'
+            })
+    
+    return patterns
+
+def calculate_rsi(prices, period=14):
+    """Calculate RSI"""
+    deltas = np.diff(prices)
+    gains = np.where(deltas > 0, deltas, 0)
+    losses = np.where(deltas < 0, -deltas, 0)
+    
+    avg_gain = np.convolve(gains, np.ones(period), 'valid') / period
+    avg_loss = np.convolve(losses, np.ones(period), 'valid') / period
+    
+    rs = avg_gain / (avg_loss + 1e-10)
+    rsi = 100 - (100 / (1 + rs))
+    
+    return rsi
+
+try:
+    hist, info = load_price_data(selected_ticker, timeframe)
+    
 try:
     hist, info = load_price_data(selected_ticker, timeframe)
     
     if not hist.empty:
-        # Create subplots
-        if show_volume:
-            fig = make_subplots(
-                rows=2, cols=1,
-                shared_xaxes=True,
-                vertical_spacing=0.03,
-                row_heights=[0.7, 0.3],
-                subplot_titles=(f'{selected_ticker} Price', 'Volume')
-            )
-        else:
-            fig = go.Figure()
+        # PATTERN DETECTION - Show first
+        patterns = detect_patterns(hist)
+        if patterns:
+            st.subheader("🎯 DETECTED PATTERNS")
+            cols = st.columns(len(patterns))
+            for i, pattern in enumerate(patterns):
+                with cols[i]:
+                    if pattern['signal'] == 'BULLISH':
+                        st.success(f"**{pattern['name']}**\n\n{pattern['description']}\n\n*Confidence: {pattern['confidence']}*")
+                    else:
+                        st.error(f"**{pattern['name']}**\n\n{pattern['description']}\n\n*Confidence: {pattern['confidence']}*")
         
-        # Candlestick chart
+        # Calculate technical indicators
+        sma_20 = hist['Close'].rolling(window=20).mean()
+        sma_50 = hist['Close'].rolling(window=50).mean()
+        ema_9 = hist['Close'].ewm(span=9).mean()
+        ema_21 = hist['Close'].ewm(span=21).mean()
+        
+        # Bollinger Bands
+        bb_middle = hist['Close'].rolling(window=20).mean()
+        bb_std = hist['Close'].rolling(window=20).std()
+        bb_upper = bb_middle + (bb_std * 2)
+        bb_lower = bb_middle - (bb_std * 2)
+        
+        # RSI
+        rsi = calculate_rsi(hist['Close'].values)
+        
+        # MACD
+        ema_12 = hist['Close'].ewm(span=12).mean()
+        ema_26 = hist['Close'].ewm(span=26).mean()
+        macd = ema_12 - ema_26
+        signal_line = macd.ewm(span=9).mean()
+        
+        # Support/Resistance
+        sr_levels = detect_support_resistance(hist)
+        
+        # Create sophisticated subplots
+        fig = make_subplots(
+            rows=4, cols=1,
+            shared_xaxes=True,
+            vertical_spacing=0.02,
+            row_heights=[0.5, 0.15, 0.15, 0.2],
+            subplot_titles=(f'{selected_ticker} Price Action', 'RSI', 'MACD', 'Volume')
+        )
+        
+        # Main candlestick chart
         candlestick = go.Candlestick(
             x=hist.index,
             open=hist['Open'],
@@ -235,100 +404,262 @@ try:
             close=hist['Close'],
             name='Price',
             increasing_line_color='#00ff00',
-            decreasing_line_color='#ff0000'
+            decreasing_line_color='#ff0000',
+            increasing_fillcolor='#00ff00',
+            decreasing_fillcolor='#ff0000'
         )
+        fig.add_trace(candlestick, row=1, col=1)
         
-        if show_volume:
-            fig.add_trace(candlestick, row=1, col=1)
-        else:
-            fig.add_trace(candlestick)
+        # Bollinger Bands
+        fig.add_trace(go.Scatter(x=hist.index, y=bb_upper, name='BB Upper',
+                                line=dict(color='rgba(250,250,250,0.3)', width=1, dash='dash')), row=1, col=1)
+        fig.add_trace(go.Scatter(x=hist.index, y=bb_lower, name='BB Lower',
+                                line=dict(color='rgba(250,250,250,0.3)', width=1, dash='dash'),
+                                fill='tonexty', fillcolor='rgba(250,250,250,0.05)'), row=1, col=1)
         
-        # Add SMAs
+        # SMAs
         if show_sma:
-            sma_20 = hist['Close'].rolling(window=20).mean()
-            sma_50 = hist['Close'].rolling(window=50).mean()
-            
-            if show_volume:
-                fig.add_trace(go.Scatter(x=hist.index, y=sma_20, name='SMA 20', 
-                                        line=dict(color='orange', width=1)), row=1, col=1)
-                fig.add_trace(go.Scatter(x=hist.index, y=sma_50, name='SMA 50',
-                                        line=dict(color='blue', width=1)), row=1, col=1)
-            else:
-                fig.add_trace(go.Scatter(x=hist.index, y=sma_20, name='SMA 20',
-                                        line=dict(color='orange', width=1)))
-                fig.add_trace(go.Scatter(x=hist.index, y=sma_50, name='SMA 50',
-                                        line=dict(color='blue', width=1)))
+            fig.add_trace(go.Scatter(x=hist.index, y=sma_20, name='SMA 20',
+                                    line=dict(color='#FFA500', width=2)), row=1, col=1)
+            fig.add_trace(go.Scatter(x=hist.index, y=sma_50, name='SMA 50',
+                                    line=dict(color='#00BFFF', width=2)), row=1, col=1)
         
-        # Add entry zone
+        # EMAs
+        fig.add_trace(go.Scatter(x=hist.index, y=ema_9, name='EMA 9',
+                                line=dict(color='#FF1493', width=1, dash='dot')), row=1, col=1)
+        fig.add_trace(go.Scatter(x=hist.index, y=ema_21, name='EMA 21',
+                                line=dict(color='#9370DB', width=1, dash='dot')), row=1, col=1)
+        
+        # Support/Resistance levels
+        annotations = []
+        shapes = []
+        for sr_type, level, strength in sr_levels:
+            color = '#00ff00' if sr_type == 'support' else '#ff0000'
+            fig.add_hline(y=level, line_dash="dash", line_color=color, opacity=0.5, row=1, col=1)
+            annotations.append(
+                dict(x=hist.index[-1], y=level,
+                     text=f"{sr_type.upper()} ${level:.2f} (x{strength})",
+                     showarrow=False, xanchor='left', 
+                     font=dict(color=color, size=10),
+                     bgcolor='rgba(0,0,0,0.7)')
+            )
+        
+        # Entry zone overlay
         if show_entry_zone and selected_ticker in config.get('entry_zones', {}):
             zone = config['entry_zones'][selected_ticker]
             
-            shapes = [
-                # Entry zone box
+            shapes.extend([
                 dict(type="rect",
                      xref="x", yref="y",
                      x0=hist.index[0], x1=hist.index[-1],
                      y0=zone['low'], y1=zone['high'],
-                     fillcolor="green", opacity=0.1,
-                     line=dict(width=0)),
-                # Stop loss line
+                     fillcolor="green", opacity=0.15,
+                     line=dict(width=2, color='green')),
                 dict(type="line",
                      xref="x", yref="y",
                      x0=hist.index[0], x1=hist.index[-1],
                      y0=zone['stop'], y1=zone['stop'],
-                     line=dict(color="red", width=2, dash="dash"))
-            ]
+                     line=dict(color="red", width=3, dash="dash"))
+            ])
             
-            # Shapes always go in layout, not xaxis
-            fig.update_layout(shapes=shapes)
-            
-            # Add annotations
-            annotations = [
+            annotations.extend([
                 dict(x=hist.index[-1], y=zone['high'],
-                     text=f"Entry High: ${zone['high']:.2f}",
-                     showarrow=False, xanchor='left', bgcolor='green', opacity=0.8),
+                     text=f"🎯 ENTRY HIGH: ${zone['high']:.2f}",
+                     showarrow=False, xanchor='left', 
+                     font=dict(color='white', size=12, family='Arial Black'),
+                     bgcolor='green', opacity=0.9),
                 dict(x=hist.index[-1], y=zone['low'],
-                     text=f"Entry Low: ${zone['low']:.2f}",
-                     showarrow=False, xanchor='left', bgcolor='green', opacity=0.8),
+                     text=f"🎯 ENTRY LOW: ${zone['low']:.2f}",
+                     showarrow=False, xanchor='left',
+                     font=dict(color='white', size=12, family='Arial Black'),
+                     bgcolor='green', opacity=0.9),
                 dict(x=hist.index[-1], y=zone['stop'],
-                     text=f"STOP: ${zone['stop']:.2f}",
-                     showarrow=False, xanchor='left', bgcolor='red', opacity=0.8)
-            ]
-            
-            if show_volume:
-                fig.update_layout(annotations=annotations)
-            else:
-                fig.update_layout(annotations=annotations)
+                     text=f"🛑 STOP LOSS: ${zone['stop']:.2f}",
+                     showarrow=False, xanchor='left',
+                     font=dict(color='white', size=12, family='Arial Black'),
+                     bgcolor='red', opacity=0.9)
+            ])
         
-        # Add volume bars
-        if show_volume:
-            colors = ['red' if hist['Close'].iloc[i] < hist['Open'].iloc[i] else 'green' 
+        # RSI
+        rsi_trace = go.Scatter(
+            x=hist.index[14:],  # RSI starts after period
+            y=rsi,
+            name='RSI',
+            line=dict(color='#FFD700', width=2),
+            fill='tozeroy',
+            fillcolor='rgba(255,215,0,0.1)'
+        )
+        fig.add_trace(rsi_trace, row=2, col=1)
+        fig.add_hline(y=70, line_dash="dash", line_color="red", opacity=0.5, row=2, col=1)
+        fig.add_hline(y=30, line_dash="dash", line_color="green", opacity=0.5, row=2, col=1)
+        fig.add_hrect(y0=70, y1=100, fillcolor="red", opacity=0.1, row=2, col=1)
+        fig.add_hrect(y0=0, y1=30, fillcolor="green", opacity=0.1, row=2, col=1)
+        
+        # MACD
+        fig.add_trace(go.Scatter(x=hist.index, y=macd, name='MACD',
+                                line=dict(color='#00CED1', width=2)), row=3, col=1)
+        fig.add_trace(go.Scatter(x=hist.index, y=signal_line, name='Signal',
+                                line=dict(color='#FF6347', width=2)), row=3, col=1)
+        
+        histogram = macd - signal_line
+        colors_macd = ['green' if histogram.iloc[i] > 0 else 'red' for i in range(len(histogram))]
+        fig.add_trace(go.Bar(x=hist.index, y=histogram, name='Histogram',
+                            marker_color=colors_macd, opacity=0.5), row=3, col=1)
+        
+        # Volume with color
+        colors_vol = ['#00ff00' if hist['Close'].iloc[i] >= hist['Open'].iloc[i] else '#ff0000'
                      for i in range(len(hist))]
-            
-            fig.add_trace(go.Bar(
-                x=hist.index,
-                y=hist['Volume'],
-                name='Volume',
-                marker_color=colors,
-                showlegend=False
-            ), row=2, col=1)
+        fig.add_trace(go.Bar(
+            x=hist.index,
+            y=hist['Volume'],
+            name='Volume',
+            marker_color=colors_vol,
+            showlegend=False
+        ), row=4, col=1)
+        
+        # Add average volume line
+        avg_volume = hist['Volume'].mean()
+        fig.add_hline(y=avg_volume, line_dash="dash", line_color="yellow", 
+                     opacity=0.5, row=4, col=1,
+                     annotation_text="Avg Vol", annotation_position="right")
         
         # Update layout
         fig.update_layout(
-            height=700 if show_volume else 500,
+            height=1000,
             xaxis_rangeslider_visible=False,
             template='plotly_dark',
             hovermode='x unified',
-            margin=dict(l=0, r=0, t=30, b=0)
+            margin=dict(l=0, r=100, t=30, b=0),
+            shapes=shapes,
+            annotations=annotations,
+            font=dict(family='Arial', size=11),
+            plot_bgcolor='#0E1117',
+            paper_bgcolor='#0E1117'
         )
         
-        if show_volume:
-            fig.update_yaxes(title_text="Price", row=1, col=1)
-            fig.update_yaxes(title_text="Volume", row=2, col=1)
+        fig.update_yaxes(title_text="Price ($)", row=1, col=1, gridcolor='rgba(128,128,128,0.2)')
+        fig.update_yaxes(title_text="RSI", row=2, col=1, gridcolor='rgba(128,128,128,0.2)')
+        fig.update_yaxes(title_text="MACD", row=3, col=1, gridcolor='rgba(128,128,128,0.2)')
+        fig.update_yaxes(title_text="Volume", row=4, col=1, gridcolor='rgba(128,128,128,0.2)')
+        fig.update_xaxes(gridcolor='rgba(128,128,128,0.2)')
         
         st.plotly_chart(fig, use_container_width=True)
         
-        # Current stats
+        # INTELLIGENT ANALYSIS
+        st.markdown("---")
+        st.subheader("🧠 WOLF PACK ANALYSIS")
+        
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.markdown("### 📊 Technical Signals")
+            
+            # Price vs SMAs
+            current_price = hist['Close'].iloc[-1]
+            sma20_val = sma_20.iloc[-1]
+            sma50_val = sma_50.iloc[-1]
+            
+            if current_price > sma20_val and current_price > sma50_val:
+                st.success("✅ **ABOVE both SMAs** - Bullish structure")
+            elif current_price > sma20_val:
+                st.warning("⚠️ **Above SMA20, below SMA50** - Mixed")
+            else:
+                st.error("🔴 **BELOW both SMAs** - Bearish structure")
+            
+            # RSI analysis
+            current_rsi = rsi[-1] if len(rsi) > 0 else 50
+            if current_rsi > 70:
+                st.error(f"🔥 **RSI: {current_rsi:.1f}** - OVERBOUGHT")
+            elif current_rsi < 30:
+                st.success(f"💎 **RSI: {current_rsi:.1f}** - OVERSOLD (Buy Zone)")
+            else:
+                st.info(f"📊 **RSI: {current_rsi:.1f}** - Neutral")
+            
+            # MACD
+            macd_val = macd.iloc[-1]
+            signal_val = signal_line.iloc[-1]
+            if macd_val > signal_val:
+                st.success("📈 **MACD BULLISH** - Above signal")
+            else:
+                st.error("📉 **MACD BEARISH** - Below signal")
+        
+        with col2:
+            st.markdown("### 🎯 Key Levels")
+            
+            if sr_levels:
+                for sr_type, level, strength in sr_levels[:2]:  # Top 2
+                    distance = ((current_price - level) / level) * 100
+                    if sr_type == 'support':
+                        st.success(f"**Support: ${level:.2f}** ({abs(distance):.1f}% {'below' if distance < 0 else 'above'})\nTested {strength}x")
+                    else:
+                        st.error(f"**Resistance: ${level:.2f}** ({abs(distance):.1f}% {'above' if distance > 0 else 'below'})\nTested {strength}x")
+            else:
+                st.info("No major S/R levels detected")
+            
+            # Bollinger Bands position
+            bb_upper_val = bb_upper.iloc[-1]
+            bb_lower_val = bb_lower.iloc[-1]
+            bb_position = (current_price - bb_lower_val) / (bb_upper_val - bb_lower_val) * 100
+            
+            if bb_position > 80:
+                st.warning(f"⚠️ **BB Position: {bb_position:.0f}%** - Near upper band")
+            elif bb_position < 20:
+                st.success(f"💪 **BB Position: {bb_position:.0f}%** - Near lower band (bounce zone)")
+            else:
+                st.info(f"📊 **BB Position: {bb_position:.0f}%** - Mid-range")
+        
+        with col3:
+            st.markdown("### 🚨 Action Items")
+            
+            # Generate specific trading signals
+            signals = []
+            
+            # RSI oversold + above support
+            if current_rsi < 35 and sr_levels:
+                support_close = any(sr_type == 'support' and abs(current_price - level)/level < 0.03 
+                                   for sr_type, level, _ in sr_levels)
+                if support_close:
+                    signals.append("💎 **STRONG BUY**: RSI oversold AT support level")
+            
+            # Bullish crossover
+            if len(macd) > 1 and macd.iloc[-2] < signal_line.iloc[-2] and macd.iloc[-1] > signal_line.iloc[-1]:
+                signals.append("🚀 **BUY SIGNAL**: MACD bullish crossover")
+            
+            # Bearish crossover
+            if len(macd) > 1 and macd.iloc[-2] > signal_line.iloc[-2] and macd.iloc[-1] < signal_line.iloc[-1]:
+                signals.append("🛑 **SELL SIGNAL**: MACD bearish crossover")
+            
+            # Volume spike
+            avg_vol = hist['Volume'].mean()
+            current_vol = hist['Volume'].iloc[-1]
+            if current_vol > avg_vol * 2:
+                signals.append(f"📊 **VOLUME SURGE**: {current_vol/avg_vol:.1f}x average - Institutions moving")
+            
+            # Price near entry zone
+            if selected_ticker in config.get('entry_zones', {}):
+                zone = config['entry_zones'][selected_ticker]
+                if zone['low'] <= current_price <= zone['high']:
+                    signals.append(f"🎯 **IN ENTRY ZONE**: ${zone['low']:.2f}-${zone['high']:.2f}")
+                elif current_price < zone['low'] * 1.05:
+                    signals.append(f"⏳ **APPROACHING ENTRY**: Watch ${zone['low']:.2f}")
+            
+            # Pattern-based signals
+            if patterns:
+                for pattern in patterns:
+                    if pattern['confidence'] == 'HIGH':
+                        if pattern['signal'] == 'BULLISH':
+                            signals.append(f"🚀 **{pattern['name']}**: Setup confirmed")
+                        else:
+                            signals.append(f"⚠️ **{pattern['name']}**: Risk elevated")
+            
+            if signals:
+                for signal in signals:
+                    st.markdown(f"- {signal}")
+            else:
+                st.info("📋 No immediate action items. Continue monitoring.")
+        
+        # Current stats row
+        st.markdown("---")
         current_price = hist['Close'].iloc[-1]
         prev_close = info.get('previousClose', hist['Close'].iloc[-2])
         change = current_price - prev_close
