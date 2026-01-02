@@ -29,6 +29,8 @@ try:
     from research.sector_rotation import SectorRotationTracker
     from research.catalyst_tracker import CatalystTracker
     from research.failed_breakout_detector import FailedBreakoutDetector
+    from research.form4_cluster_scanner import Form4ClusterScanner
+    from research.watchlist_monitor import WatchlistMonitor
     RESEARCH_MODULES_AVAILABLE = True
 except Exception as e:
     RESEARCH_MODULES_AVAILABLE = False
@@ -46,8 +48,8 @@ st.title("🐺 WOLF DEN WAR ROOM")
 st.caption(f"Bloomberg-Level Research Platform | Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 # Add tabs for different sections
-tab_overview, tab_chart, tab_sectors, tab_catalysts, tab_breakouts, tab_watchlist = st.tabs([
-    "📊 Overview", "📈 Live Chart", "🔥 Sectors", "📅 Catalysts", "💣 Breakouts", "🎯 Watchlist"
+tab_overview, tab_chart, tab_clusters, tab_monitor, tab_sectors, tab_catalysts, tab_breakouts, tab_watchlist = st.tabs([
+    "📊 Overview", "📈 Live Chart", "🔥 Clusters", "👁️ Monitor", "🔥 Sectors", "📅 Catalysts", "💣 Breakouts", "🎯 Watchlist"
 ])
 
 # Load config
@@ -135,6 +137,24 @@ if st.sidebar.button("💣 Failed Breakout Scan"):
         with st.spinner("Scanning breakouts..."):
             import subprocess
             subprocess.run(['python3', 'src/research/failed_breakout_detector.py'], timeout=120)
+        st.success("✅ Complete!")
+        st.rerun()
+
+if st.sidebar.button("🔥 Form 4 Cluster Scan"):
+    if RESEARCH_MODULES_AVAILABLE:
+        with st.spinner("Scanning SEC EDGAR for insider clusters..."):
+            import subprocess
+            subprocess.run(['python3', 'src/research/form4_cluster_scanner.py', '--detect'], timeout=60)
+        st.success("✅ Complete!")
+        st.rerun()
+    else:
+        st.error("Research modules not available")
+
+if st.sidebar.button("👁️ Watchlist Snapshot"):
+    if RESEARCH_MODULES_AVAILABLE:
+        with st.spinner("Taking watchlist snapshot..."):
+            import subprocess
+            subprocess.run(['python3', 'src/research/watchlist_monitor.py', '--snapshot', '--top-movers'], timeout=60)
         st.success("✅ Complete!")
         st.rerun()
     else:
@@ -439,7 +459,164 @@ except FileNotFoundError:
     st.warning("⚠️ No conviction data. Click 'Run Conviction Scan' in sidebar.")
 
 #==========================================================================
-# TAB 3: SECTOR ROTATION
+# TAB 3: FORM 4 CLUSTER SCANNER (TIER 1)
+#==========================================================================
+with tab_clusters:
+    st.header("🔥 Form 4 Cluster Scanner")
+    st.caption("Our #1 Edge - Detects when 3+ insiders buy same stock within 14 days")
+    
+    if RESEARCH_MODULES_AVAILABLE:
+        scanner = Form4ClusterScanner()
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            lookback_days = st.slider("Lookback Days", 7, 30, 14)
+        with col2:
+            min_insiders = st.slider("Min Insiders", 2, 5, 3)
+        
+        if st.button("🔍 Scan for Clusters", type="primary"):
+            with st.spinner(f"Scanning SEC EDGAR for clusters ({min_insiders}+ insiders in {lookback_days} days)..."):
+                clusters = scanner.detect_clusters(
+                    window_days=lookback_days,
+                    min_insiders=min_insiders
+                )
+                
+                if clusters:
+                    st.success(f"🎯 Found {len(clusters)} clusters!")
+                    
+                    for i, cluster in enumerate(clusters, 1):
+                        alert = scanner.generate_alert(cluster)
+                        with st.expander(f"#{i} {cluster['ticker']} - {cluster['insider_count']} insiders, ${cluster['total_value']:,.0f}"):
+                            st.code(alert)
+                            
+                            # Cross-reference with watchlist
+                            if cluster['ticker'] in (full_watchlist or all_tickers):
+                                st.success("✅ IN WATCHLIST - Check conviction score!")
+                            else:
+                                st.warning("⚠️ Not in watchlist - Manual review needed")
+                            
+                            # Quick stats
+                            col1, col2, col3 = st.columns(3)
+                            col1.metric("Insiders", cluster['insider_count'])
+                            col2.metric("Total Value", f"${cluster['total_value']:,.0f}")
+                            col3.metric("Days Span", cluster['days_span'])
+                else:
+                    st.info("📭 No clusters detected in database. Run a full SEC scan first.")
+        
+        st.markdown("---")
+        st.subheader("📊 About Form 4 Clusters")
+        st.markdown("""
+        **Why This Works:**
+        - When MULTIPLE insiders buy within a short window, it signals shared conviction
+        - Insiders have access to material non-public info before it becomes public
+        - AISP had 3 insiders buy $1.1M in 10 days before the run
+        
+        **How to Use:**
+        1. Scan daily for new clusters
+        2. Cross-reference with wounded prey criteria
+        3. Check conviction score (should be 75+)
+        4. Monitor entry zone for positioning
+        
+        **Data Source:** SEC EDGAR Form 4 filings (real-time, free)
+        """)
+    else:
+        st.error("⚠️ Research modules not available")
+
+#==========================================================================
+# TAB 4: WATCHLIST MONITOR (TIER 1)
+#==========================================================================
+with tab_monitor:
+    st.header("👁️ Watchlist Monitor")
+    st.caption("Real-time alerts when any ticker moves >5% or volume >2x average")
+    
+    if RESEARCH_MODULES_AVAILABLE:
+        monitor = WatchlistMonitor(watchlist_path="ATP_WOLF_PACK_MASTER.csv")
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            price_threshold = st.slider("Price Move Alert %", 3.0, 10.0, 5.0)
+        with col2:
+            volume_threshold = st.slider("Volume Alert (x avg)", 1.5, 3.0, 2.0)
+        
+        if st.button("📸 Take Snapshot", type="primary"):
+            with st.spinner(f"Scanning {len(monitor.tickers)} tickers..."):
+                snapshot = monitor.get_live_snapshot()
+                
+                st.success(f"✅ Snapshot captured: {len(snapshot)} tickers")
+                
+                # Top movers
+                st.subheader("🏆 Top Movers")
+                
+                sorted_snapshot = sorted(snapshot, key=lambda x: abs(x['change_pct']), reverse=True)[:10]
+                
+                for i, ticker_data in enumerate(sorted_snapshot, 1):
+                    direction = "🚀" if ticker_data['change_pct'] > 0 else "📉"
+                    color = "green" if ticker_data['change_pct'] > 0 else "red"
+                    
+                    with st.expander(f"{i}. {ticker_data['ticker']} {direction} {ticker_data['change_pct']:+.2f}%"):
+                        col1, col2, col3 = st.columns(3)
+                        col1.metric("Price", f"${ticker_data['price']:.2f}")
+                        col2.metric("Change", f"{ticker_data['change_pct']:+.2f}%")
+                        col3.metric("Volume", f"{ticker_data['volume']:,.0f}")
+                        
+                        # Check if meets alert criteria
+                        if abs(ticker_data['change_pct']) >= price_threshold:
+                            st.warning(f"⚠️ PRICE ALERT: {abs(ticker_data['change_pct']):.1f}% move!")
+        
+        if st.button("🔔 Set Baseline (Start Monitoring)"):
+            with st.spinner("Setting baseline prices and volumes..."):
+                monitor.set_baseline()
+                st.success(f"✅ Baseline set for {len(monitor.baseline)} tickers. Ready to monitor!")
+        
+        st.markdown("---")
+        st.subheader("🚨 Recent Alerts")
+        
+        # Load recent alerts from log
+        alert_file = Path("logs/watchlist_alerts.jsonl")
+        if alert_file.exists():
+            alerts = []
+            with open(alert_file) as f:
+                for line in f:
+                    alerts.append(json.loads(line))
+            
+            # Show last 10
+            recent = alerts[-10:]
+            
+            for alert in reversed(recent):
+                alert_type = alert['type']
+                if alert_type == 'COMBO':
+                    st.error(f"🔥 {alert['message']} ({alert['timestamp']})")
+                elif alert_type == 'PRICE_MOVE':
+                    st.warning(f"⚠️ {alert['message']} ({alert['timestamp']})")
+                elif alert_type == 'VOLUME_SPIKE':
+                    st.info(f"📊 {alert['message']} ({alert['timestamp']})")
+        else:
+            st.info("No alerts yet. Set baseline to start monitoring.")
+        
+        st.markdown("---")
+        st.subheader("📖 About Watchlist Monitor")
+        st.markdown("""
+        **Why This Works:**
+        - Catches breakouts in real-time before they run
+        - Volume spikes signal institutional buying
+        - Price + volume combo = strongest conviction
+        
+        **How to Use:**
+        1. Set baseline at market open (9:30 AM EST)
+        2. Monitor runs continuously in background
+        3. Get alerted on Slack/email when criteria hit
+        4. Cross-check with conviction score before entry
+        
+        **Alert Types:**
+        - 🚀 PRICE MOVE: >5% intraday move
+        - 📊 VOLUME SPIKE: >2x average volume
+        - 🔥 COMBO: Both price AND volume (highest priority)
+        """)
+    else:
+        st.error("⚠️ Research modules not available")
+
+#==========================================================================
+# TAB 5: SECTOR ROTATION
 #==========================================================================
 with tab_sectors:
     st.header("🔥 Sector Rotation Analysis")
