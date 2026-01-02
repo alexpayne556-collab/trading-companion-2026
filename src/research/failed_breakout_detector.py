@@ -24,6 +24,7 @@ class FailedBreakoutDetector:
         1. Stock ran +30%+ in short period
         2. Gave most/all of it back
         3. Now consolidating near lows
+        4. BONUS: Insider buying during the reset
         
         Returns dict with breakout analysis
         """
@@ -33,6 +34,12 @@ class FailedBreakoutDetector:
             
             if len(hist) < lookback_days:
                 return None
+            
+            # Ensure timezone awareness for date comparisons
+            now = datetime.now()
+            if hist.index.tz is not None:
+                import pytz
+                now = now.replace(tzinfo=pytz.UTC)
                 
             # Find highest high in lookback period
             recent = hist.tail(lookback_days)
@@ -58,14 +65,26 @@ class FailedBreakoutDetector:
             retracement_pct = ((high - low_after) / high) * 100
             current_from_low = ((current - low_after) / low_after) * 100
             
-            # Failed breakout criteria
+            # Calculate volatility during retracement (higher = more violent)
+            if len(after_high) > 0:
+                volatility = after_high['Close'].pct_change().std() * 100
+            else:
+                volatility = 0
+            
+            # Failed breakout criteria - be smarter about what qualifies
             is_failed = (
                 run_pct >= 30 and  # Ran at least 30%
                 retracement_pct >= 50 and  # Gave back at least 50%
-                current_from_low < 15  # Still near lows
+                current_from_low < 20 and  # Still near lows (loosened from 15)
+                (now - high_date).days >= 14  # High was at least 2 weeks ago
             )
             
             if is_failed:
+                # Check for insider buying during reset (conviction booster)
+                insider_support = self._check_insider_buying_during_reset(
+                    ticker, low_date
+                )
+                
                 return {
                     'ticker': ticker,
                     'high': round(high, 2),
@@ -76,9 +95,12 @@ class FailedBreakoutDetector:
                     'run_pct': round(run_pct, 1),
                     'retracement_pct': round(retracement_pct, 1),
                     'current_from_low_pct': round(current_from_low, 1),
-                    'days_since_high': (datetime.now() - high_date).days,
+                    'volatility': round(volatility, 2),
+                    'days_since_high': (now - high_date).days,
+                    'insider_support': insider_support,
+                    'conviction_boost': 10 if insider_support else 0,
                     'pattern': 'FAILED_BREAKOUT',
-                    'status': 'RESETTING'
+                    'status': 'RESETTING_WITH_INSIDER' if insider_support else 'RESETTING'
                 }
             
             return None

@@ -49,7 +49,7 @@ class RealtimeForm4Scanner:
         conn.commit()
         conn.close()
     
-    def fetch_recent_buys(self, min_value=25000):
+    def fetch_recent_buys(self, min_value=25000, days_back=14):
         """
         Fetch recent insider purchases from OpenInsider
         Returns clean, parsed data ready to use
@@ -57,11 +57,13 @@ class RealtimeForm4Scanner:
         print(f"🔍 Fetching insider buys (>${min_value:,})...")
         
         try:
-            # OpenInsider has a CSV download endpoint
-            url = "http://openinsider.com/screener?s=&o=&pl=&ph=&ll=&lh=&fd=14&fdr=&td=0&tdr=&fdlyl=&fdlyh=&daysago=&xp=1&vl=25&vh=&ocl=&och=&sic1=-1&sicl=100&sich=9999&grp=0&nfl=&nfh=&nil=&nih=&nol=&noh=&v2l=&v2h=&oc2l=&oc2h=&sortcol=0&cnt=5000&page=1"
+            from bs4 import BeautifulSoup
+            
+            # OpenInsider screener with purchase filter
+            url = f"http://openinsider.com/screener?s=&o=&pl=&ph=&ll=&lh=&fd={days_back}&fdr=&td=0&tdr=&fdlyl=&fdlyh=&daysago=&xp=1&vl={min_value//1000}&vh=&ocl=&och=&sic1=-1&sicl=100&sich=9999&grp=0&nfl=&nfh=&nil=&nih=&nol=&noh=&v2l=&v2h=&oc2l=&oc2h=&sortcol=0&cnt=1000&page=1"
             
             headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
             }
             
             response = requests.get(url, headers=headers, timeout=30)
@@ -70,21 +72,52 @@ class RealtimeForm4Scanner:
                 print(f"⚠️  OpenInsider returned {response.status_code}")
                 return pd.DataFrame()
             
-            # Parse HTML table
-            tables = pd.read_html(response.text)
+            # Parse with BeautifulSoup for more control
+            soup = BeautifulSoup(response.text, 'html.parser')
+            table = soup.find('table', {'class': 'tinytable'})
             
-            if not tables:
-                print("⚠️  No tables found")
-                return pd.DataFrame()
+            if not table:
+                # Fallback to pandas read_html - but don't specify columns
+                tables = pd.read_html(response.text)
+                if not tables or len(tables) == 0:
+                    print("⚠️  No tables found")
+                    return pd.DataFrame()
+                df = tables[0]
+                
+                # Clean up - pandas auto-detected columns
+                print(f"✅ Found table with {len(df.columns)} columns")
+                
+            else:
+                # Parse table manually for reliability
+                rows = []
+                for tr in table.find_all('tr')[1:]:  # Skip header
+                    cols = [td.text.strip() for td in tr.find_all('td')]
+                    if len(cols) >= 11:  # Valid row
+                        rows.append(cols)
+                
+                if not rows:
+                    print("⚠️  No data rows found")
+                    return pd.DataFrame()
+                    
+                # Create DataFrame with OpenInsider column structure
+                df = pd.DataFrame(rows, columns=[
+                    'X', 'Filing Date', 'Trade Date', 'Ticker', 'Company Name',
+                    'Insider Name', 'Title', 'Trade Type', 'Price', 'Qty', 'Owned',
+                    'ΔOwn', 'Value'
+                ])
             
-            df = tables[0]  # Main table
-            
-            # Clean column names
+            # Standardize column names
             df.columns = df.columns.str.strip()
             
-            # Filter for purchases only (exclude sales)
-            if 'Trade Type' in df.columns:
-                df = df[df['Trade Type'].str.contains('P-Purchase', na=False)]
+            # Filter for purchases only - be flexible with column name matching
+            trade_col = None
+            for col in df.columns:
+                if 'trade' in col.lower() and 'type' in col.lower():
+                    trade_col = col
+                    break
+            
+            if trade_col:
+                df = df[df[trade_col].astype(str).str.contains('P', case=False, na=False)]
             
             print(f"✅ Found {len(df)} insider purchases")
             return df
@@ -103,17 +136,24 @@ class RealtimeForm4Scanner:
         
         for _, row in df.iterrows():
             try:
-                # Map columns (OpenInsider format)
-                ticker = row.get('Ticker', row.get('Symbol', ''))
-                insider_name = row.get('Insider Name', 'Unknown')
-                title = row.get('Title', 'Unknown')
-                trans_date = row.get('Trade Date', '')
-                filing_date = row.get('Filing Date', '')
-                shares = int(row.get('Qty', 0))
-                price = float(row.get('Price', 0))
-                value = float(row.get('Value', 0))
+                # Map columns (OpenInsider format) - handle multiple column name variations
+                ticker = str(row.get('Ticker', row.get('Symbol', ''))).strip().upper()
+                insider_name = str(row.get('Insider Name', 'Unknown')).strip()
+                title = str(row.get('Title', 'Unknown')).strip()
+                trans_date = str(row.get('Trade Date', '')).strip()
+                filing_date = str(row.get('Filing Date', '')).strip()
                 
-                if not ticker or value < 1000:  # Skip invalid/tiny transactions
+                # Clean numeric fields - remove $ and commas
+                qty_str = str(row.get('Qty', '0')).replace(',', '').replace('+', '')
+                price_str = str(row.get('Price', '0')).replace('$', '').replace(',', '')
+                value_str = str(row.get('Value', '0')).replace('$', '').replace(',', '')
+                
+                shares = int(float(qty_str)) if qty_str else 0
+                price = float(price_str) if price_str else 0.0
+                value = float(value_str) if value_str else 0.0
+                
+                # Validate
+                if not ticker or ticker == 'NAN' or value < 1000:
                     continue
                 
                 c = conn.cursor()

@@ -15,14 +15,93 @@ class CatalystTracker:
     def __init__(self):
         self.data_dir = Path('logs/catalysts')
         self.data_dir.mkdir(parents=True, exist_ok=True)
+        self._ensure_critical_catalysts()
+    
+    def _ensure_critical_catalysts(self):
+        """Auto-populate known high-impact catalysts"""
+        catalyst_file = self.data_dir / 'manual_catalysts.json'
         
+        # Critical catalysts for Q1 2026
+        critical = {
+            'LUNR': [{
+                'event': 'IM-3 Moon Mission Launch',
+                'date': '2026-02-15',
+                'type': 'PRODUCT_LAUNCH',
+                'impact': 'EXTREME',
+                'added': '2026-01-02'
+            }],
+            'RKLB': [{
+                'event': 'Neutron Rocket First Launch',
+                'date': 'Q1 2026',
+                'type': 'TECH_MILESTONE',
+                'impact': 'HIGH',
+                'added': '2026-01-02'
+            }],
+            'IONQ': [{
+                'event': 'Quantum Breakthrough Demo',
+                'date': 'Q1 2026',
+                'type': 'TECH_MILESTONE',
+                'impact': 'HIGH',
+                'added': '2026-01-02'
+            }],
+            'SMR': [{
+                'event': 'SMR Deployment Update',
+                'date': 'Q1 2026',
+                'type': 'CONTRACT',
+                'impact': 'MEDIUM',
+                'added': '2026-01-02'
+            }]
+        }
+        
+        # Load existing or create new
+        if catalyst_file.exists():
+            with open(catalyst_file) as f:
+                existing = json.load(f)
+        else:
+            existing = {}
+        
+        # Merge without duplicating
+        updated = False
+        for ticker, events in critical.items():
+            if ticker not in existing:
+                existing[ticker] = events
+                updated = True
+            else:
+                # Add new events not already tracked
+                existing_events = {e['event'] for e in existing[ticker]}
+                for event in events:
+                    if event['event'] not in existing_events:
+                        existing[ticker].append(event)
+                        updated = True
+        
+        if updated:
+            with open(catalyst_file, 'w') as f:
+                json.dump(existing, f, indent=2)
+    
+    def _calculate_catalyst_boost(self, ticker, days_until):
+        """
+        Calculate conviction boost based on catalyst timing
+        Returns +5 to +15 points to add to conviction score
+        """
+        # Imminent catalysts (1-7 days) = highest boost
+        if 1 <= days_until <= 7:
+            return 15
+        # Near-term (8-14 days) = medium boost  
+        elif 8 <= days_until <= 14:
+            return 10
+        # Visible but not imminent (15-30 days) = small boost
+        elif 15 <= days_until <= 30:
+            return 5
+        else:
+            return 0
+    
     def get_earnings_calendar(self, tickers, days_ahead=30):
         """
         Get earnings dates for watchlist tickers
         Returns dict with ticker: {date, days_until, last_surprise}
         """
         results = {}
-        today = datetime.now()
+        today = datetime.now().date()  # Use .date() for consistent comparison
         
         for ticker in tickers:
             try:
@@ -34,7 +113,9 @@ class CatalystTracker:
                     earnings_date = calendar['Earnings Date'][0]
                     
                     if isinstance(earnings_date, str):
-                        earnings_date = pd.to_datetime(earnings_date)
+                        earnings_date = pd.to_datetime(earnings_date).date()
+                    elif hasattr(earnings_date, 'date'):
+                        earnings_date = earnings_date.date()
                     
                     days_until = (earnings_date - today).days
                     
@@ -50,7 +131,8 @@ class CatalystTracker:
                             'days_until': days_until,
                             'last_surprise_pct': last_surprise,
                             'catalyst_type': 'EARNINGS',
-                            'impact': 'HIGH'
+                            'impact': 'HIGH',
+                            'conviction_boost': self._calculate_catalyst_boost(ticker, days_until)
                         }
                         
             except Exception as e:

@@ -858,7 +858,7 @@ with tab_monitor:
     st.caption("Real-time alerts when any ticker moves >5% or volume >2x average")
     
     if RESEARCH_MODULES_AVAILABLE:
-        monitor = WatchlistMonitor(watchlist_path="ATP_WOLF_PACK_MASTER.csv")
+        monitor = WatchlistMonitor(watchlist_path="atp_watchlists/ATP_WOLF_PACK_MASTER.csv")
         
         col1, col2 = st.columns(2)
         with col1:
