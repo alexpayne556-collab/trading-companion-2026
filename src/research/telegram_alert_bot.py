@@ -125,16 +125,27 @@ class TelegramAlertBot:
     
     def send_position_alert(self, position: Dict):
         """Send position risk alert"""
-        emoji = '🚨' if position.get('distance_to_stop_pct', 999) < 5 else '⚠️'
+        # Get distance to stop, default to high value if not present
+        distance_to_stop = position.get('distance_to_stop_pct', position.get('stop_distance_pct', 999))
+        emoji = '🚨' if distance_to_stop < 5 else '⚠️'
         
         message = f"{emoji} <b>POSITION ALERT: {position['ticker']}</b>\n\n"
-        message += f"Session: {position['session']}\n"
-        message += f"P&L: ${position['pnl_total']:+.2f} ({position['pnl_pct']:+.2f}%)\n"
+        
+        # Session (optional field from extended hours scanner)
+        if 'session' in position:
+            message += f"Session: {position['session']}\n"
+        
+        # P&L
+        pnl_total = position.get('pnl_total', position.get('pnl', 0))
+        pnl_pct = position.get('pnl_pct', 0)
+        message += f"P&L: ${pnl_total:+.2f} ({pnl_pct:+.2f}%)\n"
         message += f"Price: ${position['current_price']:.2f}\n"
         
+        # Stop loss
         if position.get('stop_loss', 0) > 0:
-            message += f"Stop: ${position['stop_loss']:.2f} ({position['distance_to_stop_pct']:.1f}% away)\n"
+            message += f"Stop: ${position['stop_loss']:.2f} ({distance_to_stop:.1f}% away)\n"
         
+        # Alert conditions
         if position.get('alert_conditions'):
             message += f"\n⚠️ {', '.join(position['alert_conditions'])}"
         
