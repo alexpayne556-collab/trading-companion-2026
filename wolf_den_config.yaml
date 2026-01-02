@@ -1,0 +1,66 @@
+# 🐺 Wolf Den Configuration
+# Autonomous monitoring system settings
+
+# Watchlist for automatic scanning
+watchlist:
+  primary: AISP
+  backup: 
+    - SOUN
+    - BBAI
+    - SMR
+  positions:
+    - LUNR
+
+# Alert settings
+alerts:
+  email: ""  # Fill in: your_email@example.com
+  email_from: ""  # Gmail address for sending
+  email_password: ""  # Gmail app password (not your regular password)
+  smtp_server: "smtp.gmail.com"
+  smtp_port: 587
+  
+  # Optional: SMS via Twilio
+  sms: ""  # Your phone number: +1234567890
+  twilio_sid: ""
+  twilio_token: ""
+  twilio_from: ""
+  
+  # Optional: Discord webhook
+  discord_webhook: ""
+
+# Alert thresholds
+thresholds:
+  gap_up_alert: 15.0  # Alert if gaps up more than 15%
+  gap_down_alert: 10.0  # Alert if gaps down more than 10%
+  volume_spike: 3.0  # Alert if volume >3x average
+  form4_hours: 24  # Alert on Form 4s within X hours
+  
+# Entry zones for primary trades
+entry_zones:
+  AISP:
+    low: 2.70
+    high: 2.90
+    stop: 2.30
+    target_1: 3.50
+    target_2: 4.50
+    
+  SOUN:
+    low: 10.50
+    high: 11.00
+    stop: 9.50
+    target_1: 12.00
+    
+# Scan schedule (24-hour format, ET)
+scan_times:
+  overnight: "04:00"
+  premarket_1: "06:00"
+  premarket_2: "08:30"
+  
+# SEC EDGAR settings
+sec:
+  user_agent: "Wolf Pack Trading research@wolfpack.trading"
+  
+# Data retention
+logging:
+  keep_days: 90
+  log_level: "INFO"
