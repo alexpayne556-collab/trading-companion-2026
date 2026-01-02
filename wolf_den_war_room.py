@@ -39,11 +39,13 @@ except:
     config = {
         'watchlist': {
             'primary': 'AISP',
-            'backup': ['SOUN', 'BBAI'],
+            'backup': ['SOUN', 'BBAI', 'SMR', 'IONQ', 'QBTS', 'PLUG', 'HIMS', 'KVUE'],
             'positions': ['LUNR']
         },
         'entry_zones': {
-            'AISP': {'low': 2.70, 'high': 2.90, 'stop': 2.30}
+            'AISP': {'low': 2.70, 'high': 2.90, 'stop': 2.30},
+            'SOUN': {'low': 9.50, 'high': 10.50, 'stop': 9.00},
+            'LUNR': {'low': 16.00, 'high': 16.85, 'stop': 16.00}
         }
     }
 
@@ -186,10 +188,8 @@ try:
                      line=dict(color="red", width=2, dash="dash"))
             ]
             
-            if show_volume:
-                fig.update_xaxes(shapes=shapes, row=1, col=1)
-            else:
-                fig.update_layout(shapes=shapes)
+            # Shapes always go in layout, not xaxis
+            fig.update_layout(shapes=shapes)
             
             # Add annotations
             annotations = [
