@@ -57,7 +57,8 @@ if st.sidebar.button("🔄 Refresh Data"):
 if st.sidebar.button("📊 Run Conviction Scan"):
     with st.spinner("Running conviction analysis..."):
         import subprocess
-        subprocess.run(['python3', 'conviction_ranker.py'], timeout=180)
+        # Use fast scanner for instant results
+        subprocess.run(['python3', 'fast_conviction_scanner.py'], timeout=60)
     st.success("✅ Conviction scan complete!")
     st.rerun()
 

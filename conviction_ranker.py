@@ -32,17 +32,29 @@ def score_insider_cluster(ticker):
         # Use form4_validator to get recent buys
         from subprocess import run, PIPE
         
-        result = run(['python3', 'form4_validator.py', ticker], 
+        result = run(['python3', 'src/research/form4_validator.py', ticker], 
                     capture_output=True, text=True, timeout=30)
         
         if result.returncode != 0:
-            return 0, "No data"
+            return 0, "No SEC data"
         
         # Parse output
         output = result.stdout
         
-        # Count Code P purchases
-        p_code_count = output.count('Code: P')
+        # Count Code P purchases in output
+        p_code_count = output.count('🟢 Code P:')
+        
+        # If not found in summary, count individual entries
+        if p_code_count == 0:
+            # Count "Code P = Open Market PURCHASE" headers
+            import re
+            p_matches = re.findall(r'Code P.*?PURCHASE', output)
+            if p_matches:
+                p_code_count = len(p_matches)
+            else:
+                # Try counting transaction dates with "PURCHASE" mentions
+                purchase_lines = [line for line in output.split('\n') if 'Open Market PURCHASE' in line]
+                p_code_count = len(purchase_lines) // 2  # Each purchase has 2 lines typically
         
         # Score based on cluster size
         if p_code_count >= 9:
@@ -72,19 +84,19 @@ def score_insider_cluster(ticker):
 def score_insider_timing(ticker):
     """Score insider timing quality using Paul Allen methodology (0-20 pts)."""
     try:
-        # Use insider_track_record if it exists
+        # Use insider_track_record from src/research
         from subprocess import run, PIPE
         
-        result = run(['python3', 'insider_track_record.py', ticker], 
+        result = run(['python3', 'src/research/insider_track_record.py', ticker], 
                     capture_output=True, text=True, timeout=30)
         
         if result.returncode != 0:
-            return 0, "No timing data"
+            return 10, "Assumed average (no data)"
         
         output = result.stdout
         
-        # Look for timing score
-        if 'timing score:' in output.lower():
+        # Look for timing score in output
+        if 'timing score:' in output.lower() or 'buy timing:' in output.lower():
             # Extract score (rough parsing)
             import re
             match = re.search(r'(\d+\.?\d*)/100', output)
@@ -93,23 +105,29 @@ def score_insider_timing(ticker):
                 
                 if timing >= 95:
                     score = 20
-                    reason = f"{timing}/100 (EXCELLENT)"
+                    reason = f"{timing:.1f}/100 (EXCELLENT)"
                 elif timing >= 85:
                     score = 15
-                    reason = f"{timing}/100 (GOOD)"
+                    reason = f"{timing:.1f}/100 (GOOD)"
                 elif timing >= 70:
                     score = 10
-                    reason = f"{timing}/100 (FAIR)"
+                    reason = f"{timing:.1f}/100 (FAIR)"
                 else:
                     score = 5
-                    reason = f"{timing}/100 (POOR)"
+                    reason = f"{timing:.1f}/100 (POOR)"
                 
                 return score, reason
         
-        return 10, "No historical data (assume average)"
+        # Check if output mentions "EXCELLENT" or similar
+        if 'EXCELLENT' in output.upper():
+            return 20, "Excellent timing"
+        elif 'GOOD' in output.upper():
+            return 15, "Good timing"
+        
+        return 10, "Assumed average timing"
         
     except Exception as e:
-        return 10, "Assumed average"
+        return 10, "Assumed average timing"
 
 def score_cash_runway(ticker):
     """Score cash runway (0-15 pts)."""
