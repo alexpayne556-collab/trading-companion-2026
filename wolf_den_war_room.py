@@ -346,9 +346,6 @@ def calculate_rsi(prices, period=14):
 try:
     hist, info = load_price_data(selected_ticker, timeframe)
     
-try:
-    hist, info = load_price_data(selected_ticker, timeframe)
-    
     if not hist.empty:
         # PATTERN DETECTION - Show first
         patterns = detect_patterns(hist)
