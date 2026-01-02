@@ -293,8 +293,13 @@ try:
         
         st.caption(f"Last scan: {premarket.get('timestamp', 'Unknown')}")
         
-        # Show each ticker
-        for ticker, data in premarket.get('watchlist', {}).items():
+        # Handle both dict and list formats
+        watchlist_data = premarket.get('watchlist', {})
+        if isinstance(watchlist_data, list):
+            st.info("⏳ Pre-market data pending. Run scan to update.")
+        else:
+            # Show each ticker
+            for ticker, data in watchlist_data.items():
             col1, col2, col3, col4 = st.columns(4)
             
             with col1:
