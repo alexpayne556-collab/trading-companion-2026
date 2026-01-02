@@ -7,8 +7,9 @@ Ties all alert systems together:
 - After-hours moves  
 - Position alerts
 - Form 4 clusters
-- Pattern scanner alerts
+- News catalysts
 - Sector rotation
+- Pattern scanner alerts
 
 Sends notifications via Telegram (or fallback to console)
 
@@ -32,6 +33,9 @@ sys.path.append(str(Path(__file__).parent.parent))
 from research.premarket_afterhours_scanner import PreMarketAfterHoursScanner
 from research.position_tracker import PositionTracker
 from research.telegram_alert_bot import TelegramAlertBot
+from research.form4_monitor import Form4Monitor
+from research.news_scraper import NewsScraper
+from research.sector_rotation import SectorRotationTracker
 
 
 class AlertOrchestrator:
@@ -44,6 +48,9 @@ class AlertOrchestrator:
         self.pm_ah_scanner = PreMarketAfterHoursScanner()
         self.position_tracker = PositionTracker()
         self.telegram = TelegramAlertBot()
+        self.form4 = Form4Monitor()
+        self.news = NewsScraper()
+        self.sectors = SectorRotationTracker()
         
         self.watchlist_file = 'atp_watchlists/ATP_WOLF_PACK_MASTER.csv'
     
@@ -52,6 +59,8 @@ class AlertOrchestrator:
         6 AM Morning Routine
         - Check pre-market gaps
         - Check position status
+        - Check sector rotation
+        - Check news catalysts
         - Generate morning report
         """
         print("\n" + "="*70)
@@ -87,9 +96,27 @@ class AlertOrchestrator:
                 if alert.get('alert_conditions'):
                     self.telegram.send_position_alert(alert)
         
-        # 3. Generate morning report
-        print("\n3️⃣ Generating morning report...")
-        report = self._build_morning_report(gaps, position_status)
+        # 3. Sector rotation check
+        print("\n3️⃣ Checking sector rotation...")
+        sector_alerts = self.sectors.get_alerts()
+        
+        for alert in sector_alerts[:3]:  # Top 3 hot/cold
+            self.telegram.send_sector_rotation_alert(alert)
+        
+        # 4. News catalyst scan
+        print("\n4️⃣ Scanning news catalysts...")
+        watchlist = self.pm_ah_scanner._load_watchlist(self.watchlist_file)
+        news_alerts = self.news.get_catalyst_alerts(watchlist[:20])  # Top 20 tickers
+        
+        for alert in news_alerts[:5]:  # Top 5 news
+            msg = f"📰 <b>{alert['ticker']}</b> - {alert['title']}\n"
+            msg += f"Keywords: {', '.join(alert['keywords'])}\n"
+            msg += f"<a href=\"{alert['link']}\">Read More</a>"
+            self.telegram.send_message(msg)
+        
+        # 5. Generate morning report
+        print("\n5️⃣ Generating morning report...")
+        report = self._build_morning_report(gaps, position_status, sector_alerts, news_alerts)
         self.telegram.send_morning_report(report)
         
         print("\n✅ Morning routine complete")
@@ -134,6 +161,14 @@ class AlertOrchestrator:
                     self.telegram.send_position_alert(alert)
                     print(f"   🚨 Sent position alert for {alert['ticker']}")
         
+        # 3. Form 4 check
+        print("\n3️⃣ Checking Form 4 filings...")
+        watchlist = self.pm_ah_scanner._load_watchlist(self.watchlist_file)
+        form4_alerts = self.form4.get_alerts(tickers=watchlist[:30])  # Top 30
+        
+        for alert in form4_alerts:
+            self.telegram.send_form4_cluster(alert)
+        
         print("\n✅ Evening routine complete")
         print("="*70 + "\n")
     
@@ -141,12 +176,11 @@ class AlertOrchestrator:
         """
         Hourly checks during market hours (9 AM - 5 PM)
         - Form 4 clusters
-        - Pattern scanner
         - Position alerts
         """
         print(f"\n⏰ HOURLY CHECK - {datetime.now().strftime('%I:%M %p')}")
         
-        # Check positions for alerts
+        # 1. Check positions for alerts
         alerts = self.position_tracker.get_alerts()
         
         if alerts:
@@ -155,8 +189,18 @@ class AlertOrchestrator:
                 self.telegram.send_position_alert(alert)
         else:
             print("   ✅ No position alerts")
+        
+        # 2. Check Form 4 clusters
+        watchlist = self.pm_ah_scanner._load_watchlist(self.watchlist_file)
+        form4_alerts = self.form4.get_alerts(tickers=watchlist[:30])
+        
+        if form4_alerts:
+            print(f"   🎯 {len(form4_alerts)} Form 4 clusters")
+            for alert in form4_alerts:
+                self.telegram.send_form4_cluster(alert)
     
-    def _build_morning_report(self, gaps: List[Dict], positions: List[Dict]) -> Dict:
+    def _build_morning_report(self, gaps: List[Dict], positions: List[Dict], 
+                             sector_alerts: List[Dict], news_alerts: List[Dict]) -> Dict:
         """Build comprehensive morning report"""
         
         # Calculate portfolio stats
@@ -172,10 +216,10 @@ class AlertOrchestrator:
                 'total': total_account
             },
             'gaps': gaps[:5] if gaps else [],
-            'positions': positions
+            'positions': positions,
+            'hot_sectors': [s for s in sector_alerts if s.get('direction') == 'HOT'][:3],
+            'news_highlights': news_alerts[:5]
         }
-        
-        # TODO: Add hot sectors, top setups when those scanners are integrated
         
         return report
     
