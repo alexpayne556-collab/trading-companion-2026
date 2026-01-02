@@ -102,3 +102,5 @@ pydantic>=2.0.0
 # ============================================================
 # ta-lib  # Technical analysis (requires system install)
 # backtrader>=1.9.0
+scikit-learn
+
