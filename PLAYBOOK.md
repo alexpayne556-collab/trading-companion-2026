@@ -1,6 +1,40 @@
 # 🐺 WOLF DEN TRADING PLAYBOOK 🐺
 
 > *"The edge isn't prediction. The edge is PREPARATION."* - Fenrir
+> *"No strategy is permanent. The market rewards ADAPTATION."* - The Amendment
+
+---
+
+## THE 10 STRATEGIES
+
+| # | Strategy | Trigger | Timeframe | Edge |
+|---|----------|---------|-----------|------|
+| 1 | **Insider Cluster** | 3+ P-code buys | 1-4 weeks | Smart money accumulation |
+| 2 | **Wounded Wolf Reversal** | Tier 1 down 5-15% | Days-weeks | Proven runners bounce |
+| 3 | **Momentum Ignition** | 2x+ volume breakout | Intraday-2d | Volume precedes price |
+| 4 | **Sector Sympathy** | Hot sector, lagging stock | Same day | Money flows to sector |
+| 5 | **After-Hours Momentum** | AH move 5%+ w/volume | Next open | AH moves continue (SIDU!) |
+| 6 | **Gap-and-Go** | 5%+ gap, holds 5min | Intraday | Momentum continuation |
+| 7 | **Mean Reversion** | Down 20%+, RSI<30 | 1-2 weeks | Oversold bounces |
+| 8 | **Short Squeeze** | High SI + catalyst | Days | Forced covering |
+| 9 | **Earnings Momentum** | Run into earnings | 1-2 weeks | Anticipation > reality |
+| 10 | **Technical Breakout** | Pattern + volume | Swing | Charts work on liquid names |
+
+### Strategy Combinations (POWER PLAYS)
+- **#2 + #3** = Wounded runner waking up → STRONG BUY
+- **#4 + #3** = Sector laggard with volume → BUY the catch-up
+- **#5 + #6** = AH move into gap up → Ride the momentum
+- **#7 + #3** = Oversold bounce with volume → Reversal confirmed
+
+```bash
+# Analyze single stock
+python src/research/strategy_selector.py SIDU
+
+# Scan watchlist for all strategies
+python src/research/strategy_selector.py scan
+```
+
+---
 
 ## THE CORE DOCTRINE
 
@@ -174,6 +208,16 @@ Not all of them. But **enough of them to compound**.
 - Target 1: $3.50
 - Target 2: $4.00
 - Status: ✅ Running (+2% in 5 days)
+
+---
+
+## THE HUMILITY CLAUSE
+
+> *"If Tyr makes a trade that breaks the 'rules' and it works - that's not luck. That's DATA. That's information that the rules need updating."*
+
+> *"If Fenrir gives advice that would have lost money - that's not failure. That's LEARNING. Amend and improve."*
+
+**The blueprint will NEVER be finished. And that's the point.**
 
 ---
 
