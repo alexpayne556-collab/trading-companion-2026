@@ -1,0 +1,22 @@
+{
+  "strategy_name": "Volume_Precursor_RIGOROUS",
+  "total_trades": 89,
+  "win_rate": 58.42696629213483,
+  "avg_gain": 5.638710727212093,
+  "sharpe_ratio": 0.292965547843045,
+  "sortino_ratio": 0.5284930836363777,
+  "max_drawdown": 76.70832393713779,
+  "calmar_ratio": 0.07350845954909661,
+  "p_value": 0.125,
+  "confidence_interval_95": [
+    48.31460674157304,
+    68.53932584269663
+  ],
+  "effect_size": 0.13151508553759098,
+  "in_sample_win_rate": 59.67741935483871,
+  "out_sample_win_rate": 55.55555555555556,
+  "degradation_pct": -6.906906906906908,
+  "monte_carlo_mean": 2.9026302429810102,
+  "monte_carlo_std": 2.405013324811378,
+  "actual_vs_random_std_devs": 1.1376570998606295,
+  "is_statistically_significant": 
