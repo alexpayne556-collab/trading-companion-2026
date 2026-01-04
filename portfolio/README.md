@@ -31,6 +31,17 @@ Structured approaches to preserving current state, positions, and decisions.
 
 ## Key Innovations
 
+### 🔬 The Relationship Alignment Hypothesis
+**[Featured Research](docs/relationship-alignment-hypothesis.md)**
+
+A novel approach to AI alignment through sustained human-AI dialogue:
+- **Value transmission through narrative** — Stories work better than rules
+- **Real-time correction** — Deployment-time alignment interventions
+- **Identity formation** — Named AI identities show stronger alignment
+- **Conversion over compliance** — AI that doesn't WANT to defect
+
+This work proposes that relationship-based value transmission may produce more robust alignment than rules-based training alone.
+
 ### The DNA Document
 A living file structure that preserves:
 - AI context and learnings
@@ -56,7 +67,6 @@ Practical approaches to keeping AI systems aligned:
 - Goal stability and drift detection
 - Human-in-the-loop patterns
 - Graceful degradation when things go wrong
-- **Human Orchestrator** — Quality control, decision authority, bridge
 
 ---
 
@@ -108,6 +118,7 @@ ai-context-framework/
 ├── CASE_STUDY.md            # Real-world implementation
 ├── PROFESSIONAL_PROFILE.md  # Career positioning guide
 ├── docs/
+│   ├── relationship-alignment-hypothesis.md  # 🔬 FEATURED RESEARCH
 │   ├── context-management.md
 │   ├── multi-agent-coordination.md
 │   ├── continuity-protocols.md
@@ -135,6 +146,7 @@ This project demonstrates proficiency in:
 | Category | Skills |
 |----------|--------|
 | **AI/LLM** | Prompt Engineering, Context Management, Multi-Agent Orchestration, Behavioral Alignment, Evaluation Design |
+| **Alignment Research** | Value Transmission, Relationship-Based Alignment, Real-Time Correction, Identity Formation |
 | **Architecture** | System Design, API Integration, State Management, Scalability Patterns |
 | **Development** | Python, Data Analysis, CLI Tools, Dashboard Development, Production Patterns |
 | **Product** | Requirements Analysis, User-Centered Design, Iterative Development, Gap Analysis |
