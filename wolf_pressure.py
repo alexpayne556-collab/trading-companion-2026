@@ -32,6 +32,8 @@ PRESSURE_UNIVERSE = [
     'SMR', 'NNE', 'LEU', 'OKLO',
     # AI/Tech
     'PLTR', 'WOLF', 'NVDA',
+    # CES 2026 Plays
+    'RR', 'SOUN',
 ]
 
 # Historical Monday win rates after big Fridays
@@ -39,11 +41,13 @@ MONDAY_RATES = {
     'RKLB': 100,  # 5/5 Mondays up after big Friday
     'QBTS': 80,   # 4/5
     'OKLO': 80,   # 4/5
+    'RR': 70,     # CES catalyst play
     'RCAT': 67,   # 4/6
     'LUNR': 67,   # 2/3
     'RDW': 67,    # 2/3
     'RGTI': 67,   # 2/3
     'IONQ': 60,   # 3/5
+    'SOUN': 55,   # High short, low expectations
     'WOLF': 50,   # estimate
     'QUBT': 29,   # 2/7
     'NNE': 17,    # 1/6

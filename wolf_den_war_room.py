@@ -168,6 +168,103 @@ if RESEARCH_MODULES_AVAILABLE:
 else:
     st.sidebar.error("⚠️ Modules not available")
 
+# ═══════════════════════════════════════════════════════════════════════════
+# HELP & INSTRUCTIONS SECTION
+# ═══════════════════════════════════════════════════════════════════════════
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 📖 Quick Help")
+
+with st.sidebar.expander("🎯 How To Use This Dashboard"):
+    st.markdown("""
+    **📊 Overview Tab**
+    - Account status and conviction scores
+    - Quick market snapshot
+    
+    **📈 Live Chart Tab**
+    - Select ticker from dropdown above
+    - Technical analysis with support/resistance
+    - Pattern detection (bull flags, triangles)
+    
+    **⚡ Pressure Tab** ⭐ NEW
+    - **Gamma squeeze** potential scores
+    - **Monday win rates** after big Fridays
+    - **Short interest** for squeeze setups
+    - Higher score = more pressure built
+    
+    **🔥 Clusters Tab**
+    - Insider buying clusters from SEC filings
+    - Multiple insiders buying = conviction
+    
+    **👁️ Monitor Tab**
+    - Real-time watchlist tracking
+    - Price alerts and volume spikes
+    
+    **🔥 Sectors Tab**
+    - Sector rotation analysis
+    - Hot/cold sector rankings
+    
+    **📅 Catalysts Tab**
+    - Earnings dates, conferences
+    - CES, analyst days, etc.
+    
+    **💣 Breakouts Tab**
+    - Failed breakouts for reversal plays
+    - Stocks that ran up and crashed
+    
+    **🎯 Watchlist Tab**
+    - Conviction rankings
+    - Sorted by composite score
+    """)
+
+with st.sidebar.expander("🐺 Monday Jan 6 Battle Plan"):
+    st.markdown("""
+    **CES 2026 PLAYS:**
+    
+    🥇 **RR (Richtech Robotics)**
+    - 26% short, 0.8 days to cover
+    - Humanoid robot demo at CES
+    - Entry: $3.35-3.50 | Stop: $3.00
+    - Target: $4.50-5.00
+    
+    🥈 **QBTS (D-Wave)**
+    - CES Foundry sponsor
+    - 80% Monday win rate
+    - Masterclass Jan 7, 1PM
+    - Entry: Market open | Target: $40
+    
+    🥉 **QUBT (Quantum Computing)**
+    - CES demos Jan 7-8
+    - 22.7% short interest
+    - HIGH RISK - tight stops!
+    
+    ⚠️ **AVOID:** IONQ, RGTI (no CES presence)
+    """)
+
+with st.sidebar.expander("⚡ Pressure Score Explained"):
+    st.markdown("""
+    **What creates PRESSURE?**
+    
+    | Factor | Points |
+    |--------|--------|
+    | Monday Win Rate | 30 |
+    | Gamma Score | 25 |
+    | Short Interest | 15 |
+    | Accumulation | 15 |
+    | Volume Surge | 15 |
+    
+    **Score Levels:**
+    - 🔥 70+ = EXTREME pressure
+    - ⚡ 55+ = HIGH pressure
+    - ✅ 40+ = MODERATE
+    - ⚪ <40 = LOW
+    
+    **The Edge:**
+    MMs MUST hedge when calls go ITM.
+    Shorts MUST cover on spikes.
+    We find WHERE pressure builds.
+    Catalyst is just the spark.
+    """)
+
 #==========================================================================
 # TAB 1: OVERVIEW
 #==========================================================================
@@ -1077,7 +1174,11 @@ with tab_sectors:
         with st.spinner("Analyzing sector momentum..."):
             df = tracker.get_sector_performance([5, 10, 20])
             
-            if not df.empty:
+            # Handle both DataFrame and dict returns
+            if isinstance(df, dict):
+                df = pd.DataFrame(df) if df else pd.DataFrame()
+            
+            if not df.empty if hasattr(df, 'empty') else len(df) > 0:
                 ranked = tracker.rank_sectors(df)
                 
                 # Top 5 hot sectors
