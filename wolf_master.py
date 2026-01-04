@@ -98,8 +98,12 @@ def full_scan():
     print(f"🎯 Watchlist: {', '.join(WATCHLIST)}")
     print_separator()
     
+    # 0. WIDE HUNT - Find front-runners across ALL sectors
+    print_header("WIDE HUNT - ALL SECTORS")
+    run_tool("python wolf_hunt_wide.py scan 2>&1")
+    
     # 1. Pressure Rankings
-    print_header("PRESSURE RANKINGS")
+    print_header("PRESSURE RANKINGS (Watchlist)")
     run_tool("python wolf_pressure.py scan 2>&1")
     
     # 2. Monday Plan
@@ -314,10 +318,19 @@ def show_tools():
 ║  python wolf_master.py status     Positions + stats               ║
 ║  python wolf_master.py tools      List all tools                  ║
 ╠═══════════════════════════════════════════════════════════════════╣
+║  WIDE HUNT (182 tickers across 13 sectors)                        ║
+╠═══════════════════════════════════════════════════════════════════╣
+║  python wolf_hunt_wide.py scan           Full market scan         ║
+║  python wolf_hunt_wide.py sector QUANTUM Scan one sector          ║
+║  python wolf_hunt_wide.py sector NUCLEAR Uranium/nuclear          ║
+║  python wolf_hunt_wide.py sector SPACE   Space stocks             ║
+║  python wolf_hunt_wide.py sector BIOTECH Biotech                  ║
+║  python wolf_hunt_wide.py top 20         Top 20 movers            ║
+╠═══════════════════════════════════════════════════════════════════╣
 ║  INDIVIDUAL TOOLS                                                 ║
 ╠═══════════════════════════════════════════════════════════════════╣
 ║  python wolf_pressure.py scan     Pressure convergence ranking    ║
-║  python wolf_gamma.py QBTS        Gamma squeeze analysis          ║
+║  python wolf_gamma.py map QBTS    Gamma squeeze analysis          ║
 ║  python wolf_monday.py plan       CES 2026 battle plan            ║
 ║  python wolf_sunday.py plan       Sunday Monday prep              ║
 ║  python wolf_alpha.py scan        Unified alpha signals           ║
