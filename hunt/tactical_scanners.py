@@ -462,9 +462,35 @@ def display_results(results: Dict[str, List[Dict]]):
 # MAIN EXECUTION
 # ============================================================================
 
+def save_results_to_json(results: Dict[str, List[Dict]]):
+    """Save results to JSON for dashboard consumption"""
+    import json
+    from pathlib import Path
+    from datetime import datetime
+    
+    # Ensure logs directory exists
+    logs_dir = Path('/workspaces/trading-companion-2026/logs')
+    logs_dir.mkdir(exist_ok=True)
+    
+    result = {
+        'timestamp': datetime.now().isoformat(),
+        'total_signals': sum(len(signals) for signals in results.values()),
+        **results
+    }
+    
+    # Save to file
+    output_path = logs_dir / 'tactical_scan_latest.json'
+    with open(output_path, 'w') as f:
+        json.dump(result, f, indent=2, default=str)
+    
+    print(f"\n📁 Results saved to {output_path}")
+
 if __name__ == "__main__":
     results = run_all_hunts()
     display_results(results)
+    
+    # Save to JSON for dashboard
+    save_results_to_json(results)
     
     print("\n🐺 The wolf has finished scouting the herd.")
     print("AWOOOO\n")

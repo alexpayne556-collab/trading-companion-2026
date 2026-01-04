@@ -717,6 +717,44 @@ THE SETUPS WE HUNT:
 # MAIN
 # ============================================================================
 
+def save_results_to_json(signals: List[PressureSignal]):
+    """Save results to JSON for dashboard consumption"""
+    import json
+    from pathlib import Path
+    
+    # Ensure logs directory exists
+    logs_dir = Path('/workspaces/trading-companion-2026/logs')
+    logs_dir.mkdir(exist_ok=True)
+    
+    # Convert signals to dict format
+    signals_data = []
+    for s in signals:
+        signals_data.append({
+            'ticker': s.ticker,
+            'type': s.pressure_type.value,
+            'trapped_player': s.trapped_player.value,
+            'score': s.pressure_score,
+            'thesis': s.thesis,
+            'entry_zone': s.entry_zone,
+            'target': s.target,
+            'stop': s.stop,
+            'timing': s.timing,
+            'data': s.data
+        })
+    
+    result = {
+        'timestamp': datetime.now().isoformat(),
+        'total_signals': len(signals),
+        'signals': signals_data
+    }
+    
+    # Save to file
+    output_path = logs_dir / 'pressure_scan_latest.json'
+    with open(output_path, 'w') as f:
+        json.dump(result, f, indent=2, default=str)
+    
+    print(f"\n📁 Results saved to {output_path}")
+
 if __name__ == "__main__":
     import argparse
     
@@ -730,6 +768,9 @@ if __name__ == "__main__":
     else:
         signals = scan_all_pressure()
         display_pressure_signals(signals)
+        
+        # Save to JSON for dashboard
+        save_results_to_json(signals)
         
         print("\n" + "="*80)
         print("🐺 THE WOLF SEES WHO'S TRAPPED")

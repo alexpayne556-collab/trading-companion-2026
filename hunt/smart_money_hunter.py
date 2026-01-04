@@ -553,6 +553,33 @@ def run_full_hunt(num_filings: int = 1000):
 # MAIN
 # ============================================================================
 
+def save_results_to_json(purchases: List[Dict], stats: Dict):
+    """Save results to JSON for dashboard consumption"""
+    import json
+    from pathlib import Path
+    
+    # Ensure logs directory exists
+    logs_dir = Path('/workspaces/trading-companion-2026/logs')
+    logs_dir.mkdir(exist_ok=True)
+    
+    result = {
+        'timestamp': datetime.now().isoformat(),
+        'total_purchases': len(purchases),
+        'total_value': sum(p.get('total_value', 0) for p in purchases),
+        'unique_tickers': len(set(p.get('ticker', '') for p in purchases)),
+        'mega_purchases': stats.get('mega_purchases', []),
+        'big_purchases': stats.get('big_purchases', []),
+        'core_universe': stats.get('core_universe_purchases', []),
+        'purchases': purchases
+    }
+    
+    # Save to file
+    output_path = logs_dir / 'smart_money_latest.json'
+    with open(output_path, 'w') as f:
+        json.dump(result, f, indent=2, default=str)
+    
+    print(f"\n📁 Results saved to {output_path}")
+
 if __name__ == "__main__":
     import argparse
     
@@ -566,5 +593,8 @@ if __name__ == "__main__":
     
     purchases, stats = hunt_smart_money(num_filings=args.filings, min_value=args.min_value)
     display_results(purchases, stats)
+    
+    # Save to JSON for dashboard
+    save_results_to_json(purchases, stats)
     
     print("\n🐺 HUNT COMPLETE. AWOOOO!\n")
