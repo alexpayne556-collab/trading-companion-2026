@@ -191,6 +191,18 @@ with st.sidebar:
     
     st.markdown("---")
     
+    # THE HUNT button - most important
+    if st.button("🐺 HUNT TODAY", type="primary", use_container_width=True, help="Find best setups NOW"):
+        with st.spinner("Hunting..."):
+            result = subprocess.run(
+                ['python', 'wolf_hunt.py', 'today', '--risk', '500'],
+                capture_output=True, text=True, timeout=300,
+                cwd='/workspaces/trading-companion-2026'
+            )
+            st.code(result.stdout or result.stderr, language="text")
+    
+    st.markdown("---")
+    
     # Market status
     st.subheader("📈 Market Status")
     try:
@@ -212,7 +224,8 @@ with st.sidebar:
 # MAIN CONTENT - TABS
 # ============================================================================
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12, tab13 = st.tabs([
+tab0, tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12, tab13 = st.tabs([
+    "🐺 HUNT",
     "🎯 PRESSURE MAP",
     "💰 SMART MONEY",
     "🔫 TACTICAL",
@@ -227,6 +240,84 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12, tab13
     "🏠 DEN",
     "🔧 SETTINGS"
 ])
+
+# ============================================================================
+# TAB 0: THE HUNT - Main Decision Engine
+# ============================================================================
+
+with tab0:
+    st.header("🐺 THE HUNT - Should I Trade This?")
+    st.caption("One command. Everything checked. Clear verdict.")
+    
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        hunt_ticker = st.text_input("Enter ticker to hunt:", "", key="hunt_main_ticker", 
+                                    placeholder="GME, IONQ, MARA...")
+        
+        col_a, col_b = st.columns(2)
+        with col_a:
+            hunt_risk = st.number_input("Risk amount ($):", min_value=100, max_value=10000, 
+                                        value=500, step=100, key="hunt_risk")
+        with col_b:
+            st.write("")  # Spacer
+            st.write("")
+            if st.button("🐺 HUNT THIS TICKER", type="primary", key="hunt_single"):
+                if hunt_ticker:
+                    with st.spinner(f"Hunting {hunt_ticker.upper()}..."):
+                        result = subprocess.run(
+                            ['python', 'wolf_hunt.py', hunt_ticker.upper(), '--risk', str(hunt_risk)],
+                            capture_output=True, text=True, timeout=120,
+                            cwd='/workspaces/trading-companion-2026'
+                        )
+                        st.code(result.stdout or result.stderr, language="text")
+    
+    with col2:
+        st.subheader("⚡ Quick Hunt")
+        
+        if st.button("🎯 What to Hunt TODAY?", use_container_width=True, key="hunt_today"):
+            with st.spinner("Finding best setups..."):
+                result = subprocess.run(
+                    ['python', 'wolf_hunt.py', 'today', '--risk', str(hunt_risk)],
+                    capture_output=True, text=True, timeout=300,
+                    cwd='/workspaces/trading-companion-2026'
+                )
+                st.code(result.stdout or result.stderr, language="text")
+        
+        if st.button("🌐 Scan ALL Universe", use_container_width=True, key="hunt_scan"):
+            with st.spinner("Scanning all tickers..."):
+                result = subprocess.run(
+                    ['python', 'wolf_hunt.py', 'scan', '--risk', str(hunt_risk)],
+                    capture_output=True, text=True, timeout=600,
+                    cwd='/workspaces/trading-companion-2026'
+                )
+                st.code(result.stdout or result.stderr, language="text")
+    
+    st.markdown("---")
+    
+    st.subheader("📖 The Verdict System")
+    
+    st.markdown("""
+    | Verdict | Meaning | Action |
+    |---------|---------|--------|
+    | 🟢 **HUNT** | Multiple signals aligned, clear setup | Put money down |
+    | 🟡 **STALK** | Interesting but incomplete | Watch for better entry |
+    | 🔴 **PASS** | Not enough edge | Skip, no trade |
+    
+    **7 Signals Checked:**
+    1. **Gamma Squeeze** - Options chain pressure
+    2. **Momentum** - Price trend strength
+    3. **Volume** - Confirmation and accumulation
+    4. **Short Squeeze** - Shorts getting trapped
+    5. **Technical Setup** - Clean levels, breakouts
+    6. **Market Regime** - Risk-on/off environment
+    7. **Sector Momentum** - Peers moving together
+    
+    **The Three Wolves:**
+    - 🔧 **Brokkr** validates signals
+    - 🐺 **Fenrir** checks R:R  
+    - 👑 **Tyr** makes the call
+    """)
 
 # ============================================================================
 # TAB 1: PRESSURE MAP
