@@ -1,0 +1,51 @@
+{
+  "IONQ": {
+    "shares": 500,
+    "entry_price": 35.0,
+    "entry_date": "2026-01-04T03:18:18.470199",
+    "sector": "quantum",
+    "notes": ""
+  },
+  "RGTI": {
+    "shares": 1000,
+    "entry_price": 12.5,
+    "entry_date": "2026-01-04T03:18:18.470536",
+    "sector": "quantum",
+    "notes": ""
+  },
+  "NNE": {
+    "shares": 200,
+    "entry_price": 28.0,
+    "entry_date": "2026-01-04T03:18:18.470965",
+    "sector": "nuclear",
+    "notes": ""
+  },
+  "OKLO": {
+    "shares": 300,
+    "entry_price": 22.0,
+    "entry_date": "2026-01-04T03:18:18.471385",
+    "sector": "nuclear",
+    "notes": ""
+  },
+  "SOUN": {
+    "shares": 800,
+    "entry_price": 8.5,
+    "entry_date": "2026-01-04T03:18:18.471774",
+    "sector": "voice_ai",
+    "notes": ""
+  },
+  "MARA": {
+    "shares": 400,
+    "entry_price": 18.0,
+    "entry_date": "2026-01-04T03:18:18.472211",
+    "sector": "crypto",
+    "notes": ""
+  },
+  "ARM": {
+    "shares": 100,
+    "entry_price": 145.0,
+    "entry_date": "2026-01-04T03:18:18.472618",
+    "sector": "ai_chips",
+    "notes": ""
+  }
+}

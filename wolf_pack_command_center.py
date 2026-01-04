@@ -187,13 +187,16 @@ with st.sidebar:
 # MAIN CONTENT - TABS
 # ============================================================================
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
     "🎯 PRESSURE MAP",
     "💰 SMART MONEY",
     "🔫 TACTICAL",
     "📊 CONVICTION",
     "📤 EXPORT",
     "📓 JOURNAL",
+    "👁️ WATCHER",
+    "🧠 LEARNER",
+    "🔗 CORRELATOR",
     "🔧 SETTINGS"
 ])
 
@@ -678,10 +681,342 @@ with tab6:
             st.success("Backtest complete! Check exports/backtest_results.csv")
 
 # ============================================================================
-# TAB 7: SETTINGS
+# TAB 7: WATCHER - Real-time Monitoring
 # ============================================================================
 
 with tab7:
+    st.header("👁️ Wolf Watcher - Real-Time Monitoring")
+    
+    st.markdown("""
+    The eyes that never close. Monitor Form 4 filings, volume spikes, 
+    laggard opportunities, and stop prices in real-time.
+    """)
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("🎮 Watcher Controls")
+        
+        if st.button("🧪 Test Alerts", use_container_width=True):
+            with st.spinner("Testing..."):
+                result = subprocess.run(
+                    ['python', 'wolf_watcher.py', 'test'],
+                    capture_output=True, text=True, timeout=30,
+                    cwd='/workspaces/trading-companion-2026'
+                )
+                if result.returncode == 0:
+                    st.success("Alert test complete!")
+                    st.code(result.stdout[-2000:])
+                else:
+                    st.error(f"Error: {result.stderr}")
+        
+        if st.button("📊 Quick Volume Check", use_container_width=True):
+            with st.spinner("Checking volume..."):
+                result = subprocess.run(
+                    ['python', 'wolf_watcher.py', 'check', '--volume'],
+                    capture_output=True, text=True, timeout=120,
+                    cwd='/workspaces/trading-companion-2026'
+                )
+                st.code(result.stdout[-2000:] if result.stdout else "No output")
+        
+        if st.button("🎯 Quick Laggard Check", use_container_width=True):
+            with st.spinner("Checking laggards..."):
+                result = subprocess.run(
+                    ['python', 'wolf_watcher.py', 'check', '--laggards'],
+                    capture_output=True, text=True, timeout=120,
+                    cwd='/workspaces/trading-companion-2026'
+                )
+                st.code(result.stdout[-2000:] if result.stdout else "No output")
+    
+    with col2:
+        st.subheader("🛑 Stop Management")
+        
+        # Add stop form
+        with st.form("add_stop"):
+            stop_ticker = st.text_input("Ticker")
+            stop_price = st.number_input("Stop Price", min_value=0.0, step=0.01)
+            entry_price = st.number_input("Entry Price (optional)", min_value=0.0, step=0.01)
+            
+            if st.form_submit_button("Add Stop"):
+                if stop_ticker and stop_price > 0:
+                    cmd = ['python', 'wolf_watcher.py', 'stops', '--add', 
+                           f"{stop_ticker}:{stop_price}:{entry_price}" if entry_price > 0 
+                           else f"{stop_ticker}:{stop_price}"]
+                    result = subprocess.run(cmd, capture_output=True, text=True,
+                                          cwd='/workspaces/trading-companion-2026')
+                    st.success(f"Stop added: {stop_ticker} @ ${stop_price}")
+        
+        # List stops
+        if st.button("📋 List Stops"):
+            result = subprocess.run(
+                ['python', 'wolf_watcher.py', 'stops', '--list'],
+                capture_output=True, text=True,
+                cwd='/workspaces/trading-companion-2026'
+            )
+            st.code(result.stdout if result.stdout else "No stops configured")
+    
+    st.markdown("---")
+    
+    st.subheader("📜 Recent Alerts")
+    alerts_file = Path("logs/wolf_alerts.jsonl")
+    if alerts_file.exists():
+        alerts = []
+        with open(alerts_file) as f:
+            for line in f:
+                try:
+                    alerts.append(json.loads(line))
+                except:
+                    pass
+        
+        if alerts:
+            recent = alerts[-20:][::-1]  # Last 20, newest first
+            for alert in recent:
+                icon = {"form4": "📋", "volume_spike": "📈", "laggard": "🎯", 
+                        "stop_hit": "🛑", "system": "⚙️"}.get(alert.get("type"), "🔔")
+                priority = alert.get("priority", "normal")
+                color = "🔴" if priority == "critical" else "🟡" if priority == "high" else "⚪"
+                
+                time_str = datetime.fromisoformat(alert["timestamp"]).strftime("%H:%M:%S")
+                st.markdown(f"{color} **{time_str}** {icon} **{alert['ticker']}**: {alert['message']}")
+        else:
+            st.info("No alerts yet. Run the watcher to generate alerts.")
+    else:
+        st.info("No alerts file found. Run `python wolf_watcher.py watch` to start monitoring.")
+    
+    st.markdown("---")
+    st.code("""
+# Start real-time watcher (runs continuously)
+python wolf_watcher.py watch
+
+# One-time checks
+python wolf_watcher.py check --all
+python wolf_watcher.py check --volume
+python wolf_watcher.py check --laggards
+
+# Manage watchlist
+python wolf_watcher.py watchlist --init
+python wolf_watcher.py watchlist --add TICKER
+python wolf_watcher.py watchlist --list
+    """, language="bash")
+
+# ============================================================================
+# TAB 8: LEARNER - Personal Trading Intelligence
+# ============================================================================
+
+with tab8:
+    st.header("🧠 Wolf Learner - Your Personal Trading Intelligence")
+    
+    st.markdown("""
+    The system that learns YOU. Analyzes your trade history, identifies your strengths
+    and weaknesses, and weights signals based on YOUR track record.
+    """)
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("📊 Build Your Profile")
+        
+        if st.button("🧠 Analyze My Trading", type="primary", use_container_width=True):
+            with st.spinner("Analyzing your trades..."):
+                result = subprocess.run(
+                    ['python', 'wolf_learner.py', 'profile'],
+                    capture_output=True, text=True, timeout=60,
+                    cwd='/workspaces/trading-companion-2026'
+                )
+                st.code(result.stdout[-3000:] if result.stdout else "No trades found. Log some trades first!")
+    
+    with col2:
+        st.subheader("⚖️ Signal Weights")
+        
+        signal_type = st.selectbox("Signal Type", [
+            "insider_buy", "short_squeeze", "capitulation", "momentum",
+            "laggard", "volume_spike", "pocket_pivot", "wolf_signal", "manual"
+        ])
+        
+        if st.button("Get Weight", use_container_width=True):
+            result = subprocess.run(
+                ['python', 'wolf_learner.py', 'weight', signal_type],
+                capture_output=True, text=True,
+                cwd='/workspaces/trading-companion-2026'
+            )
+            st.code(result.stdout if result.stdout else "No data")
+        
+        if st.button("Position Size Suggestion", use_container_width=True):
+            result = subprocess.run(
+                ['python', 'wolf_learner.py', 'size', signal_type],
+                capture_output=True, text=True,
+                cwd='/workspaces/trading-companion-2026'
+            )
+            st.code(result.stdout if result.stdout else "No data")
+    
+    st.markdown("---")
+    
+    st.subheader("📝 Record Skipped Signal")
+    
+    with st.form("skip_signal"):
+        skip_col1, skip_col2, skip_col3 = st.columns(3)
+        
+        with skip_col1:
+            skip_ticker = st.text_input("Ticker Skipped")
+        with skip_col2:
+            skip_signal = st.selectbox("Signal Type", [
+                "insider_buy", "short_squeeze", "capitulation", "momentum",
+                "laggard", "volume_spike"
+            ], key="skip_signal_type")
+        with skip_col3:
+            skip_reason = st.text_input("Reason (optional)")
+        
+        if st.form_submit_button("Record Skip"):
+            if skip_ticker:
+                cmd = ['python', 'wolf_learner.py', 'skip', skip_ticker.upper(), skip_signal]
+                if skip_reason:
+                    cmd.extend(['--reason', skip_reason])
+                result = subprocess.run(cmd, capture_output=True, text=True,
+                                       cwd='/workspaces/trading-companion-2026')
+                st.success(f"Recorded skip: {skip_ticker.upper()}")
+    
+    st.markdown("---")
+    
+    # Load and display profile if exists
+    profile_file = Path("logs/wolf_profile.json")
+    if profile_file.exists():
+        with open(profile_file) as f:
+            profile = json.load(f)
+        
+        if "overall" in profile:
+            st.subheader("📈 Your Profile Summary")
+            
+            metrics_col1, metrics_col2, metrics_col3, metrics_col4 = st.columns(4)
+            
+            with metrics_col1:
+                st.metric("Total Trades", profile["total_trades"])
+            with metrics_col2:
+                st.metric("Win Rate", f"{profile['overall']['win_rate']:.1f}%")
+            with metrics_col3:
+                st.metric("Expectancy", f"{profile['overall']['expectancy']:.2f}")
+            with metrics_col4:
+                st.metric("Profit Factor", f"{profile['overall']['profit_factor']:.2f}")
+            
+            if profile.get("strengths"):
+                st.subheader("💪 Your Strengths")
+                for s in profile["strengths"][:3]:
+                    st.success(f"✅ {s['type'].upper()}: {s['name']} ({s['win_rate']:.0f}% win rate)")
+            
+            if profile.get("weaknesses"):
+                st.subheader("⚠️ Your Weaknesses")
+                for w in profile["weaknesses"][:3]:
+                    st.warning(f"❌ {w['type'].upper()}: {w['name']} ({w['win_rate']:.0f}% win rate)")
+
+# ============================================================================
+# TAB 9: CORRELATOR - Portfolio Risk Intelligence
+# ============================================================================
+
+with tab9:
+    st.header("🔗 Wolf Correlator - Portfolio Risk Intelligence")
+    
+    st.markdown("""
+    Real portfolio thinking. Track sector exposure, correlations, and get warned
+    before you accidentally concentrate risk.
+    """)
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("📊 Portfolio Analysis")
+        
+        if st.button("🔍 Analyze Portfolio", type="primary", use_container_width=True):
+            with st.spinner("Analyzing..."):
+                result = subprocess.run(
+                    ['python', 'wolf_correlator.py', 'portfolio', '--analyze'],
+                    capture_output=True, text=True, timeout=120,
+                    cwd='/workspaces/trading-companion-2026'
+                )
+                st.code(result.stdout[-3000:] if result.stdout else "No positions. Add some first!")
+        
+        if st.button("📥 Load Demo Portfolio", use_container_width=True):
+            result = subprocess.run(
+                ['python', 'wolf_correlator.py', 'demo'],
+                capture_output=True, text=True, timeout=120,
+                cwd='/workspaces/trading-companion-2026'
+            )
+            st.success("Demo portfolio loaded!")
+            st.code(result.stdout[-3000:])
+        
+        if st.button("💡 Get Diversification Ideas", use_container_width=True):
+            result = subprocess.run(
+                ['python', 'wolf_correlator.py', 'suggest'],
+                capture_output=True, text=True,
+                cwd='/workspaces/trading-companion-2026'
+            )
+            st.code(result.stdout if result.stdout else "Add positions first")
+    
+    with col2:
+        st.subheader("🎯 Check New Position")
+        
+        check_ticker = st.text_input("Ticker to Check", key="corr_check_ticker")
+        
+        if st.button("Check Correlations", use_container_width=True):
+            if check_ticker:
+                result = subprocess.run(
+                    ['python', 'wolf_correlator.py', 'check', check_ticker.upper()],
+                    capture_output=True, text=True, timeout=60,
+                    cwd='/workspaces/trading-companion-2026'
+                )
+                st.code(result.stdout if result.stdout else "Error checking")
+        
+        st.markdown("---")
+        
+        st.subheader("➕ Add Position")
+        
+        with st.form("add_position"):
+            pos_ticker = st.text_input("Ticker")
+            pos_shares = st.number_input("Shares", min_value=0.0, step=1.0)
+            pos_price = st.number_input("Entry Price", min_value=0.0, step=0.01)
+            
+            if st.form_submit_button("Add Position"):
+                if pos_ticker and pos_shares > 0 and pos_price > 0:
+                    result = subprocess.run(
+                        ['python', 'wolf_correlator.py', 'portfolio', '--add',
+                         f"{pos_ticker.upper()}:{pos_shares}:{pos_price}"],
+                        capture_output=True, text=True,
+                        cwd='/workspaces/trading-companion-2026'
+                    )
+                    st.success(f"Added: {pos_ticker.upper()}")
+    
+    st.markdown("---")
+    
+    st.subheader("🔗 Check Correlation Between Tickers")
+    
+    corr_col1, corr_col2 = st.columns(2)
+    with corr_col1:
+        ticker1 = st.text_input("Ticker 1", key="corr_t1")
+    with corr_col2:
+        ticker2 = st.text_input("Ticker 2", key="corr_t2")
+    
+    if st.button("Calculate Correlation"):
+        if ticker1 and ticker2:
+            result = subprocess.run(
+                ['python', 'wolf_correlator.py', 'correlation', 
+                 ticker1.upper(), ticker2.upper()],
+                capture_output=True, text=True, timeout=30,
+                cwd='/workspaces/trading-companion-2026'
+            )
+            st.code(result.stdout if result.stdout else "Error")
+    
+    st.markdown("---")
+    st.info("""
+    💡 **Correlation Guide:**
+    - 🔴 **> 0.85**: Essentially same position - avoid doubling up
+    - 🟡 **0.70-0.85**: High correlation - consider as partial position
+    - 🟢 **0.50-0.70**: Moderate - some diversification benefit
+    - ⚪ **< 0.50**: Low correlation - good diversification
+    """)
+
+# ============================================================================
+# TAB 10: SETTINGS
+# ============================================================================
+
+with tab10:
     st.header("🔧 Settings & Universe")
     
     st.subheader("🌐 Trading Universe")
