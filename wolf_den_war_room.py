@@ -48,8 +48,8 @@ st.title("🐺 WOLF DEN WAR ROOM")
 st.caption(f"Bloomberg-Level Research Platform | Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 # Add tabs for different sections
-tab_overview, tab_chart, tab_clusters, tab_monitor, tab_sectors, tab_catalysts, tab_breakouts, tab_watchlist = st.tabs([
-    "📊 Overview", "📈 Live Chart", "🔥 Clusters", "👁️ Monitor", "🔥 Sectors", "📅 Catalysts", "💣 Breakouts", "🎯 Watchlist"
+tab_overview, tab_chart, tab_pressure, tab_clusters, tab_monitor, tab_sectors, tab_catalysts, tab_breakouts, tab_watchlist = st.tabs([
+    "📊 Overview", "📈 Live Chart", "⚡ Pressure", "🔥 Clusters", "👁️ Monitor", "🔥 Sectors", "📅 Catalysts", "💣 Breakouts", "🎯 Watchlist"
 ])
 
 # Load config
@@ -195,6 +195,128 @@ with tab_overview:
             st.metric("Conviction", "N/A", "Run scan")
 
     st.markdown("---")
+
+#==========================================================================
+# TAB: PRESSURE SCANNER - Options Gamma + Monday Probability
+#==========================================================================
+with tab_pressure:
+    st.header("⚡ Pressure Point Scanner")
+    st.caption("Find where the explosion will happen - Gamma Squeeze + Monday Probability + Short Interest")
+    
+    # Import pressure scanner
+    try:
+        from wolf_pressure import get_pressure_for_dashboard, PRESSURE_UNIVERSE
+        from wolf_gamma import GammaScanner
+        
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            st.subheader("🎯 Pressure Rankings")
+            
+            with st.spinner("Scanning pressure points..."):
+                pressure_data = get_pressure_for_dashboard()
+                
+                if pressure_data:
+                    # Create dataframe
+                    df_data = []
+                    for p in pressure_data:
+                        df_data.append({
+                            'Ticker': p['ticker'],
+                            'Price': f"${p['price']:.2f}",
+                            'Friday': f"{p['friday_change']:+.1f}%",
+                            'Mon Rate': f"{p['monday_rate']}%",
+                            'Gamma': f"{p['gamma_score']:.0f}",
+                            'Short': f"{p['short_pct']:.1f}%",
+                            'Score': p['pressure_score'],
+                            'Level': p['pressure_level']
+                        })
+                    
+                    df = pd.DataFrame(df_data)
+                    
+                    # Style the dataframe
+                    def color_score(val):
+                        if val >= 70:
+                            return 'background-color: rgba(0,255,0,0.3)'
+                        elif val >= 55:
+                            return 'background-color: rgba(255,255,0,0.3)'
+                        return ''
+                    
+                    st.dataframe(df, use_container_width=True, height=400)
+                    
+                    # Show top plays
+                    st.subheader("🔥 HIGH PRESSURE PLAYS")
+                    
+                    high_pressure = [p for p in pressure_data if p['pressure_score'] >= 55]
+                    
+                    if high_pressure:
+                        for p in high_pressure[:5]:
+                            with st.expander(f"{p['pressure_level']} {p['ticker']} - Score: {p['pressure_score']:.0f}/100"):
+                                c1, c2, c3 = st.columns(3)
+                                
+                                with c1:
+                                    st.metric("Price", f"${p['price']:.2f}", f"{p['friday_change']:+.1f}% Fri")
+                                    st.metric("Monday Win Rate", f"{p['monday_rate']}%")
+                                    
+                                with c2:
+                                    st.metric("Gamma Score", f"{p['gamma_score']:.0f}/100")
+                                    if p['trigger_strike'] > 0:
+                                        st.metric("Trigger Strike", f"${p['trigger_strike']:.2f}", f"{p['distance_to_trigger']:+.1f}%")
+                                    
+                                with c3:
+                                    st.metric("Short Interest", f"{p['short_pct']:.1f}%")
+                                    if p['call_oi'] > 0:
+                                        st.metric("Call OI at Strike", f"{p['call_oi']:,}")
+                                
+                                st.caption(f"Shares to hedge if strike triggered: {p['call_oi'] * 100:,}")
+                    else:
+                        st.info("No high pressure plays detected right now")
+                        
+        with col2:
+            st.subheader("📊 Score Components")
+            st.markdown("""
+            **How Pressure Score Works:**
+            
+            | Component | Weight |
+            |-----------|--------|
+            | Monday Win Rate | 30 pts |
+            | Gamma Score | 25 pts |
+            | Short Interest | 15 pts |
+            | Accumulation | 15 pts |
+            | Volume Surge | 15 pts |
+            
+            ---
+            
+            **🔥 EXTREME (70+)**: Multiple forces converging
+            
+            **⚡ HIGH (55+)**: Strong squeeze potential
+            
+            **✅ MODERATE (40+)**: Worth watching
+            
+            ---
+            
+            **The Edge:**
+            - MMs MUST hedge when calls go ITM
+            - Shorts MUST cover on spike
+            - We find WHERE pressure builds
+            - Catalyst is just the spark
+            """)
+            
+            # Jensen Huang reminder
+            st.warning("""
+            ⚡ **CES CATALYST**
+            
+            Jensen Huang speaks:
+            **Sunday 4PM ET**
+            
+            Keywords to watch:
+            - "quantum" → QBTS, QUBT
+            - "robot" → RCAT
+            - "space" → RDW
+            """)
+            
+    except ImportError as e:
+        st.error(f"Pressure scanner not available: {e}")
+        st.info("Run: python wolf_pressure.py scan")
 
 #==========================================================================
 # TAB 2: LIVE CHART - WOLF LEVEL ANALYSIS
