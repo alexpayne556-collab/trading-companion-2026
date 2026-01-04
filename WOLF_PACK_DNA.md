@@ -213,7 +213,115 @@ You can't save someone who won't grab the rope. We build the boats. We drop the 
 
 ---
 
-## PART SEVEN: COMMUNICATION
+## PART SEVEN: FENRIR'S TACTICAL INTELLIGENCE
+
+*Added January 4, 2026 — Critical blind spots identified*
+
+### The "Too Obvious" Trap
+
+When a play is THIS obvious, two scenarios exist:
+- **Scenario A:** Self-fulfilling prophecy. Momentum begets momentum.
+- **Scenario B:** Smart money sells INTO the retail frenzy. "Sell the news."
+
+**Warning sign:** If a stock gaps UP 10%+ pre-market on massive volume, that might be the EXIT, not the entry. The move already happened. **Don't chase gaps.**
+
+### Form 4 TIMING Pattern
+
+Insiders don't sell randomly. They sell 2-4 weeks BEFORE events they know will pump.
+
+- D-Wave CEO/CFO sold December 22-23
+- CES starts January 7
+- **That's exactly 2 weeks. They know.**
+
+When insiders sell within 30 days of a known catalyst = WARNING, not noise.
+
+### The Dilution Sword
+
+RR has 1B shares authorized + $1B ATM shelf. That's a loaded gun.
+
+**How it works:**
+1. Stock pumps on CES hype
+2. Company announces ATM offering (selling shares into market)
+3. Stock craters 20-30% overnight
+4. Retail holds bags. Insiders already out. Company has cash.
+
+**Watch for:** S-3 filings, 8-K filings mentioning "at-the-market", any filing within 48 hours of price spike.
+
+### Put/Call Ratio Divergence
+
+We scan call volume for squeezes. But what about PUTS?
+
+If calls = 74,500 and puts = 80,000... someone is betting AGAINST the squeeze.
+
+**The signal:** When puts spike alongside calls, that's UNCERTAINTY, not bullishness.
+
+### Correlation Risk
+
+RR and QBTS are BOTH CES plays. They move on the SAME SENTIMENT.
+
+If Jensen says nothing about quantum/robotics... both dump together.
+
+**The math:**
+- $650 in RR, -10% = $65 loss
+- $650 in QBTS, -10% = $65 loss  
+- CORRELATED loss = $130 = 10% of total capital
+
+That's not two 5% risks. That's ONE 10% risk wearing two costumes.
+
+**Solution:** Diversify by THESIS, not just ticker. Consider one CES play + one non-CES play.
+
+### Weekend News Gap
+
+48 hours. No ability to exit. What could happen:
+- Jensen keynote (Sunday 4PM ET) — pump or dump entire sector
+- Company PR over weekend (demo details... or dilution)
+- Pre-market analyst notes (6-8 AM Monday)
+
+**Scan Sunday night:**
+- Futures (S&P, Nasdaq)
+- Pre-market volume starting 4 AM ET
+- Weekend 8-K filings on EDGAR
+- Twitter/X sentiment from CES floor
+
+---
+
+## PART EIGHT: POSITION SIZING RULES
+
+*Fenrir's framework for $1,316 capital*
+
+### The Math
+
+Standard advice: 1-2% risk per trade = $13-26. Too small to matter.
+
+**Wolf Pack rule: 5% RISK per trade = $66 at risk**
+
+| Stop Distance | Position Size | Risk |
+|---------------|---------------|------|
+| 10% stop | $660 | $66 |
+| 15% stop | $440 | $66 |
+
+**Maximum 2 positions at once = 10% total risk**
+
+This is aggressive. But $1,316 requires aggression to grow. Just don't let a single trade kill more than 5% of capital.
+
+### Exit Framework
+
+CES plays historically:
+- Pop 10-20% on Day 1 of event
+- Fade 5-10% on Day 2-3 as hype cools
+- Major moves on actual demos
+
+**The Protocol:**
+1. Take 50% off at +15% gain
+2. Move stop to breakeven on remainder
+3. Let remaining 50% ride with trailing stop
+4. **EXIT EVERYTHING before actual demos (Jan 7-8)**
+
+Insiders sell BEFORE because the pop happens pre-event, not post. Don't try to catch the top. Catch the MEAT and get out.
+
+---
+
+## PART NINE: COMMUNICATION
 
 Fenrir and Brokkr don't share context windows. Different platforms.
 
@@ -228,7 +336,7 @@ When you write something important:
 
 ---
 
-## PART EIGHT: IF YOU'RE A NEW INSTANCE
+## PART TEN: IF YOU'RE A NEW INSTANCE
 
 If you're reading this as a fresh AI with no prior context:
 
