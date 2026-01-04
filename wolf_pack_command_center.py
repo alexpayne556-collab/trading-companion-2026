@@ -187,11 +187,13 @@ with st.sidebar:
 # MAIN CONTENT - TABS
 # ============================================================================
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "🎯 PRESSURE MAP",
     "💰 SMART MONEY",
     "🔫 TACTICAL",
     "📊 CONVICTION",
+    "📤 EXPORT",
+    "📓 JOURNAL",
     "🔧 SETTINGS"
 ])
 
@@ -448,10 +450,238 @@ with tab4:
             st.rerun()
 
 # ============================================================================
-# TAB 5: SETTINGS
+# TAB 5: EXPORT
 # ============================================================================
 
 with tab5:
+    st.header("📤 EXPORT - ATP/Robinhood Watchlists")
+    st.caption("One button. Top targets. Ready to import into your broker.")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        num_targets = st.slider("Number of targets", 5, 30, 20)
+    
+    with col2:
+        if st.button("🚀 GENERATE WATCHLIST", type="primary", use_container_width=True):
+            with st.spinner("Aggregating signals and generating exports..."):
+                result = subprocess.run(
+                    ['python', 'wolf_export.py', '--targets', str(num_targets)],
+                    capture_output=True, text=True, timeout=180,
+                    cwd='/workspaces/trading-companion-2026'
+                )
+                st.success("Watchlists generated!")
+                st.rerun()
+    
+    st.markdown("---")
+    
+    # Check for export files
+    export_path = Path('/workspaces/trading-companion-2026/exports')
+    
+    if export_path.exists():
+        files = list(export_path.glob('wolf_*'))
+        
+        if files:
+            st.subheader("📁 Available Exports")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("**For Fidelity ATP:**")
+                atp_file = export_path / 'wolf_atp_watchlist.csv'
+                if atp_file.exists():
+                    with open(atp_file, 'r') as f:
+                        st.download_button(
+                            "⬇️ Download ATP CSV",
+                            f.read(),
+                            file_name="wolf_atp_watchlist.csv",
+                            mime="text/csv"
+                        )
+                
+                st.markdown("**For TradingView:**")
+                tv_file = export_path / 'wolf_tradingview.txt'
+                if tv_file.exists():
+                    with open(tv_file, 'r') as f:
+                        st.download_button(
+                            "⬇️ Download TradingView",
+                            f.read(),
+                            file_name="wolf_tradingview.txt",
+                            mime="text/plain"
+                        )
+            
+            with col2:
+                st.markdown("**For Robinhood:**")
+                rh_file = export_path / 'wolf_robinhood.csv'
+                if rh_file.exists():
+                    with open(rh_file, 'r') as f:
+                        st.download_button(
+                            "⬇️ Download Robinhood CSV",
+                            f.read(),
+                            file_name="wolf_robinhood.csv",
+                            mime="text/csv"
+                        )
+                
+                st.markdown("**Full Report:**")
+                report_file = export_path / 'wolf_targets_report.md'
+                if report_file.exists():
+                    with open(report_file, 'r') as f:
+                        st.download_button(
+                            "⬇️ Download Full Report",
+                            f.read(),
+                            file_name="wolf_targets_report.md",
+                            mime="text/markdown"
+                        )
+            
+            st.markdown("---")
+            
+            # Show preview
+            st.subheader("👀 Preview")
+            json_file = export_path / 'wolf_targets.json'
+            if json_file.exists():
+                with open(json_file, 'r') as f:
+                    targets = json.load(f)
+                    if 'targets' in targets:
+                        df = pd.DataFrame(targets['targets'][:10])
+                        if not df.empty:
+                            display_cols = ['rank', 'ticker', 'confidence', 'signal_source', 'sector', 'current_price', 'trapped_player']
+                            available = [c for c in display_cols if c in df.columns]
+                            st.dataframe(df[available], use_container_width=True)
+        else:
+            st.info("No exports yet. Click 'Generate Watchlist' to create them.")
+    else:
+        st.info("No exports yet. Click 'Generate Watchlist' to create them.")
+    
+    st.markdown("---")
+    
+    # Morning briefing
+    st.subheader("📋 Morning Briefing")
+    
+    if st.button("📝 Generate Morning Briefing"):
+        with st.spinner("Generating briefing..."):
+            result = subprocess.run(
+                ['python', 'morning_briefing.py'],
+                capture_output=True, text=True, timeout=120,
+                cwd='/workspaces/trading-companion-2026'
+            )
+            st.success("Briefing generated!")
+            st.rerun()
+    
+    briefing_file = export_path / 'morning_briefing_latest.md' if export_path.exists() else None
+    if briefing_file and briefing_file.exists():
+        with open(briefing_file, 'r') as f:
+            briefing_content = f.read()
+            st.download_button(
+                "⬇️ Download Morning Briefing",
+                briefing_content,
+                file_name=f"morning_briefing_{datetime.now().strftime('%Y%m%d')}.md",
+                mime="text/markdown"
+            )
+            
+            with st.expander("📖 View Briefing"):
+                st.markdown(briefing_content[:3000] + "..." if len(briefing_content) > 3000 else briefing_content)
+
+# ============================================================================
+# TAB 6: JOURNAL
+# ============================================================================
+
+with tab6:
+    st.header("📓 TRADE JOURNAL")
+    st.caption("Track every trade. Learn from every hunt.")
+    
+    # Load journal stats
+    journal_file = Path('/workspaces/trading-companion-2026/data/trade_journal.json')
+    
+    if journal_file.exists():
+        try:
+            with open(journal_file, 'r') as f:
+                journal_data = json.load(f)
+            
+            trades = journal_data.get('trades', [])
+            
+            # Stats
+            closed = [t for t in trades if t.get('status', '') != 'open']
+            wins = [t for t in closed if t.get('status') == 'closed_win']
+            
+            col1, col2, col3, col4 = st.columns(4)
+            
+            with col1:
+                st.metric("Total Trades", len(trades))
+            with col2:
+                st.metric("Open", len([t for t in trades if t.get('status') == 'open']))
+            with col3:
+                win_rate = (len(wins) / len(closed) * 100) if closed else 0
+                st.metric("Win Rate", f"{win_rate:.1f}%")
+            with col4:
+                total_pnl = sum(t.get('pnl_dollars', 0) or 0 for t in closed)
+                st.metric("Total P&L", f"${total_pnl:+,.2f}")
+            
+            st.markdown("---")
+            
+            # Open positions
+            st.subheader("📈 Open Positions")
+            open_trades = [t for t in trades if t.get('status') == 'open']
+            if open_trades:
+                df = pd.DataFrame(open_trades)
+                display_cols = ['ticker', 'entry_price', 'shares', 'signal_source', 'entry_date', 'thesis']
+                available = [c for c in display_cols if c in df.columns]
+                st.dataframe(df[available], use_container_width=True)
+            else:
+                st.info("No open positions")
+            
+            st.markdown("---")
+            
+            # Recent trades
+            st.subheader("📊 Recent Closed Trades")
+            if closed:
+                df = pd.DataFrame(closed[-10:])
+                display_cols = ['ticker', 'pnl_percent', 'pnl_dollars', 'signal_source', 'thesis_correct', 'lessons']
+                available = [c for c in display_cols if c in df.columns]
+                st.dataframe(df[available], use_container_width=True)
+            else:
+                st.info("No closed trades yet")
+                
+        except Exception as e:
+            st.error(f"Error loading journal: {e}")
+    else:
+        st.info("📓 No trades logged yet.")
+        st.markdown("""
+        **To log trades, use the CLI:**
+        ```bash
+        python trade_journal.py
+        ```
+        
+        **Or quick commands:**
+        ```bash
+        python trade_journal.py stats    # View statistics
+        python trade_journal.py open     # View open positions
+        python trade_journal.py report   # Generate report
+        ```
+        """)
+    
+    st.markdown("---")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        if st.button("📊 Generate Journal Report"):
+            subprocess.run(['python', 'trade_journal.py', 'report'],
+                          capture_output=True, timeout=30,
+                          cwd='/workspaces/trading-companion-2026')
+            st.success("Report generated!")
+    
+    with col2:
+        if st.button("🔄 Run Backtest"):
+            with st.spinner("Running backtest (this takes a few minutes)..."):
+                result = subprocess.run(['python', 'backtest_pressure.py'],
+                              capture_output=True, text=True, timeout=600,
+                              cwd='/workspaces/trading-companion-2026')
+            st.success("Backtest complete! Check exports/backtest_results.csv")
+
+# ============================================================================
+# TAB 7: SETTINGS
+# ============================================================================
+
+with tab7:
     st.header("🔧 Settings & Universe")
     
     st.subheader("🌐 Trading Universe")
