@@ -129,6 +129,31 @@ with st.sidebar:
                 st.success("Done!")
                 st.rerun()
     
+    col5, col6 = st.columns(2)
+    
+    with col5:
+        if st.button("📡 Radar", help="Check regime and invisible signals"):
+            with st.spinner("Scanning..."):
+                result = subprocess.run(
+                    ['python', 'wolf_radar.py', 'regime'],
+                    capture_output=True, text=True, timeout=60,
+                    cwd='/workspaces/trading-companion-2026'
+                )
+                st.success("Done!")
+                st.rerun()
+    
+    with col6:
+        if st.button("🎰 Gamma", help="Scan for gamma squeeze setups"):
+            with st.spinner("Scanning..."):
+                result = subprocess.run(
+                    ['python', 'wolf_gamma.py', 'scan', '--tickers', 
+                     'GME,AMC,MARA,RIOT,SMCI,ARM,RGTI,QBTS'],
+                    capture_output=True, text=True, timeout=120,
+                    cwd='/workspaces/trading-companion-2026'
+                )
+                st.success("Done!")
+                st.rerun()
+    
     st.markdown("---")
     
     # Run ALL scans
@@ -187,7 +212,7 @@ with st.sidebar:
 # MAIN CONTENT - TABS
 # ============================================================================
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12, tab13 = st.tabs([
     "🎯 PRESSURE MAP",
     "💰 SMART MONEY",
     "🔫 TACTICAL",
@@ -197,6 +222,9 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
     "👁️ WATCHER",
     "🧠 LEARNER",
     "🔗 CORRELATOR",
+    "📡 RADAR",
+    "🎰 GAMMA",
+    "🏠 DEN",
     "🔧 SETTINGS"
 ])
 
@@ -1013,10 +1041,261 @@ with tab9:
     """)
 
 # ============================================================================
-# TAB 10: SETTINGS
+# TAB 10: RADAR - The Invisible
 # ============================================================================
 
 with tab10:
+    st.header("📡 RADAR - The Invisible")
+    st.caption("Second-order effects. What nobody else sees. What comes BEFORE.")
+    
+    # Regime status at top
+    st.subheader("🌡️ Market Regime")
+    
+    col1, col2, col3 = st.columns([2, 1, 1])
+    
+    with col1:
+        if st.button("🔍 Check Regime", key="radar_regime"):
+            with st.spinner("Reading market regime..."):
+                result = subprocess.run(
+                    ['python', 'wolf_radar.py', 'regime'],
+                    capture_output=True, text=True, timeout=60,
+                    cwd='/workspaces/trading-companion-2026'
+                )
+                st.code(result.stdout or result.stderr, language="text")
+    
+    with col2:
+        if st.button("📅 Calendar", key="radar_calendar"):
+            with st.spinner("Loading mechanical calendar..."):
+                result = subprocess.run(
+                    ['python', 'wolf_radar.py', 'calendar'],
+                    capture_output=True, text=True, timeout=60,
+                    cwd='/workspaces/trading-companion-2026'
+                )
+                st.code(result.stdout or result.stderr, language="text")
+    
+    with col3:
+        if st.button("🔬 Full Scan", key="radar_full"):
+            with st.spinner("Running full radar scan..."):
+                result = subprocess.run(
+                    ['python', 'wolf_radar.py', 'scan'],
+                    capture_output=True, text=True, timeout=120,
+                    cwd='/workspaces/trading-companion-2026'
+                )
+                st.code(result.stdout or result.stderr, language="text")
+    
+    st.markdown("---")
+    
+    st.subheader("📡 Radar Detectors")
+    
+    st.markdown("""
+    | Detector | What It Sees | Edge |
+    |----------|--------------|------|
+    | **Pre-Filing** | Insider signature BEFORE Form 4 | Trade before the crowd knows |
+    | **Regime** | Risk-on/off/rotation/chop | Know WHEN to be aggressive |
+    | **Absence** | Dogs that didn't bark | Quiet accumulation signals |
+    | **Calendar** | Forced mechanical flows | Trade predictable moves |
+    | **Stealth** | Hidden accumulation patterns | Spot smart money quietly entering |
+    | **Reflexivity** | Self-reinforcing spirals | Catch momentum before obvious |
+    """)
+    
+    st.markdown("---")
+    
+    # Single ticker radar
+    st.subheader("🎯 Single Ticker Radar")
+    
+    radar_ticker = st.text_input("Enter ticker:", "IONQ", key="radar_ticker")
+    
+    if st.button("🔍 Deep Scan Ticker", key="radar_single"):
+        with st.spinner(f"Running radar on {radar_ticker}..."):
+            result = subprocess.run(
+                ['python', 'wolf_radar.py', 'single', radar_ticker.upper()],
+                capture_output=True, text=True, timeout=60,
+                cwd='/workspaces/trading-companion-2026'
+            )
+            st.code(result.stdout or result.stderr, language="text")
+
+# ============================================================================
+# TAB 11: GAMMA - Squeeze Predictor
+# ============================================================================
+
+with tab11:
+    st.header("🎰 GAMMA MAP - Squeeze Predictor")
+    st.caption("Options chain analysis. Market makers HAVE to hedge. We can SEE this building.")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("🔥 Quick Gamma Scan")
+        
+        # Default high-gamma tickers
+        gamma_tickers = st.text_area(
+            "Tickers to scan (comma separated):",
+            "GME, AMC, MARA, RIOT, SMCI, ARM, RGTI, QBTS, IONQ",
+            key="gamma_tickers"
+        )
+        
+        if st.button("🎰 Scan for Gamma", key="gamma_scan"):
+            tickers = gamma_tickers.replace(" ", "")
+            with st.spinner("Analyzing options chains..."):
+                result = subprocess.run(
+                    ['python', 'wolf_gamma.py', 'scan', '--tickers', tickers],
+                    capture_output=True, text=True, timeout=120,
+                    cwd='/workspaces/trading-companion-2026'
+                )
+                st.code(result.stdout or result.stderr, language="text")
+    
+    with col2:
+        st.subheader("🗺️ Deep Gamma Map")
+        
+        gamma_single = st.text_input("Ticker for deep dive:", "GME", key="gamma_single")
+        
+        if st.button("🔬 Deep Gamma Analysis", key="gamma_deep"):
+            with st.spinner(f"Mapping gamma for {gamma_single}..."):
+                result = subprocess.run(
+                    ['python', 'wolf_gamma.py', 'map', gamma_single.upper()],
+                    capture_output=True, text=True, timeout=60,
+                    cwd='/workspaces/trading-companion-2026'
+                )
+                st.code(result.stdout or result.stderr, language="text")
+    
+    st.markdown("---")
+    
+    st.subheader("📖 Gamma Squeeze Mechanics")
+    
+    st.markdown("""
+    **HOW IT WORKS:**
+    
+    1. **Calls get bought** → MMs sell calls to provide liquidity
+    2. **MMs must hedge** → They buy shares to stay delta neutral
+    3. **Price rises** → Calls go more ITM, delta increases
+    4. **More hedging needed** → MMs buy MORE shares
+    5. **Feedback loop** → Price rockets 🚀
+    
+    **WHAT WE MEASURE:**
+    
+    | Metric | Meaning | Squeeze Signal |
+    |--------|---------|----------------|
+    | **Call/Put OI Ratio** | Bullish positioning | > 2:1 = bullish, > 5:1 = extreme |
+    | **Gamma Wall** | High-OI strike price | Magnet for price |
+    | **Near-Term Expiry** | This week's options | Max gamma effect |
+    | **OTM Call Fuel** | Cheap calls above price | Rocket fuel if triggered |
+    | **Volume Ratio** | Today's call vs put volume | Momentum indicator |
+    """)
+
+# ============================================================================
+# TAB 12: DEN - Paper Trading
+# ============================================================================
+
+with tab12:
+    st.header("🏠 WOLF DEN - Paper Trading Proving Ground")
+    st.caption("Prove the edge before you risk real capital. Track every decision.")
+    
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        # Show current status
+        if st.button("📊 Refresh Status", key="den_refresh"):
+            pass  # Just triggers rerun
+        
+        result = subprocess.run(
+            ['python', 'wolf_den.py', 'status'],
+            capture_output=True, text=True, timeout=30,
+            cwd='/workspaces/trading-companion-2026'
+        )
+        st.code(result.stdout or result.stderr, language="text")
+    
+    with col2:
+        st.subheader("⚡ Quick Actions")
+        
+        # Check stops
+        if st.button("🛑 Check Stops/Targets", key="den_check"):
+            result = subprocess.run(
+                ['python', 'wolf_den.py', 'check'],
+                capture_output=True, text=True, timeout=30,
+                cwd='/workspaces/trading-companion-2026'
+            )
+            st.code(result.stdout or result.stderr, language="text")
+        
+        # Stats
+        if st.button("📈 Show Stats", key="den_stats"):
+            result = subprocess.run(
+                ['python', 'wolf_den.py', 'stats'],
+                capture_output=True, text=True, timeout=30,
+                cwd='/workspaces/trading-companion-2026'
+            )
+            st.code(result.stdout or result.stderr, language="text")
+    
+    st.markdown("---")
+    
+    st.subheader("🎯 New Paper Trade")
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        trade_ticker = st.text_input("Ticker:", "", key="den_ticker")
+        trade_signal = st.selectbox("Signal Type:", 
+            ["pressure", "gamma", "insider", "tactical", "conviction", "manual"],
+            key="den_signal")
+    
+    with col2:
+        trade_reason = st.text_input("Reason:", "", key="den_reason")
+        trade_stop = st.slider("Stop Loss %:", 3, 15, 8, key="den_stop")
+    
+    with col3:
+        trade_target = st.slider("Target %:", 5, 30, 15, key="den_target")
+    
+    col4, col5 = st.columns(2)
+    
+    with col4:
+        if st.button("🟢 BUY", type="primary", key="den_buy"):
+            if trade_ticker:
+                stop = trade_stop / 100
+                target = trade_target / 100
+                result = subprocess.run(
+                    ['python', 'wolf_den.py', 'buy', trade_ticker.upper(),
+                     '--signal', trade_signal,
+                     '--reason', trade_reason or 'Manual entry',
+                     '--stop', str(stop),
+                     '--target', str(target)],
+                    capture_output=True, text=True, timeout=30,
+                    cwd='/workspaces/trading-companion-2026'
+                )
+                st.code(result.stdout or result.stderr, language="text")
+    
+    with col5:
+        if st.button("🔴 SELL", key="den_sell"):
+            if trade_ticker:
+                result = subprocess.run(
+                    ['python', 'wolf_den.py', 'sell', trade_ticker.upper(),
+                     '--reason', trade_reason or 'Manual exit'],
+                    capture_output=True, text=True, timeout=30,
+                    cwd='/workspaces/trading-companion-2026'
+                )
+                st.code(result.stdout or result.stderr, language="text")
+    
+    st.markdown("---")
+    
+    st.subheader("📖 The Three Wolves")
+    
+    st.markdown("""
+    | Wolf | Role | Decision |
+    |------|------|----------|
+    | 🔧 **Brokkr** | Builder | "The signal is valid" |
+    | 🐺 **Fenrir** | Analyst | "The setup is clean" |
+    | 👑 **Tyr** | Trader | "I'm taking this trade" |
+    
+    **Paper trading proves:**
+    - Which signals actually work
+    - What position sizes make sense
+    - How your timing holds up
+    - Where your edge really is
+    """)
+
+# ============================================================================
+# TAB 13: SETTINGS
+# ============================================================================
+
+with tab13:
     st.header("🔧 Settings & Universe")
     
     st.subheader("🌐 Trading Universe")
