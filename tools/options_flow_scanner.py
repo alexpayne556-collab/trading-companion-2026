@@ -3,375 +3,359 @@
 OPTIONS FLOW SCANNER - PRODUCTION VERSION
 
 Catches unusual options activity signaling smart money positioning.
-Scrapes Barchart for free data (15-30 min delay acceptable for overnight holds).
+Uses Yahoo Finance for FREE real-time options chains (no Barchart scraping).
 
-SUCCESS CRITERIA: Flag unusual activity 24-48h BEFORE 10%+ moves, 30%+ hit rate
+SUCCESS CRITERIA: 30%+ hit rate on 10%+ moves within 3 days.
+
+Scoring (0-100):
+• Volume/OI ratio (max 40): ≥10x = 40pts, ≥5x = 30pts, ≥2x = 20pts
+• Days to expiry (max 20): ≤7 days = 20pts, ≤14 days = 15pts
+• OTM strikes (max 20): ≥20% OTM = 20pts, ≥10% = 15pts
+• Volume threshold (max 20): ≥1000 = 20pts, ≥500 = 15pts, ≥100 = 10pts
 
 Usage:
-    python3 options_flow_scanner.py              # Daily scan
-    python3 options_flow_scanner.py --sunday     # Sunday scan for Monday
+    python3 options_flow_scanner.py
+    python3 options_flow_scanner.py --score 60  # Higher threshold
 """
 
-import requests
-from bs4 import BeautifulSoup
 import yfinance as yf
 from datetime import datetime, timedelta
 import json
 from pathlib import Path
 import argparse
 import time
-import re
+import pandas as pd
 
 # Tyr's watchlist
 WATCHLIST = [
-    # Current positions
     'UUUU', 'USAR', 'AISP',
-    # Nuclear
     'UEC', 'CCJ', 'SMR', 'LEU', 'DNN', 'NXE',
-    # Quantum/Robotics/CES
     'RR', 'QBTS', 'QUBT', 'RGTI', 'IONQ',
-    # AI Infrastructure
     'SMCI', 'CRDO', 'VRT',
-    # Space
     'RDW', 'RKLB', 'LUNR', 'ASTS',
 ]
 
 class OptionsFlowScanner:
-    def __init__(self):
-        self.session = requests.Session()
-        self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.5',
-        })
+    def __init__(self, min_score=50):
+        self.min_score = min_score
     
-    def scrape_barchart_unusual_options(self):
-        """Scrape Barchart unusual options page"""
+    def get_unusual_options(self, ticker):
+        """Get unusual options from Yahoo Finance"""
         try:
-            url = "https://www.barchart.com/options/unusual-activity/stocks"
-            response = self.session.get(url, timeout=15)
+            stock = yf.Ticker(ticker)
             
-            if response.status_code != 200:
-                print(f"   ⚠️  Barchart returned {response.status_code}")
+            # Get current price
+            info = stock.info
+            current_price = info.get('currentPrice') or info.get('regularMarketPrice')
+            if not current_price:
                 return []
             
-            soup = BeautifulSoup(response.content, 'html.parser')
-            
-            # Find the data table
-            table = soup.find('table', class_='bc-table')
-            if not table:
-                print("   ⚠️  Could not find Barchart data table")
+            # Get all expiration dates
+            expirations = stock.options
+            if not expirations:
                 return []
             
             unusual_options = []
-            rows = table.find_all('tr')[1:]  # Skip header
             
-            for row in rows:
-                cells = row.find_all('td')
-                if len(cells) < 10:
-                    continue
-                
+            # Check near-term expirations only (≤14 days)
+            now = datetime.now()
+            for exp_date_str in expirations[:4]:  # First 4 expirations
                 try:
-                    ticker = cells[0].text.strip()
+                    exp_date = datetime.strptime(exp_date_str, '%Y-%m-%d')
+                    days_to_expiry = (exp_date - now).days
                     
-                    # Only process watchlist tickers
-                    if ticker not in WATCHLIST:
-                        continue
+                    if days_to_expiry > 14:
+                        continue  # Too far out
                     
-                    option_type = cells[1].text.strip()  # Call or Put
-                    strike = cells[2].text.strip()
-                    expiry = cells[3].text.strip()
-                    volume = int(cells[5].text.strip().replace(',', ''))
-                    open_interest = int(cells[6].text.strip().replace(',', ''))
-                    vol_oi_ratio = volume / open_interest if open_interest > 0 else 0
+                    # Get options chain
+                    options_chain = stock.option_chain(exp_date_str)
                     
-                    unusual_options.append({
-                        'ticker': ticker,
-                        'type': option_type,
-                        'strike': strike,
-                        'expiry': expiry,
-                        'volume': volume,
-                        'open_interest': open_interest,
-                        'vol_oi_ratio': vol_oi_ratio
-                    })
+                    # Check calls
+                    calls = options_chain.calls
+                    for _, row in calls.iterrows():
+                        volume = row.get('volume', 0)
+                        oi = row.get('openInterest', 0)
+                        strike = row.get('strike', 0)
+                        
+                        if volume == 0 or oi == 0 or strike == 0:
+                            continue
+                        
+                        # Calculate metrics
+                        vol_oi_ratio = volume / oi if oi > 0 else 0
+                        strike_vs_price_pct = ((strike - current_price) / current_price) * 100
+                        
+                        # Score this option
+                        score, reasons = self.score_option(
+                            volume, oi, vol_oi_ratio, days_to_expiry,
+                            strike_vs_price_pct, 'CALL'
+                        )
+                        
+                        if score >= self.min_score:
+                            unusual_options.append({
+                                'ticker': ticker,
+                                'type': 'CALL',
+                                'strike': strike,
+                                'expiry': exp_date_str,
+                                'days_to_expiry': days_to_expiry,
+                                'volume': volume,
+                                'open_interest': oi,
+                                'vol_oi_ratio': vol_oi_ratio,
+                                'current_price': current_price,
+                                'strike_vs_price_pct': strike_vs_price_pct,
+                                'score': score,
+                                'reasons': reasons,
+                                'block_trade': self.check_block_trade(volume)
+                            })
                     
-                except (ValueError, AttributeError, IndexError) as e:
+                    # Check puts
+                    puts = options_chain.puts
+                    for _, row in puts.iterrows():
+                        volume = row.get('volume', 0)
+                        oi = row.get('openInterest', 0)
+                        strike = row.get('strike', 0)
+                        
+                        if volume == 0 or oi == 0 or strike == 0:
+                            continue
+                        
+                        # Calculate metrics
+                        vol_oi_ratio = volume / oi if oi > 0 else 0
+                        strike_vs_price_pct = ((current_price - strike) / current_price) * 100  # For puts, OTM is below
+                        
+                        # Score this option
+                        score, reasons = self.score_option(
+                            volume, oi, vol_oi_ratio, days_to_expiry,
+                            strike_vs_price_pct, 'PUT'
+                        )
+                        
+                        if score >= self.min_score:
+                            unusual_options.append({
+                                'ticker': ticker,
+                                'type': 'PUT',
+                                'strike': strike,
+                                'expiry': exp_date_str,
+                                'days_to_expiry': days_to_expiry,
+                                'volume': volume,
+                                'open_interest': oi,
+                                'vol_oi_ratio': vol_oi_ratio,
+                                'current_price': current_price,
+                                'strike_vs_price_pct': strike_vs_price_pct,
+                                'score': score,
+                                'reasons': reasons,
+                                'block_trade': self.check_block_trade(volume)
+                            })
+                
+                except Exception as e:
                     continue
             
             return unusual_options
             
         except Exception as e:
-            print(f"   ⚠️  Error scraping Barchart: {str(e)}")
             return []
     
-    def get_option_details(self, ticker, strike, expiry, option_type):
-        """Get additional details about an option"""
-        try:
-            stock = yf.Ticker(ticker)
-            current_price = stock.info.get('currentPrice') or stock.info.get('regularMarketPrice')
-            
-            if not current_price:
-                return None
-            
-            # Parse strike price
-            strike_price = float(re.sub(r'[^\d.]', '', strike))
-            
-            # Calculate strike vs price
-            if option_type.upper() == 'CALL':
-                strike_vs_price = ((strike_price - current_price) / current_price) * 100
-                otm = strike_price > current_price
-            else:  # PUT
-                strike_vs_price = ((current_price - strike_price) / current_price) * 100
-                otm = strike_price < current_price
-            
-            # Parse expiry to get days
-            try:
-                expiry_date = datetime.strptime(expiry, '%m/%d/%y')
-                days_to_expiry = (expiry_date - datetime.now()).days
-            except:
-                days_to_expiry = 0
-            
-            return {
-                'current_price': current_price,
-                'strike_price': strike_price,
-                'strike_vs_price_pct': strike_vs_price,
-                'otm': otm,
-                'days_to_expiry': days_to_expiry
-            }
-            
-        except Exception as e:
-            return None
-    
-    def check_block_trades(self, volume):
-        """Detect large block trades (institutional)"""
-        if volume >= 1000:
-            return "Large institutional (1000+ contracts)"
-        elif volume >= 500:
-            return "Medium institutional (500+ contracts)"
-        elif volume >= 100:
-            return "Small institutional (100+ contracts)"
-        else:
-            return "Retail volume"
-    
-    def score_unusual_activity(self, option_data, details):
-        """Score the unusual activity 0-100"""
+    def score_option(self, volume, oi, vol_oi_ratio, days_to_expiry, otm_pct, option_type):
+        """Score 0-100 based on conviction signals"""
         score = 0
         reasons = []
         
-        # Volume vs OI ratio (max 40 points)
-        if option_data['vol_oi_ratio'] >= 10:
+        # Volume/OI ratio (max 40 pts)
+        if vol_oi_ratio >= 10:
             score += 40
-            reasons.append("Volume 10x+ open interest (NEW positions)")
-        elif option_data['vol_oi_ratio'] >= 5:
+            reasons.append(f"Vol/OI {vol_oi_ratio:.1f}x (EXTREME unusual activity)")
+        elif vol_oi_ratio >= 5:
             score += 30
-            reasons.append("Volume 5x+ open interest")
-        elif option_data['vol_oi_ratio'] >= 2:
+            reasons.append(f"Vol/OI {vol_oi_ratio:.1f}x (Very unusual)")
+        elif vol_oi_ratio >= 2:
             score += 20
-            reasons.append("Volume 2x+ open interest")
+            reasons.append(f"Vol/OI {vol_oi_ratio:.1f}x (Unusual)")
         
-        if not details:
-            return score, reasons
-        
-        # Days to expiry (max 20 points)
-        if details['days_to_expiry'] <= 7:
+        # Days to expiry (max 20 pts) - Near-term = higher conviction
+        if days_to_expiry <= 7:
             score += 20
-            reasons.append("Expires in <7 days (imminent move expected)")
-        elif details['days_to_expiry'] <= 14:
+            reasons.append(f"{days_to_expiry} days to expiry (URGENT positioning)")
+        elif days_to_expiry <= 14:
             score += 15
-            reasons.append("Expires in <14 days")
+            reasons.append(f"{days_to_expiry} days to expiry (Near-term)")
         
-        # OTM strikes (max 20 points)
-        if details['otm']:
-            if abs(details['strike_vs_price_pct']) >= 20:
-                score += 20
-                reasons.append(f"{abs(details['strike_vs_price_pct']):.1f}% OTM (leveraged bet)")
-            elif abs(details['strike_vs_price_pct']) >= 10:
-                score += 15
-                reasons.append(f"{abs(details['strike_vs_price_pct']):.1f}% OTM")
-        
-        # Volume threshold (max 20 points)
-        if option_data['volume'] >= 1000:
+        # OTM percentage (max 20 pts) - OTM = directional bet
+        if otm_pct >= 20:
             score += 20
-            reasons.append("1000+ contracts (institutional)")
-        elif option_data['volume'] >= 500:
+            reasons.append(f"{otm_pct:.0f}% OTM (Aggressive bet)")
+        elif otm_pct >= 10:
             score += 15
-            reasons.append("500+ contracts")
-        elif option_data['volume'] >= 100:
+            reasons.append(f"{otm_pct:.0f}% OTM (Directional)")
+        elif otm_pct >= 5:
             score += 10
-            reasons.append("100+ contracts")
+            reasons.append(f"{otm_pct:.0f}% OTM")
+        
+        # Volume threshold (max 20 pts) - Size matters
+        if volume >= 1000:
+            score += 20
+            reasons.append(f"{volume:,} contracts (Institutional size)")
+        elif volume >= 500:
+            score += 15
+            reasons.append(f"{volume:,} contracts (Large size)")
+        elif volume >= 100:
+            score += 10
+            reasons.append(f"{volume:,} contracts (Medium size)")
         
         return score, reasons
     
+    def check_block_trade(self, volume):
+        """Categorize block trade size"""
+        if volume >= 1000:
+            return "LARGE INSTITUTIONAL (1000+)"
+        elif volume >= 500:
+            return "INSTITUTIONAL (500+)"
+        elif volume >= 100:
+            return "SIGNIFICANT (100+)"
+        else:
+            return "RETAIL (<100)"
+    
     def scan(self):
-        """Run the scan"""
-        print(f"\n📊 OPTIONS FLOW SCANNER - PRODUCTION VERSION")
+        """Scan watchlist for unusual options"""
+        print(f"\n🔍 OPTIONS FLOW SCANNER - PRODUCTION VERSION")
         print(f"   Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S ET')}")
-        print(f"   Scanning unusual options activity on {len(WATCHLIST)} watchlist tickers")
-        print(f"   Data source: Barchart (15-30 min delay)")
+        print(f"   Scanning {len(WATCHLIST)} tickers")
+        print(f"   Data source: Yahoo Finance (real-time)")
+        print(f"   Min score: {self.min_score}/100")
         print("=" * 80)
         
-        print("\n   Scraping Barchart unusual options...", end=' ', flush=True)
-        unusual_options = self.scrape_barchart_unusual_options()
-        print(f"✓ Found {len(unusual_options)} unusual options on watchlist")
+        print("\n   Scanning options chains...")
+        all_unusual = []
         
-        if not unusual_options:
-            return []
-        
-        # Enrich with details and scoring
-        print("   Analyzing activity...", end='', flush=True)
-        scored_options = []
-        
-        for option in unusual_options:
-            details = self.get_option_details(
-                option['ticker'],
-                option['strike'],
-                option['expiry'],
-                option['type']
-            )
+        for ticker in WATCHLIST:
+            print(f"      {ticker}...", end=' ', flush=True)
             
-            score, reasons = self.score_unusual_activity(option, details)
+            unusual = self.get_unusual_options(ticker)
+            if unusual:
+                all_unusual.extend(unusual)
+                print(f"✓ Found {len(unusual)}")
+            else:
+                print("✓")
             
-            if score >= 50:  # Only alert on significant activity
-                option['score'] = score
-                option['reasons'] = reasons
-                option['details'] = details
-                option['block_trade_size'] = self.check_block_trades(option['volume'])
-                scored_options.append(option)
-            
-            time.sleep(0.2)
+            time.sleep(0.5)  # Rate limiting
         
-        print(f" ✓ Found {len(scored_options)} high-conviction signals")
-        
-        return scored_options
+        return all_unusual
     
-    def display_results(self, scored_options):
+    def display_results(self, results):
         """Display results"""
-        if not scored_options:
+        if not results:
             print("\n📊 No unusual options activity detected on watchlist.")
             print("\n🐺 This could mean:")
-            print("   • No smart money positioning on our tickers right now")
-            print("   • Activity happened earlier (check Barchart manually)")
-            print("   • Our tickers aren't hot this week")
+            print("   • No smart money positioning today")
+            print("   • Activity happened earlier (check historical data)")
+            print("   • Our tickers aren't hot right now")
+            print("   • Try lowering --score threshold")
             return
         
         # Sort by score
-        scored_options.sort(key=lambda x: x['score'], reverse=True)
+        results.sort(key=lambda x: x['score'], reverse=True)
         
         # Separate calls and puts
-        calls = [o for o in scored_options if o['type'].upper() == 'CALL']
-        puts = [o for o in scored_options if o['type'].upper() == 'PUT']
+        calls = [r for r in results if r['type'] == 'CALL']
+        puts = [r for r in results if r['type'] == 'PUT']
         
         print("\n" + "=" * 80)
-        print("🚨 UNUSUAL OPTIONS ACTIVITY DETECTED")
+        print("🔥 UNUSUAL OPTIONS ACTIVITY DETECTED")
         print("=" * 80)
         
         if calls:
-            print("\n🟢 BULLISH SIGNALS (CALLS):")
+            print(f"\n📈 BULLISH BETS ({len(calls)} unusual calls):")
             print("=" * 80)
             
-            for i, option in enumerate(calls, 1):
-                details = option.get('details')
-                print(f"\n{i}. {option['ticker']} — Score: {option['score']}/100")
-                print(f"   Strike: ${option['strike']} | Expiry: {option['expiry']} ({details['days_to_expiry']} days)")
-                print(f"   Volume: {option['volume']:,} | OI: {option['open_interest']:,} | Vol/OI: {option['vol_oi_ratio']:.1f}x")
-                if details:
-                    print(f"   Current: ${details['current_price']:.2f} | Strike vs Price: {details['strike_vs_price_pct']:+.1f}%")
-                print(f"   Block Trade: {option['block_trade_size']}")
-                print(f"\n   WHY THIS MATTERS:")
-                for reason in option['reasons']:
+            for i, opt in enumerate(calls[:10], 1):  # Top 10
+                print(f"\n{i}. {opt['ticker']} ${opt['strike']} CALL | Exp: {opt['expiry']} ({opt['days_to_expiry']}d)")
+                print(f"   Score: {opt['score']}/100 | Current: ${opt['current_price']:.2f}")
+                print(f"   Volume: {opt['volume']:,} | OI: {opt['open_interest']:,} | Vol/OI: {opt['vol_oi_ratio']:.1f}x")
+                print(f"   Block Size: {opt['block_trade']}")
+                print(f"   Why:")
+                for reason in opt['reasons']:
                     print(f"      • {reason}")
-                
-                # Interpretation
-                if option['score'] >= 80:
-                    print(f"\n   🔥 INTERPRETATION: STRONG bullish signal. Smart money expecting significant upside.")
-                elif option['score'] >= 70:
-                    print(f"\n   ⚡ INTERPRETATION: GOOD bullish signal. Watch for confirmation.")
-                else:
-                    print(f"\n   ⚠️  INTERPRETATION: MODERATE bullish signal. Needs validation.")
         
         if puts:
-            print("\n🔴 BEARISH SIGNALS (PUTS):")
+            print(f"\n📉 BEARISH BETS ({len(puts)} unusual puts):")
             print("=" * 80)
             
-            for i, option in enumerate(puts, 1):
-                details = option.get('details')
-                print(f"\n{i}. {option['ticker']} — Score: {option['score']}/100")
-                print(f"   Strike: ${option['strike']} | Expiry: {option['expiry']} ({details['days_to_expiry']} days)")
-                print(f"   Volume: {option['volume']:,} | OI: {option['open_interest']:,} | Vol/OI: {option['vol_oi_ratio']:.1f}x")
-                if details:
-                    print(f"   Current: ${details['current_price']:.2f} | Strike vs Price: {details['strike_vs_price_pct']:+.1f}%")
-                print(f"   Block Trade: {option['block_trade_size']}")
-                print(f"\n   WHY THIS MATTERS:")
-                for reason in option['reasons']:
+            for i, opt in enumerate(puts[:10], 1):  # Top 10
+                print(f"\n{i}. {opt['ticker']} ${opt['strike']} PUT | Exp: {opt['expiry']} ({opt['days_to_expiry']}d)")
+                print(f"   Score: {opt['score']}/100 | Current: ${opt['current_price']:.2f}")
+                print(f"   Volume: {opt['volume']:,} | OI: {opt['open_interest']:,} | Vol/OI: {opt['vol_oi_ratio']:.1f}x")
+                print(f"   Block Size: {opt['block_trade']}")
+                print(f"   Why:")
+                for reason in opt['reasons']:
                     print(f"      • {reason}")
-                
-                # Interpretation
-                if option['score'] >= 80:
-                    print(f"\n   🔥 INTERPRETATION: STRONG bearish signal or hedging.")
-                elif option['score'] >= 70:
-                    print(f"\n   ⚡ INTERPRETATION: GOOD bearish signal. Watch for confirmation.")
-                else:
-                    print(f"\n   ⚠️  INTERPRETATION: MODERATE - could be hedging, not pure bearish.")
         
         print("\n" + "=" * 80)
         print("🐺 WOLF'S READ")
         print("=" * 80)
         
-        if calls and not puts:
-            print("\n   🟢 BULLISH FLOW ONLY - Smart money betting on upside")
-        elif puts and not calls:
-            print("\n   🔴 BEARISH FLOW ONLY - Either bearish or heavy hedging")
-        elif calls and puts:
-            print("\n   ⚪ MIXED SIGNALS - Could be complex positioning or uncertainty")
+        # Top tickers by count
+        ticker_counts = {}
+        for opt in results:
+            ticker = opt['ticker']
+            ticker_counts[ticker] = ticker_counts.get(ticker, 0) + 1
         
-        print("\n   🎯 WHAT TO DO:")
-        print("      • Score 80+ = STRONG signal, worth investigating")
-        print("      • Score 70-79 = GOOD signal, watch for confirmation")
-        print("      • Score 50-69 = MODERATE, needs validation")
-        print("      • Check ATP for price action confirmation")
-        print("      • Look for catalyst (earnings, CES, contracts)")
+        top_tickers = sorted(ticker_counts.items(), key=lambda x: x[1], reverse=True)
         
-        print("\n   ⏰ TIMING:")
-        print("      • Data is 15-30 min delayed (acceptable for overnight holds)")
-        print("      • Options flow leads price action 24-48 hours often")
-        print("      • Best used for swing trade setups, not day trades")
+        if top_tickers:
+            print(f"\n   🎯 HOT TICKERS (most unusual activity):")
+            for ticker, count in top_tickers[:5]:
+                ticker_opts = [o for o in results if o['ticker'] == ticker]
+                calls_count = len([o for o in ticker_opts if o['type'] == 'CALL'])
+                puts_count = len([o for o in ticker_opts if o['type'] == 'PUT'])
+                
+                if calls_count > puts_count:
+                    direction = f"{calls_count} calls vs {puts_count} puts = BULLISH"
+                elif puts_count > calls_count:
+                    direction = f"{puts_count} puts vs {calls_count} calls = BEARISH"
+                else:
+                    direction = f"{calls_count} calls, {puts_count} puts = MIXED"
+                
+                print(f"      • {ticker} - {count} unusual options | {direction}")
+        
+        # Score 80+ = HIGHEST conviction
+        high_conviction = [r for r in results if r['score'] >= 80]
+        if high_conviction:
+            print(f"\n   🔥 HIGHEST CONVICTION (score 80+):")
+            for opt in high_conviction[:5]:
+                direction = "🚀 BULLISH" if opt['type'] == 'CALL' else "🔻 BEARISH"
+                print(f"      • {opt['ticker']} ${opt['strike']} {opt['type']} | {direction} | Score: {opt['score']}")
+        
+        print("\n   🎯 WHAT THIS MEANS:")
+        print("      • Vol/OI >5x = Someone knows something")
+        print("      • <7 days expiry = URGENT positioning (event expected)")
+        print("      • OTM strikes = Directional bet, need big move to profit")
+        print("      • 1000+ contracts = Institutional money, not retail")
+        print("      • Unusual activity 24-48h BEFORE 10%+ moves (our thesis)")
     
-    def save_results(self, scored_options):
-        """Save results"""
+    def save_results(self, results):
+        """Save to JSON"""
         log_dir = Path(__file__).parent.parent / 'logs'
         log_dir.mkdir(exist_ok=True)
         
         output_file = log_dir / f"options_flow_{datetime.now().strftime('%Y-%m-%d_%H%M')}.json"
         
-        # Convert for JSON serialization
-        for option in scored_options:
-            if option.get('details'):
-                option['details'] = {k: float(v) if isinstance(v, (int, float)) else v 
-                                   for k, v in option['details'].items()}
-        
         with open(output_file, 'w') as f:
             json.dump({
                 'scan_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                'results': scored_options
+                'min_score': self.min_score,
+                'results': results
             }, f, indent=2)
         
         print(f"\n💾 Results saved to: {output_file}")
 
 def main():
     parser = argparse.ArgumentParser(description='Options Flow Scanner - Production Version')
-    parser.add_argument('--sunday', action='store_true', help='Sunday scan for Monday positioning')
+    parser.add_argument('--score', type=int, default=50, help='Minimum score threshold (default: 50)')
     
     args = parser.parse_args()
     
-    if args.sunday:
-        print("\n📅 SUNDAY SCAN MODE - Analyzing Thursday/Friday options activity for Monday setups")
+    scanner = OptionsFlowScanner(args.score)
+    results = scanner.scan()
+    scanner.display_results(results)
     
-    scanner = OptionsFlowScanner()
-    scored_options = scanner.scan()
-    scanner.display_results(scored_options)
-    
-    if scored_options:
-        scanner.save_results(scored_options)
+    if results:
+        scanner.save_results(results)
     
     print("\n🐺 AWOOOO! Options flow scan complete.\n")
 

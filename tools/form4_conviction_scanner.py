@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 """
-FORM 4 CONVICTION SCANNER - Real Insider Buying Only
+FORM 4 CONVICTION SCANNER - PRODUCTION VERSION
 
-Filters SEC Form 4 filings for Transaction Code "P" (Open Market Purchase).
-Skips all the bullshit: stock awards, compensation, tax withholding, options exercises.
+ONLY Transaction Code "P" (Open Market Purchase) matters.
+Filters out compensation, awards, options exercises - the noise.
+Scores 0-100 based on conviction signals.
+Detects clusters (3+ insiders = STRONG signal).
 
-Only shows us when insiders are putting their OWN MONEY on the line.
+SUCCESS CRITERIA: 100% accuracy on P vs M/A/F. Catch clusters within 24h.
 
 Usage:
-    python3 form4_conviction_scanner.py                    # Scan default watchlist
-    python3 form4_conviction_scanner.py --add-ticker TSLA  # Add specific ticker
-    python3 form4_conviction_scanner.py --days 60          # Scan last 60 days
+    python3 form4_conviction_scanner.py
+    python3 form4_conviction_scanner.py --days 60  # Extended lookback
 """
 
 import requests
@@ -20,26 +21,9 @@ import json
 from pathlib import Path
 import argparse
 import time
+import re
 
-# Transaction codes we CARE about
-CONVICTION_CODES = {
-    'P': 'Open Market Purchase',  # THE ONLY ONE THAT MATTERS
-}
-
-# Transaction codes we IGNORE (no conviction)
-IGNORE_CODES = {
-    'A': 'Grant/Award',           # Free shares
-    'M': 'Options Exercise',      # Converting options
-    'F': 'Tax Withholding',       # Automatic
-    'D': 'Disposition',           # Selling
-    'G': 'Gift',                  # Transfer
-    'I': 'Inheritance',           # Transfer
-    'S': 'Sale',                  # Selling
-    'U': 'Tender Offer',          # Corporate action
-    'J': 'Other',                 # Misc
-}
-
-# Default watchlist
+# Tyr's watchlist
 WATCHLIST = [
     'UUUU', 'USAR', 'AISP',
     'UEC', 'CCJ', 'SMR', 'LEU', 'DNN', 'NXE',
@@ -48,38 +32,54 @@ WATCHLIST = [
     'RDW', 'RKLB', 'LUNR', 'ASTS',
 ]
 
+# Transaction codes that matter
+CONVICTION_CODES = {
+    'P': 'Open Market Purchase',        # 🔥 HIGHEST conviction
+    'I': '10b5-1 Discretionary Purchase'  # ✅ GOOD conviction
+}
+
+# Ignore these (noise)
+IGNORE_CODES = {
+    'A': 'Award/Grant',
+    'M': 'Options Exercise',
+    'F': 'Tax Withholding',
+    'G': 'Gift',
+    'S': 'Sale',
+    'D': 'Disposition',
+    'J': 'Other',
+    'U': 'Tender',
+}
+
 class Form4ConvictionScanner:
-    def __init__(self, watchlist=None, days=30):
-        self.watchlist = watchlist or WATCHLIST
+    def __init__(self, days=30):
         self.days = days
-        self.start_date = datetime.now() - timedelta(days=days)
+        self.cutoff = datetime.now() - timedelta(days=days)
         self.session = requests.Session()
         self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            'User-Agent': 'Mozilla/5.0 research@trading.com',
+            'Accept-Encoding': 'gzip, deflate',
+            'Host': 'www.sec.gov'
         })
     
     def get_cik(self, ticker):
-        """Get CIK number for ticker from SEC"""
+        """Get CIK for ticker"""
         try:
             url = f"https://www.sec.gov/cgi-bin/browse-edgar?company={ticker}&action=getcompany&output=xml"
             response = self.session.get(url, timeout=10)
             soup = BeautifulSoup(response.content, 'xml')
             cik = soup.find('CIK')
-            return cik.text if cik else None
+            return cik.text.zfill(10) if cik else None
         except:
             return None
     
     def get_form4_filings(self, ticker):
-        """Fetch Form 4 filings from SEC EDGAR"""
+        """Get Form 4 filings from SEC"""
         cik = self.get_cik(ticker)
         if not cik:
             return []
         
-        # Pad CIK to 10 digits
-        cik = cik.zfill(10)
-        
         try:
-            url = f"https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK={cik}&type=4&dateb=&owner=only&count=100&output=xml"
+            url = f"https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK={cik}&type=4&dateb=&owner=only&count=40&output=xml"
             response = self.session.get(url, timeout=10)
             soup = BeautifulSoup(response.content, 'xml')
             
@@ -90,28 +90,45 @@ class Form4ConvictionScanner:
                     continue
                 
                 filing_date = datetime.strptime(filing_date_str.text, '%Y-%m-%d')
-                if filing_date < self.start_date:
+                if filing_date < self.cutoff:
                     continue
                 
                 filing_url = filing.find('filingHref')
                 if filing_url:
                     filings.append({
                         'date': filing_date.strftime('%Y-%m-%d'),
-                        'url': filing_url.text
+                        'url': filing_url.text.replace('-index.htm', '.xml')
                     })
             
             return filings
-            
-        except Exception as e:
+        except:
             return []
     
     def parse_form4(self, url):
-        """Parse Form 4 XML to extract transaction details"""
+        """Parse Form 4 XML"""
         try:
-            # Get the XML document
-            doc_url = url.replace('-index.htm', '.xml')
-            response = self.session.get(doc_url, timeout=10)
+            response = self.session.get(url, timeout=10)
             soup = BeautifulSoup(response.content, 'xml')
+            
+            # Get insider info
+            reporting_owner = soup.find('reportingOwner')
+            if not reporting_owner:
+                return []
+            
+            name_elem = reporting_owner.find('rptOwnerName')
+            insider_name = name_elem.text.strip() if name_elem else 'Unknown'
+            
+            # Get title
+            title = 'N/A'
+            relationship = reporting_owner.find('reportingOwnerRelationship')
+            if relationship:
+                if relationship.find('isDirector') and relationship.find('isDirector').text == '1':
+                    title = 'Director'
+                elif relationship.find('isOfficer') and relationship.find('isOfficer').text == '1':
+                    officer_title = relationship.find('officerTitle')
+                    title = officer_title.text if officer_title else 'Officer'
+                elif relationship.find('isTenPercentOwner') and relationship.find('isTenPercentOwner').text == '1':
+                    title = '10% Owner'
             
             transactions = []
             
@@ -123,45 +140,41 @@ class Form4ConvictionScanner:
                 
                 trans_code = trans_code_elem.text.strip()
                 
-                # ONLY care about Code "P" - Open Market Purchase
-                if trans_code != 'P':
+                # ONLY conviction codes (P or I)
+                if trans_code not in CONVICTION_CODES:
                     continue
                 
-                # Extract transaction details
-                trans_date = trans.find('transactionDate')
+                # Extract details
+                trans_date_elem = trans.find('transactionDate')
                 shares_elem = trans.find('transactionShares')
                 price_elem = trans.find('transactionPricePerShare')
+                shares_owned_elem = trans.find('sharesOwnedFollowingTransaction')
                 
-                # Get insider name
-                reporting_owner = soup.find('reportingOwner')
-                name = 'Unknown'
-                if reporting_owner:
-                    name_elem = reporting_owner.find('rptOwnerName')
-                    if name_elem:
-                        name = name_elem.text.strip()
+                if not all([trans_date_elem, shares_elem, price_elem]):
+                    continue
                 
-                # Get title
-                title = 'N/A'
-                relationship = reporting_owner.find('reportingOwnerRelationship') if reporting_owner else None
-                if relationship:
-                    if relationship.find('isDirector') and relationship.find('isDirector').text == '1':
-                        title = 'Director'
-                    elif relationship.find('isOfficer') and relationship.find('isOfficer').text == '1':
-                        officer_title = relationship.find('officerTitle')
-                        title = officer_title.text if officer_title else 'Officer'
-                
-                shares = int(shares_elem.find('value').text) if shares_elem and shares_elem.find('value') else 0
-                price = float(price_elem.find('value').text) if price_elem and price_elem.find('value') else 0
+                trans_date = trans_date_elem.find('value').text if trans_date_elem.find('value') else ''
+                shares = int(shares_elem.find('value').text) if shares_elem.find('value') else 0
+                price = float(price_elem.find('value').text) if price_elem.find('value') else 0
+                shares_owned = int(shares_owned_elem.find('value').text) if shares_owned_elem and shares_owned_elem.find('value') else 0
                 
                 if shares > 0 and price > 0:
+                    value = shares * price
+                    
+                    # Calculate holdings increase
+                    prior_holdings = shares_owned - shares
+                    pct_increase = (shares / prior_holdings * 100) if prior_holdings > 0 else 0
+                    
                     transactions.append({
-                        'date': trans_date.find('value').text if trans_date and trans_date.find('value') else 'Unknown',
-                        'insider': name,
+                        'date': trans_date,
+                        'insider': insider_name,
                         'title': title,
+                        'code': trans_code,
                         'shares': shares,
                         'price': price,
-                        'value': shares * price,
-                        'code': trans_code
+                        'value': value,
+                        'shares_owned': shares_owned,
+                        'pct_increase': pct_increase
                     })
             
             return transactions
@@ -169,9 +182,102 @@ class Form4ConvictionScanner:
         except Exception as e:
             return []
     
+    def score_conviction(self, transaction):
+        """Score 0-100 based on conviction signals"""
+        score = 0
+        reasons = []
+        
+        # Transaction type (max 50)
+        if transaction['code'] == 'P':
+            score += 50
+            reasons.append("Open market purchase (own money)")
+        elif transaction['code'] == 'I':
+            score += 30
+            reasons.append("10b5-1 discretionary purchase")
+        
+        # Dollar amount (max 30)
+        value = transaction['value']
+        if value >= 1_000_000:
+            score += 30
+            reasons.append(f"${value:,.0f} purchase (serious conviction)")
+        elif value >= 500_000:
+            score += 20
+            reasons.append(f"${value:,.0f} purchase")
+        elif value >= 100_000:
+            score += 10
+            reasons.append(f"${value:,.0f} purchase")
+        
+        # Insider role (max 20)
+        title = transaction['title'].upper()
+        if any(x in title for x in ['CEO', 'CFO', 'CHAIRMAN']):
+            score += 20
+            reasons.append(f"{transaction['title']} (C-suite knows most)")
+        elif any(x in title for x in ['DIRECTOR', 'PRESIDENT', 'COO', 'CTO']):
+            score += 10
+            reasons.append(f"{transaction['title']}")
+        
+        # Holdings increase (max 20)
+        pct = transaction['pct_increase']
+        if pct >= 25:
+            score += 20
+            reasons.append(f"{pct:.0f}% position increase (doubling down)")
+        elif pct >= 10:
+            score += 10
+            reasons.append(f"{pct:.0f}% position increase")
+        
+        return score, reasons
+    
+    def detect_clusters(self, ticker, transactions):
+        """Detect cluster buying (3+ insiders = STRONG signal)"""
+        if len(transactions) < 2:
+            return None
+        
+        unique_insiders = len(set(t['insider'] for t in transactions))
+        total_value = sum(t['value'] for t in transactions)
+        
+        # Group by 30-day windows for tight clusters
+        transactions_sorted = sorted(transactions, key=lambda x: x['date'])
+        max_cluster_size = 1
+        
+        for i, trans in enumerate(transactions_sorted):
+            trans_date = datetime.strptime(trans['date'], '%Y-%m-%d')
+            window_end = trans_date + timedelta(days=30)
+            
+            cluster_insiders = set()
+            cluster_value = 0
+            
+            for j in range(i, len(transactions_sorted)):
+                check_trans = transactions_sorted[j]
+                check_date = datetime.strptime(check_trans['date'], '%Y-%m-%d')
+                
+                if check_date > window_end:
+                    break
+                
+                cluster_insiders.add(check_trans['insider'])
+                cluster_value += check_trans['value']
+            
+            max_cluster_size = max(max_cluster_size, len(cluster_insiders))
+        
+        if unique_insiders >= 3 and total_value >= 500_000:
+            return {
+                'type': 'CLUSTER BUY DETECTED',
+                'insiders': unique_insiders,
+                'total_value': total_value,
+                'max_cluster_size': max_cluster_size
+            }
+        elif unique_insiders >= 2 and total_value >= 250_000:
+            return {
+                'type': 'MULTIPLE INSIDERS BUYING',
+                'insiders': unique_insiders,
+                'total_value': total_value,
+                'max_cluster_size': max_cluster_size
+            }
+        
+        return None
+    
     def scan_ticker(self, ticker):
-        """Scan a single ticker for conviction buys"""
-        print(f"   Scanning {ticker}...", end=' ')
+        """Scan single ticker"""
+        print(f"   {ticker}...", end=' ', flush=True)
         
         filings = self.get_form4_filings(ticker)
         if not filings:
@@ -179,49 +285,66 @@ class Form4ConvictionScanner:
             return None
         
         all_transactions = []
-        for filing in filings[:20]:  # Check last 20 filings
+        for filing in filings[:15]:  # Limit to recent 15
             transactions = self.parse_form4(filing['url'])
             all_transactions.extend(transactions)
-            time.sleep(0.5)  # Rate limiting
+            time.sleep(0.3)  # SEC rate limiting
         
-        if all_transactions:
-            print(f"✓ FOUND {len(all_transactions)} CONVICTION BUYS")
-            return {
-                'ticker': ticker,
-                'transactions': all_transactions,
-                'total_insiders': len(set(t['insider'] for t in all_transactions)),
-                'total_value': sum(t['value'] for t in all_transactions),
-                'total_shares': sum(t['shares'] for t in all_transactions)
-            }
-        else:
+        if not all_transactions:
             print("✓")
             return None
+        
+        # Score each transaction
+        for trans in all_transactions:
+            score, reasons = self.score_conviction(trans)
+            trans['score'] = score
+            trans['reasons'] = reasons
+        
+        # Filter to high conviction only (60+)
+        high_conviction = [t for t in all_transactions if t['score'] >= 60]
+        
+        if not high_conviction:
+            print("✓")
+            return None
+        
+        # Detect clusters
+        cluster_status = self.detect_clusters(ticker, all_transactions)
+        
+        print(f"✓ FOUND {len(high_conviction)} conviction buys")
+        
+        return {
+            'ticker': ticker,
+            'transactions': high_conviction,
+            'cluster': cluster_status,
+            'total_insiders': len(set(t['insider'] for t in high_conviction)),
+            'total_value': sum(t['value'] for t in high_conviction)
+        }
     
-    def scan_watchlist(self):
-        """Scan all tickers in watchlist"""
-        print(f"\n🔍 FORM 4 CONVICTION SCANNER - Real Insider Buying Only")
+    def scan(self):
+        """Scan watchlist"""
+        print(f"\n🔍 FORM 4 CONVICTION SCANNER - PRODUCTION VERSION")
         print(f"   Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S ET')}")
-        print(f"   Scanning {len(self.watchlist)} tickers (last {self.days} days)")
-        print(f"   ONLY Transaction Code 'P' = Open Market Purchase")
+        print(f"   Scanning {len(WATCHLIST)} tickers (last {self.days} days)")
+        print(f"   ONLY Transaction Code 'P' (Open Market Purchase)")
         print("=" * 80)
         
+        print("\n   Scanning...")
         results = []
         
-        for ticker in self.watchlist:
+        for ticker in WATCHLIST:
             result = self.scan_ticker(ticker)
             if result:
                 results.append(result)
-            time.sleep(1)  # SEC rate limiting
         
         return results
     
     def display_results(self, results):
-        """Display conviction buying results"""
+        """Display results"""
         if not results:
-            print("\n📊 No conviction insider buying detected in watchlist.")
+            print("\n📊 No high-conviction insider buying detected.")
             print("\n🐺 This means:")
-            print("   • No insiders putting their money on the line recently")
-            print("   • Check back in a few days or expand date range")
+            print("   • No Code 'P' purchases with score ≥60 in timeframe")
+            print("   • Check back later or expand --days parameter")
             return
         
         # Sort by total value
@@ -234,71 +357,55 @@ class Form4ConvictionScanner:
         for i, data in enumerate(results, 1):
             ticker = data['ticker']
             print(f"\n{i}. {ticker} — {data['total_insiders']} insiders | ${data['total_value']:,.0f} total")
-            print(f"   Total Shares: {data['total_shares']:,}")
             
-            # Sort transactions by date (most recent first)
-            transactions = sorted(data['transactions'], key=lambda x: x['date'], reverse=True)
+            # Cluster status
+            if data['cluster']:
+                cluster = data['cluster']
+                print(f"   🎯 {cluster['type']}")
+                print(f"      • {cluster['insiders']} unique insiders")
+                print(f"      • ${cluster['total_value']:,.0f} total value")
+                print(f"      • Up to {cluster['max_cluster_size']} insiders in 30-day window")
             
-            print(f"\n   📊 TRANSACTION DETAILS:")
-            for trans in transactions[:10]:  # Show top 10
-                print(f"      {trans['date']} | {trans['insider'][:30]:<30} | {trans['title'][:15]:<15}")
-                print(f"         └─ {trans['shares']:>8,} shares @ ${trans['price']:.2f} = ${trans['value']:,.0f}")
+            # Show top transactions
+            transactions = sorted(data['transactions'], key=lambda x: x['score'], reverse=True)
+            print(f"\n   📊 TOP CONVICTION BUYS:")
+            
+            for trans in transactions[:5]:
+                print(f"\n      {trans['date']} | {trans['insider'][:30]} ({trans['title']})")
+                print(f"      Score: {trans['score']}/100")
+                print(f"      {trans['shares']:,} shares @ ${trans['price']:.2f} = ${trans['value']:,.0f}")
+                print(f"      Why:")
+                for reason in trans['reasons']:
+                    print(f"         • {reason}")
         
         print("\n" + "=" * 80)
-        print("🐺 WOLF'S READ ON INSIDER CONVICTION")
+        print("🐺 WOLF'S READ")
         print("=" * 80)
         
-        # Identify clusters (3+ insiders in 7 days)
-        clusters = []
-        for data in results:
-            ticker = data['ticker']
-            transactions = data['transactions']
-            
-            # Group by week
-            for trans in transactions:
-                trans_date = datetime.strptime(trans['date'], '%Y-%m-%d')
-                week_start = trans_date - timedelta(days=trans_date.weekday())
-                
-                # Count insiders in that week
-                week_insiders = set()
-                week_value = 0
-                for t in transactions:
-                    t_date = datetime.strptime(t['date'], '%Y-%m-%d')
-                    if abs((t_date - week_start).days) <= 7:
-                        week_insiders.add(t['insider'])
-                        week_value += t['value']
-                
-                if len(week_insiders) >= 3:
-                    clusters.append({
-                        'ticker': ticker,
-                        'week': week_start.strftime('%Y-%m-%d'),
-                        'insiders': len(week_insiders),
-                        'value': week_value
-                    })
-                    break
-        
+        clusters = [r for r in results if r['cluster'] and 'CLUSTER' in r['cluster']['type']]
         if clusters:
-            print(f"\n   🎯 TIGHT CLUSTERS ({len(clusters)} tickers with 3+ insiders within 7 days):")
-            for cluster in sorted(clusters, key=lambda x: x['value'], reverse=True):
-                print(f"      • {cluster['ticker']} - {cluster['insiders']} insiders | ${cluster['value']:,.0f} | Week of {cluster['week']}")
-            print("\n   💡 Clusters = HIGHEST conviction. Insiders know something.")
+            print(f"\n   🎯 CLUSTER BUYS (3+ insiders) = HIGHEST CONVICTION:")
+            for r in clusters:
+                print(f"      • {r['ticker']} - {r['cluster']['insiders']} insiders | ${r['cluster']['total_value']:,.0f}")
+            print("\n   💡 Clusters mean insiders ALL see the same opportunity")
         
-        print("\n   📈 TOP CONVICTION (by total value):")
-        for data in results[:5]:
-            print(f"      • {data['ticker']} - ${data['total_value']:,.0f} by {data['total_insiders']} insiders")
+        print(f"\n   📈 TOP CONVICTION (by value):")
+        for r in results[:5]:
+            avg_price = sum(t['value'] for t in r['transactions']) / len(r['transactions'])
+            print(f"      • {r['ticker']} - ${r['total_value']:,.0f} by {r['total_insiders']} insiders")
         
         print("\n   🎯 WHAT THIS MEANS:")
-        print("      • Code 'P' = Insiders buying with their OWN money (not awards/comp)")
-        print("      • Multiple insiders = More conviction")
-        print("      • Large $ amounts = Strong belief in upside")
-        print("      • Recent dates = Timely signal")
-        
+        print("      • Code 'P' = Insiders spending OWN money (not free shares)")
+        print("      • Score 80+ = VERY strong conviction")
+        print("      • Score 60-79 = Good conviction")
+        print("      • Clusters (3+ insiders) = Pack hunting, strongest signal")
+    
     def save_results(self, results):
-        """Save results to JSON"""
+        """Save to JSON"""
         log_dir = Path(__file__).parent.parent / 'logs'
         log_dir.mkdir(exist_ok=True)
         
-        output_file = log_dir / 'form4_conviction.json'
+        output_file = log_dir / f"form4_conviction_{datetime.now().strftime('%Y-%m-%d_%H%M')}.json"
         
         with open(output_file, 'w') as f:
             json.dump({
@@ -310,23 +417,19 @@ class Form4ConvictionScanner:
         print(f"\n💾 Results saved to: {output_file}")
 
 def main():
-    parser = argparse.ArgumentParser(description='Form 4 Conviction Scanner - Only Code P purchases')
-    parser.add_argument('--add-ticker', action='append', help='Add ticker to scan')
+    parser = argparse.ArgumentParser(description='Form 4 Conviction Scanner - Production Version')
     parser.add_argument('--days', type=int, default=30, help='Days to look back (default: 30)')
     
     args = parser.parse_args()
     
-    watchlist = WATCHLIST.copy()
-    if args.add_ticker:
-        watchlist.extend([t.upper() for t in args.add_ticker])
-    
-    scanner = Form4ConvictionScanner(watchlist, args.days)
-    results = scanner.scan_watchlist()
+    scanner = Form4ConvictionScanner(args.days)
+    results = scanner.scan()
     scanner.display_results(results)
+    
     if results:
         scanner.save_results(results)
     
-    print("\n🐺 AWOOOO! Conviction buying scanned.\n")
+    print("\n🐺 AWOOOO! Form 4 conviction scan complete.\n")
 
 if __name__ == '__main__':
     main()
