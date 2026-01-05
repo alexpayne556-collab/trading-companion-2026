@@ -24,17 +24,8 @@ import sys
 # Add src to path for research modules
 sys.path.insert(0, str(Path(__file__).parent / 'src'))
 
-# Import research modules
-try:
-    from research.sector_rotation import SectorRotationTracker
-    from research.catalyst_tracker import CatalystTracker
-    from research.failed_breakout_detector import FailedBreakoutDetector
-    from research.form4_cluster_scanner import Form4ClusterScanner
-    from research.watchlist_monitor import WatchlistMonitor
-    RESEARCH_MODULES_AVAILABLE = True
-except Exception as e:
-    RESEARCH_MODULES_AVAILABLE = False
-    print(f"Research modules not available: {e}")
+# Research modules - optional, we have NEW scanners now
+RESEARCH_MODULES_AVAILABLE = False  # Not needed anymore - using new scanners
 
 # Page config
 st.set_page_config(
@@ -48,8 +39,8 @@ st.title("🐺 WOLF DEN WAR ROOM")
 st.caption(f"Bloomberg-Level Research Platform | Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 # Add tabs for different sections
-tab_overview, tab_chart, tab_pressure, tab_clusters, tab_monitor, tab_sectors, tab_catalysts, tab_breakouts, tab_watchlist = st.tabs([
-    "📊 Overview", "📈 Live Chart", "⚡ Pressure", "🔥 Clusters", "👁️ Monitor", "🔥 Sectors", "📅 Catalysts", "💣 Breakouts", "🎯 Watchlist"
+tab_overview, tab_conviction, tab_wounded, tab_8k, tab_chart, tab_pressure, tab_clusters, tab_monitor, tab_sectors, tab_catalysts, tab_breakouts, tab_watchlist = st.tabs([
+    "📊 Overview", "🎯 HIGH CONVICTION", "🩸 Wounded Prey", "⚡ 8-K Alerts", "📈 Live Chart", "⚡ Pressure", "🔥 Clusters", "👁️ Monitor", "🔥 Sectors", "📅 Catalysts", "💣 Breakouts", "🎯 Watchlist"
 ])
 
 # Load config
@@ -122,51 +113,43 @@ if st.sidebar.button("🚨 Pre-Market Scan"):
     st.success("✅ Complete!")
     st.rerun()
 
-if st.sidebar.button("🔥 Sector Rotation Scan"):
-    if RESEARCH_MODULES_AVAILABLE:
-        with st.spinner("Analyzing sectors..."):
-            import subprocess
-            subprocess.run(['python3', 'src/research/sector_rotation.py'], timeout=60)
-        st.success("✅ Complete!")
-        st.rerun()
-    else:
-        st.error("Research modules not available")
+if st.sidebar.button("🔥 Cluster Buy Scan"):
+    with st.spinner("Scanning for insider buying clusters..."):
+        import subprocess
+        subprocess.run(['python3', 'cluster_buy_scanner.py'], timeout=90)
+    st.success("✅ Complete!")
+    st.rerun()
 
-if st.sidebar.button("💣 Failed Breakout Scan"):
-    if RESEARCH_MODULES_AVAILABLE:
-        with st.spinner("Scanning breakouts..."):
-            import subprocess
-            subprocess.run(['python3', 'src/research/failed_breakout_detector.py'], timeout=120)
-        st.success("✅ Complete!")
-        st.rerun()
+if st.sidebar.button("🩸 Wounded Prey Scan"):
+    with st.spinner("Scanning for tax loss bounces..."):
+        import subprocess
+        subprocess.run(['python3', 'wounded_prey_scanner.py'], timeout=90)
+    st.success("✅ Complete!")
+    st.rerun()
 
-if st.sidebar.button("🔥 Form 4 Cluster Scan"):
-    if RESEARCH_MODULES_AVAILABLE:
-        with st.spinner("Scanning SEC EDGAR for insider clusters..."):
-            import subprocess
-            subprocess.run(['python3', 'src/research/form4_cluster_scanner.py', '--detect'], timeout=60)
-        st.success("✅ Complete!")
-        st.rerun()
-    else:
-        st.error("Research modules not available")
+if st.sidebar.button("⚡ 8-K Contract Scan"):
+    with st.spinner("Scanning SEC EDGAR for 8-K contracts..."):
+        import subprocess
+        subprocess.run(['python3', 'sec_8k_contract_scanner.py', '--hours', '24'], timeout=120)
+    st.success("✅ Complete!")
+    st.rerun()
 
-if st.sidebar.button("👁️ Watchlist Snapshot"):
-    if RESEARCH_MODULES_AVAILABLE:
-        with st.spinner("Taking watchlist snapshot..."):
-            import subprocess
-            subprocess.run(['python3', 'src/research/watchlist_monitor.py', '--snapshot', '--top-movers'], timeout=60)
-        st.success("✅ Complete!")
-        st.rerun()
-    else:
-        st.error("Research modules not available")
+if st.sidebar.button("🏛️ Congress Tracker Scan"):
+    with st.spinner("Tracking congressional trades..."):
+        import subprocess
+        subprocess.run(['python3', 'congress_tracker.py'], timeout=90)
+    st.success("✅ Complete!")
+    st.rerun()
 
 # Research module status
 st.sidebar.markdown("---")
-st.sidebar.markdown("### 🔬 Research Modules")
-if RESEARCH_MODULES_AVAILABLE:
-    st.sidebar.success("✅ All modules loaded")
-else:
-    st.sidebar.error("⚠️ Modules not available")
+st.sidebar.markdown("### 🔬 Wolf Pack Scanners")
+st.sidebar.success("✅ All NEW scanners loaded")
+st.sidebar.caption("• Cross-Signal Validator")
+st.sidebar.caption("• Wounded Prey Hunter")
+st.sidebar.caption("• 8-K Contract Scanner")
+st.sidebar.caption("• Cluster Buy Scanner")
+st.sidebar.caption("• Congress Tracker")
 
 # ═══════════════════════════════════════════════════════════════════════════
 # HELP & INSTRUCTIONS SECTION
@@ -414,6 +397,353 @@ with tab_pressure:
     except ImportError as e:
         st.error(f"Pressure scanner not available: {e}")
         st.info("Run: python wolf_pressure.py scan")
+
+#==========================================================================
+# TAB: HIGH CONVICTION - Cross-Signal Validator
+#==========================================================================
+with tab_conviction:
+    st.header("🎯 HIGH CONVICTION SETUPS")
+    st.caption("70+ Score = Multiple signals aligned = Ready to hunt")
+    
+    try:
+        import sys
+        import subprocess
+        from pathlib import Path
+        
+        col1, col2 = st.columns([3, 1])
+        
+        with col1:
+            st.subheader("🔥 HIGH CONVICTION PLAYS (70+)")
+            
+            if st.button("🔄 Run Cross-Signal Scan", key="conviction_scan"):
+                with st.spinner("Scanning 55 tickers across 4 signals..."):
+                    result = subprocess.run(
+                        ['python3', 'cross_signal_validator.py', '--min-signals', '3'],
+                        capture_output=True,
+                        text=True,
+                        timeout=120
+                    )
+                    st.success("✅ Scan complete!")
+            
+            # Try to load latest results
+            try:
+                results_file = Path('logs/conviction_results.json')
+                if results_file.exists():
+                    with open(results_file) as f:
+                        data = json.load(f)
+                        
+                    # Filter for 70+ scores
+                    high_conviction = [t for t in data.get('tickers', []) if t['total_score'] >= 70]
+                    
+                    if high_conviction:
+                        for ticker in high_conviction:
+                            with st.expander(f"🎯 {ticker['symbol']} - Score: {ticker['total_score']}/100"):
+                                c1, c2, c3, c4 = st.columns(4)
+                                
+                                with c1:
+                                    st.metric("Wounded Prey", f"{ticker.get('wounded_score', 0)}/30")
+                                with c2:
+                                    st.metric("Insider Buying", f"{ticker.get('insider_score', 0)}/30")
+                                with c3:
+                                    st.metric("8-K Contracts", f"{ticker.get('sec_score', 0)}/25")
+                                with c4:
+                                    st.metric("Thesis Align", f"{ticker.get('thesis_score', 0)}/15")
+                                
+                                st.markdown(f"**Why it's hot:** {ticker.get('reasoning', 'Multiple signals converging')}")
+                    else:
+                        st.info("No 70+ plays right now. Run scan or lower threshold.")
+                        
+                        # Show 50-69 as backup
+                        strong = [t for t in data.get('tickers', []) if 50 <= t['total_score'] < 70]
+                        if strong:
+                            st.subheader("💪 STRONG SETUPS (50-69)")
+                            for ticker in strong[:5]:
+                                st.markdown(f"**{ticker['symbol']}** - {ticker['total_score']}/100")
+                else:
+                    st.warning("No results yet - click 'Run Cross-Signal Scan' above")
+                    
+            except Exception as e:
+                st.error(f"Error loading results: {e}")
+                st.info("Run the scanner first: python3 cross_signal_validator.py")
+        
+        with col2:
+            st.subheader("📊 Scoring System")
+            st.markdown("""
+            **Signal Breakdown:**
+            
+            🩸 **Wounded Prey** (30 pts)
+            - Down 30%+, recovering
+            - Tax loss bounce (Jan 2-10)
+            
+            👔 **Insider Buying** (30 pts)
+            - Form 4 purchases
+            - Clusters (3+ insiders)
+            
+            ⚡ **SEC 8-K** (25 pts)
+            - Material contracts filed
+            - 15-min edge before news
+            
+            🎯 **Thesis Alignment** (15 pts)
+            - AI Fuel Chain priority
+            - Space/Nuclear sectors
+            
+            ---
+            
+            **🔥 HIGH (70+)**: Hunt NOW
+            
+            **💪 STRONG (50-69)**: Watch close
+            
+            **✅ MODERATE (30-49)**: Build list
+            """)
+    
+    except Exception as e:
+        st.error(f"High Conviction scanner not available: {e}")
+
+#==========================================================================
+# TAB: WOUNDED PREY - Tax Loss Bounce Hunter
+#==========================================================================
+with tab_wounded:
+    st.header("🩸 WOUNDED PREY - Tax Loss Bounce Hunter")
+    st.caption("January bounce plays: Down 30%+, recovering now (Jan 2-10 entry window)")
+    
+    try:
+        import subprocess
+        
+        col1, col2 = st.columns([3, 1])
+        
+        with col1:
+            st.subheader("🎯 WOUNDED PREY RANKINGS")
+            
+            if st.button("🔄 Run Wounded Prey Scan", key="wounded_scan"):
+                with st.spinner("Scanning 55 tickers for bounce potential..."):
+                    result = subprocess.run(
+                        ['python3', 'wounded_prey_scanner.py'],
+                        capture_output=True,
+                        text=True,
+                        timeout=90
+                    )
+                    st.success("✅ Scan complete!")
+            
+            # Try to load latest results
+            try:
+                results_file = Path('logs/wounded_prey_results.json')
+                if results_file.exists():
+                    with open(results_file) as f:
+                        data = json.load(f)
+                    
+                    wounded = data.get('wounded_prey', [])
+                    
+                    if wounded:
+                        # Filter for high scores
+                        high_score = [w for w in wounded if w.get('bounce_score', 0) >= 60]
+                        
+                        st.subheader(f"🔥 HIGH SCORE BOUNCES (60+) - {len(high_score)} found")
+                        
+                        for prey in high_score:
+                            with st.expander(f"🩸 {prey['ticker']} - Bounce Score: {prey.get('bounce_score', 0)}/100"):
+                                c1, c2, c3 = st.columns(3)
+                                
+                                with c1:
+                                    st.metric("Current Price", f"${prey.get('price', 0):.2f}")
+                                    st.metric("52w High", f"${prey.get('high_52w', 0):.2f}")
+                                    st.metric("% from High", f"{prey.get('pct_from_high', 0):.1f}%")
+                                
+                                with c2:
+                                    st.metric("5-Day Change", f"{prey.get('change_5d', 0):+.1f}%")
+                                    st.metric("Volume Ratio", f"{prey.get('volume_ratio', 0):.1f}x")
+                                    st.metric("Insider Buys", prey.get('insider_count', 0))
+                                
+                                with c3:
+                                    st.metric("Tax Loss Score", f"{prey.get('tax_loss_score', 0)}/40")
+                                    st.metric("Recovery Score", f"{prey.get('recovery_score', 0)}/30")
+                                    st.metric("Insider Score", f"{prey.get('insider_score', 0)}/30")
+                                
+                                # Entry/exit
+                                st.markdown("---")
+                                st.markdown(f"**📌 Entry Zone:** ${prey.get('entry_low', 0):.2f} - ${prey.get('entry_high', 0):.2f}")
+                                st.markdown(f"**🎯 Target:** ${prey.get('target', 0):.2f} (+{prey.get('target_pct', 0):.1f}%)")
+                                st.markdown(f"**🛡️ Stop:** ${prey.get('stop', 0):.2f} (-8%)")
+                    else:
+                        st.info("No wounded prey detected. Market might be too strong.")
+                else:
+                    st.warning("No results yet - click 'Run Wounded Prey Scan' above")
+                    
+            except Exception as e:
+                st.error(f"Error loading results: {e}")
+        
+        with col2:
+            st.subheader("🗓️ Timing")
+            st.markdown("""
+            **Tax Loss Timeline:**
+            
+            📅 **Dec 15-31**: Tax loss selling
+            ✅ **DONE**
+            
+            ⏰ **Wash Sale**: 30 days
+            📆 **Ends**: Jan 24-31
+            
+            🎯 **ENTRY WINDOW**: Jan 2-10
+            ⭐ **RIGHT NOW!**
+            
+            📈 **Expected**: 15-30% bounce
+            🗓️ **By**: End of January
+            
+            ---
+            
+            **What We Look For:**
+            
+            ✅ Down 30%+ from highs
+            ✅ Price $2-50
+            ✅ Volume picking up
+            ✅ Has revenue
+            ✅ Insider buying
+            
+            🎯 Enter early Jan
+            🛡️ -8% stop
+            💰 Exit by month end
+            """)
+    
+    except Exception as e:
+        st.error(f"Wounded prey scanner not available: {e}")
+
+#==========================================================================
+# TAB: 8-K ALERTS - SEC Contract Filings (15-min edge)
+#==========================================================================
+with tab_8k:
+    st.header("⚡ 8-K CONTRACT ALERTS - The 15-Minute Edge")
+    st.caption("Material contracts filed with SEC - Catch before market wakes up")
+    
+    try:
+        import subprocess
+        
+        col1, col2 = st.columns([3, 1])
+        
+        with col1:
+            st.subheader("🚨 RECENT 8-K FILINGS (Last 24h)")
+            
+            hours = st.slider("Hours to scan back", 4, 48, 24, key="8k_hours")
+            
+            if st.button("🔄 Scan 8-K Filings", key="8k_scan"):
+                with st.spinner(f"Scanning SEC EDGAR for contracts (last {hours}h)..."):
+                    result = subprocess.run(
+                        ['python3', 'sec_8k_contract_scanner.py', '--hours', str(hours)],
+                        capture_output=True,
+                        text=True,
+                        timeout=180
+                    )
+                    st.success("✅ Scan complete!")
+            
+            # Try to load latest results
+            try:
+                results_file = Path('logs/8k_contract_results.json')
+                if results_file.exists():
+                    with open(results_file) as f:
+                        data = json.load(f)
+                    
+                    filings = data.get('filings', [])
+                    
+                    if filings:
+                        # Filter for high value (score 30+)
+                        high_value = [f for f in filings if f.get('score', 0) >= 30]
+                        
+                        st.subheader(f"🔥 HIGH-VALUE CONTRACTS (30+) - {len(high_value)} found")
+                        
+                        for filing in high_value:
+                            with st.expander(f"⚡ {filing['ticker']} - Score: {filing.get('score', 0)}/100 | Filed: {filing.get('filed_at', 'Unknown')}"):
+                                c1, c2 = st.columns(2)
+                                
+                                with c1:
+                                    st.markdown(f"**Contract Type:** {filing.get('contract_type', 'Material Agreement')}")
+                                    st.markdown(f"**Filed:** {filing.get('filed_at', 'Unknown')}")
+                                    st.markdown(f"**Time Since:** {filing.get('hours_ago', 0):.1f} hours")
+                                
+                                with c2:
+                                    st.metric("Value Score", f"{filing.get('score', 0)}/100")
+                                    if 'price' in filing:
+                                        st.metric("Current Price", f"${filing['price']:.2f}")
+                                        st.metric("5d Change", f"{filing.get('change_5d', 0):+.1f}%")
+                                
+                                # Contract details
+                                if 'description' in filing:
+                                    st.markdown("**Description:**")
+                                    st.markdown(filing['description'])
+                                
+                                # SEC link
+                                if 'sec_url' in filing:
+                                    st.markdown(f"[📄 View SEC Filing]({filing['sec_url']})")
+                        
+                        # Show all recent
+                        st.subheader(f"📋 ALL RECENT FILINGS - {len(filings)} total")
+                        df_data = []
+                        for f in filings:
+                            df_data.append({
+                                'Ticker': f['ticker'],
+                                'Type': f.get('contract_type', 'Material'),
+                                'Score': f.get('score', 0),
+                                'Filed': f.get('filed_at', ''),
+                                'Hours Ago': f"{f.get('hours_ago', 0):.1f}h"
+                            })
+                        
+                        if df_data:
+                            df = pd.DataFrame(df_data)
+                            st.dataframe(df, use_container_width=True)
+                    else:
+                        st.info(f"No 8-K contract filings in last {hours} hours")
+                else:
+                    st.warning("No results yet - click 'Scan 8-K Filings' above")
+                    
+            except Exception as e:
+                st.error(f"Error loading results: {e}")
+        
+        with col2:
+            st.subheader("⚡ The Edge")
+            st.markdown("""
+            **Why 8-K Contracts Matter:**
+            
+            ⏰ **15-Min Window**
+            - Filed → SEC website
+            - Before news picks up
+            - Before algos react
+            
+            💰 **Material = Important**
+            - Must disclose big deals
+            - Revenue impact
+            - Partnership value
+            
+            🎯 **What We Catch:**
+            - Gov contracts
+            - Partnership agreements
+            - Major customer deals
+            - Supply agreements
+            
+            ---
+            
+            **Scoring (0-100):**
+            
+            🔥 **40+**: Major contract
+            - Check immediately
+            - Possible entry
+            
+            ⚡ **30-39**: Solid deal
+            - Worth reviewing
+            - Add to watchlist
+            
+            ✅ **20-29**: Standard
+            - Material but small
+            - Monitor only
+            
+            ---
+            
+            **The Play:**
+            1. Alert fires
+            2. Read filing (2 min)
+            3. Check price/volume
+            4. Enter if clean
+            5. Exit on news pump
+            """)
+    
+    except Exception as e:
+        st.error(f"8-K scanner not available: {e}")
 
 #==========================================================================
 # TAB 2: LIVE CHART - WOLF LEVEL ANALYSIS
@@ -1163,165 +1493,292 @@ with tab_monitor:
         st.error("⚠️ Research modules not available")
 
 #==========================================================================
-# TAB 5: SECTOR ROTATION
+# TAB 5: INSIDER CLUSTERS - Using our cluster_buy_scanner.py
 #==========================================================================
 with tab_sectors:
-    st.header("🔥 Sector Rotation Analysis")
+    st.header("🔥 Insider Cluster Analysis")
+    st.caption("Multiple insiders buying = conviction signal")
     
-    if RESEARCH_MODULES_AVAILABLE:
-        tracker = SectorRotationTracker()
+    try:
+        import subprocess
         
-        with st.spinner("Analyzing sector momentum..."):
-            df = tracker.get_sector_performance([5, 10, 20])
+        col1, col2 = st.columns([3, 1])
+        
+        with col1:
+            if st.button("🔄 Run Cluster Scan", key="sectors_cluster_scan"):
+                with st.spinner("Scanning for insider buying clusters..."):
+                    result = subprocess.run(
+                        ['python3', 'cluster_buy_scanner.py'],
+                        capture_output=True,
+                        text=True,
+                        timeout=90
+                    )
+                    st.success("✅ Scan complete!")
             
-            # Handle both DataFrame and dict returns
-            if isinstance(df, dict):
-                df = pd.DataFrame(df) if df else pd.DataFrame()
-            
-            if not df.empty if hasattr(df, 'empty') else len(df) > 0:
-                ranked = tracker.rank_sectors(df)
-                
-                # Top 5 hot sectors
-                st.subheader("🚀 HOTTEST SECTORS")
-                for idx, row in ranked.head(5).iterrows():
-                    with st.expander(f"{'🔥' if row['5d'] > 5 else '🟢'} {row['sector']} ({row['etf']}) - {row['5d']:+.1f}%"):
-                        col1, col2, col3 = st.columns(3)
-                        col1.metric("5-Day", f"{row['5d']:+.2f}%")
-                        col2.metric("10-Day", f"{row['10d']:+.2f}%")
-                        col3.metric("20-Day", f"{row['20d']:+.2f}%")
-                        
-                        if row.get('accelerating'):
-                            st.success("🚀 ACCELERATING - Getting stronger!")
-                
-                # Generate alerts
-                st.markdown("---")
-                st.subheader("⚡ Sector Alerts")
-                
-                alerts = tracker.generate_sector_alerts(ranked, threshold=3.0)
-                
-                if alerts:
-                    for alert in alerts:
-                        if alert['alert_type'] == 'HOT_SECTOR':
-                            st.success(f"🟢 {alert['sector']} ({alert['etf']}) +{alert['performance_5d']:.1f}%")
-                            st.write(f"**Watchlist tickers:** {', '.join(alert['watchlist_tickers'])}")
-                            st.write(f"**Priority:** {alert['priority']}")
-                            st.markdown("---")
-                else:
-                    st.info("No major sector movements detected")
+            # Load results
+            try:
+                results_file = Path('logs/cluster_results.json')
+                if results_file.exists():
+                    with open(results_file) as f:
+                        data = json.load(f)
                     
-                # Full table
-                st.markdown("---")
-                st.subheader("📊 All Sectors")
-                st.dataframe(ranked[['sector', 'etf', '5d', '10d', '20d', 'momentum_score']], use_container_width=True)
-    else:
-        st.error("⚠️ Research modules not available. Check installation.")
+                    clusters = data.get('clusters', [])
+                    
+                    if clusters:
+                        tier1 = [c for c in clusters if c.get('tier') == 'TIER 1']
+                        tier2 = [c for c in clusters if c.get('tier') == 'TIER 2']
+                        
+                        if tier1:
+                            st.subheader(f"🔥 TIER 1 CLUSTERS ({len(tier1)}) - 5+ insiders")
+                            for cluster in tier1:
+                                with st.expander(f"🔥 {cluster['ticker']} - {cluster['insider_count']} insiders"):
+                                    c1, c2, c3 = st.columns(3)
+                                    with c1:
+                                        st.metric("Insiders", cluster['insider_count'])
+                                        st.metric("Total Shares", f"{cluster.get('total_shares', 0):,}")
+                                    with c2:
+                                        st.metric("Total Value", f"${cluster.get('total_value', 0):,.0f}")
+                                        st.metric("Latest Buy", cluster.get('latest_date', 'Unknown'))
+                                    with c3:
+                                        st.metric("Avg Price", f"${cluster.get('avg_price', 0):.2f}")
+                                        st.metric("Current Price", f"${cluster.get('current_price', 0):.2f}")
+                        
+                        if tier2:
+                            st.subheader(f"⚡ TIER 2 CLUSTERS ({len(tier2)}) - 3-4 insiders")
+                            for cluster in tier2[:5]:
+                                st.markdown(f"**{cluster['ticker']}** - {cluster['insider_count']} insiders | ${cluster.get('total_value', 0):,.0f}")
+                    else:
+                        st.info("No clusters detected. Run scan.")
+                else:
+                    st.warning("No results yet - click 'Run Cluster Scan' above")
+            except Exception as e:
+                st.error(f"Error loading results: {e}")
+        
+        with col2:
+            st.subheader("📊 About")
+            st.markdown("""
+            **Cluster = Conviction**
+            
+            When multiple insiders buy:
+            - They see the same opportunity
+            - Reduces individual risk
+            - Higher conviction signal
+            
+            **Tiers:**
+            - 🔥 TIER 1: 5+ insiders
+            - ⚡ TIER 2: 3-4 insiders
+            
+            **Data from:**
+            - SEC Form 4 filings
+            - Last 90 days
+            - Open market purchases only
+            """)
+    
+    except Exception as e:
+        st.error(f"Cluster scanner error: {e}")
+        st.info("Run: python3 cluster_buy_scanner.py")
 
 #==========================================================================
-# TAB 4: CATALYST CALENDAR
+# TAB 4: CONGRESS TRACKER - Follow the money
 #==========================================================================
 with tab_catalysts:
-    st.header("📅 Upcoming Catalysts")
+    st.header("🏛️ Congress Tracker")
+    st.caption("Follow congressional trades - they have inside info")
     
-    if RESEARCH_MODULES_AVAILABLE:
-        tracker = CatalystTracker()
+    try:
+        import subprocess
         
-        # Add manual catalyst interface
-        with st.sidebar:
-            st.markdown("---")
-            st.subheader("➕ Add Catalyst")
-            cat_ticker = st.text_input("Ticker", "LUNR")
-            cat_event = st.text_input("Event", "IM-3 Moon Mission")
-            cat_date = st.date_input("Date")
-            cat_type = st.selectbox("Type", ["EARNINGS", "PRODUCT_LAUNCH", "FDA", "CONTRACT", "TECH_DEMO"])
-            cat_impact = st.selectbox("Impact", ["LOW", "MEDIUM", "HIGH", "EXTREME"])
-            
-            if st.button("Add Catalyst"):
-                tracker.add_manual_catalysts(cat_ticker, cat_event, cat_date.strftime('%Y-%m-%d'), cat_type, cat_impact)
-                st.success(f"✅ Added {cat_ticker}!")
-                st.rerun()
+        col1, col2 = st.columns([3, 1])
         
-        with st.spinner("Loading catalyst calendar..."):
-            catalysts = tracker.get_all_catalysts(full_watchlist if full_watchlist else all_tickers, days_ahead=30)
-            ranked = tracker.rank_catalysts(catalysts)
+        with col1:
+            if st.button("🔄 Run Congress Scan", key="congress_scan"):
+                with st.spinner("Tracking congressional trades..."):
+                    result = subprocess.run(
+                        ['python3', 'congress_tracker.py'],
+                        capture_output=True,
+                        text=True,
+                        timeout=90
+                    )
+                    st.success("✅ Scan complete!")
             
-            if ranked:
-                st.subheader(f"🎯 {len(ranked)} Catalysts in Next 30 Days")
-                
-                for cat in ranked:
-                    ticker = cat.get('ticker', 'MARKET')
-                    days = cat['days_until']
+            # Load results
+            try:
+                results_file = Path('logs/congress_trades.json')
+                if results_file.exists():
+                    with open(results_file) as f:
+                        data = json.load(f)
                     
-                    # Urgency color
-                    if days <= 3:
-                        urgency = "🔴 IMMINENT"
-                    elif days <= 7:
-                        urgency = "🟠 THIS WEEK"
-                    elif days <= 14:
-                        urgency = "🟡 NEXT 2 WEEKS"
+                    trades = data.get('trades', [])
+                    
+                    if trades:
+                        st.subheader(f"📋 Recent Congressional Trades ({len(trades)})")
+                        
+                        for trade in trades[:20]:
+                            with st.expander(f"{trade.get('ticker', 'N/A')} - {trade.get('politician', 'Unknown')} | {trade.get('transaction_type', 'N/A')}"):
+                                c1, c2, c3 = st.columns(3)
+                                with c1:
+                                    st.markdown(f"**Politician:** {trade.get('politician', 'Unknown')}")
+                                    st.markdown(f"**Party:** {trade.get('party', 'Unknown')}")
+                                with c2:
+                                    st.markdown(f"**Type:** {trade.get('transaction_type', 'Unknown')}")
+                                    st.markdown(f"**Amount:** ${trade.get('amount_min', 0):,} - ${trade.get('amount_max', 0):,}")
+                                with c3:
+                                    st.markdown(f"**Filed:** {trade.get('filed_date', 'Unknown')}")
+                                    st.markdown(f"**Trade Date:** {trade.get('transaction_date', 'Unknown')}")
                     else:
-                        urgency = "🟢 LATER"
-                        
-                    with st.expander(f"{urgency} | {ticker} - {cat.get('event', 'Earnings')} (Score: {cat['score']})"):
-                        col1, col2, col3 = st.columns(3)
-                        col1.metric("Days Until", days)
-                        col2.metric("Impact", cat['impact'])
-                        col3.metric("Type", cat['catalyst_type'])
-                        
-                        st.write(f"**Date:** {cat['date']}")
-                        
-                        if cat.get('last_surprise_pct'):
-                            surprise = cat['last_surprise_pct']
-                            if surprise > 0:
-                                st.success(f"Last earnings: +{surprise:.1f}% surprise")
-                            else:
-                                st.error(f"Last earnings: {surprise:.1f}% miss")
-            else:
-                st.info("⚠️ No catalysts in next 30 days. Add manual catalysts in sidebar.")
-    else:
-        st.error("⚠️ Research modules not available")
+                        st.info("No recent trades. Run scan.")
+                else:
+                    st.warning("No results yet - click 'Run Congress Scan' above")
+            except Exception as e:
+                st.error(f"Error loading results: {e}")
+        
+        with col2:
+            st.subheader("📊 The Edge")
+            st.markdown("""
+            **Why Track Congress?**
+            
+            ✅ Access to insider info
+            ✅ Policy knowledge
+            ✅ Committee insights
+            ✅ Legal for them!
+            
+            **What to Watch:**
+            - Clusters (multiple buying same stock)
+            - Unusual timing
+            - Committee members
+            - Large positions
+            
+            **Data from:**
+            - Congressional disclosure filings
+            - 45-day reporting window
+            """)
+    
+    except Exception as e:
+        st.error(f"Congress tracker error: {e}")
+        st.info("Run: python3 congress_tracker.py")
 
 #==========================================================================
-# TAB 5: FAILED BREAKOUTS
+# TAB 5: PATTERN HUNTER - Repeat gainers
 #==========================================================================
 with tab_breakouts:
-    st.header("💣 Failed Breakout Detector")
-    st.caption("Stocks that hyped, failed, and are resetting - potential reversal plays")
+    st.header("💣 Pattern Hunter - Repeat Gainers")
+    st.caption("Find stocks with predictable cycles - space/nuclear/AI sectors")
     
-    if RESEARCH_MODULES_AVAILABLE:
-        detector = FailedBreakoutDetector()
+    try:
+        import subprocess
         
-        with st.spinner(f"Scanning {len(full_watchlist if full_watchlist else all_tickers)} tickers..."):
-            results = detector.scan_watchlist(full_watchlist if full_watchlist else all_tickers)
+        col1, col2 = st.columns([3, 1])
+        
+        with col1:
+            if st.button("🔄 Run Pattern Analysis", key="pattern_scan"):
+                with st.spinner("Analyzing repeat mover patterns..."):
+                    result = subprocess.run(
+                        ['python3', 'pattern_hunter.py'],
+                        capture_output=True,
+                        text=True,
+                        timeout=120
+                    )
+                    st.success("✅ Analysis complete!")
             
-            if results:
-                # Score each
-                for result in results:
-                    result['score'] = detector.score_reversal_potential(result)
-                    
-                results.sort(key=lambda x: x['score'], reverse=True)
+            st.subheader("🔥 KNOWN REPEAT RUNNERS")
+            
+            # Space sector
+            with st.expander("🚀 SPACE SECTOR - Launch window cycles"):
+                st.markdown("""
+                **LUNR, RKLB, RDW**
+                - **Catalyst:** Launch windows every 4-8 weeks
+                - **Pattern:** +15-40% on successful launch news
+                - **Pullback:** 20-30% after initial spike
+                - **Re-entry:** On pullback or next launch window
                 
-                st.subheader(f"🎯 Found {len(results)} Failed Breakouts")
+                **What triggers it:**
+                - NASA contracts
+                - Successful launches
+                - New mission announcements
+                - Earnings with guidance
+                """)
+            
+            # Nuclear sector
+            with st.expander("☢️ NUCLEAR SECTOR - Policy cycles"):
+                st.markdown("""
+                **UUUU, SMR, LEU, OKLO**
+                - **Catalyst:** DOE policy, uranium prices, SMR approvals
+                - **Pattern:** Sector moves together
+                - **Edge:** UUUU has 21 insider cluster (highest conviction)
+                - **Timing:** Policy announcements, White House clean energy push
                 
-                for i, fb in enumerate(results, 1):
-                    with st.expander(f"#{i} {fb['ticker']} - Reversal Score: {fb['score']}/100"):
-                        col1, col2 = st.columns(2)
-                        
-                        with col1:
-                            st.metric("Peak", f"${fb['high']:.2f}", f"+{fb['run_pct']:.1f}%")
-                            st.metric("Bottom", f"${fb['low_after']:.2f}", f"-{fb['retracement_pct']:.1f}%")
-                            st.metric("Current", f"${fb['current']:.2f}", f"+{fb['current_from_low_pct']:.1f}% off low")
-                            
-                        with col2:
-                            st.write(f"**High Date:** {fb['high_date']}")
-                            st.write(f"**Low Date:** {fb['low_date']}")
-                            st.write(f"**Days Since Peak:** {fb['days_since_high']}")
-                            st.write(f"**Pattern:** {fb['pattern']}")
-                            
-                        st.info("💡 Check for insider buying to increase conviction")
-            else:
-                st.info("✅ No failed breakouts detected in watchlist")
-    else:
-        st.error("⚠️ Research modules not available")
+                **What triggers it:**
+                - DOE funding announcements
+                - Uranium price spikes
+                - SMR construction permits
+                - Climate policy news
+                """)
+            
+            # AI Infrastructure
+            with st.expander("🤖 AI INFRASTRUCTURE - Earnings cycles"):
+                st.markdown("""
+                **VRT, ANET, SMCI**
+                - **Catalyst:** Earnings beats, hyperscaler announcements
+                - **Pattern:** Pumps 1-2 weeks AFTER main AI sector
+                - **Why:** Infrastructure needed for AI buildout
+                - **Timing:** Following NVDA/MSFT earnings
+                
+                **What triggers it:**
+                - Data center expansion news
+                - Hyperscaler capex guidance
+                - Infrastructure shortage headlines
+                - Cooling/power solution announcements
+                """)
+            
+            # Quantum
+            with st.expander("⚛️ QUANTUM - Event driven"):
+                st.markdown("""
+                **IONQ, RGTI, QBTS, QUBT**
+                - **Catalyst:** Tech demos, partnerships, breakthroughs
+                - **Pattern:** +30-100% on major news, VERY volatile
+                - **Risk:** HIGH - tight stops required
+                - **Timing:** CES, AWS re:Invent, research papers
+                
+                **What triggers it:**
+                - Error correction breakthroughs
+                - Commercial partnerships
+                - Government contracts
+                - Conference demonstrations
+                """)
+        
+        with col2:
+            st.subheader("📊 The Play")
+            st.markdown("""
+            **How to Use:**
+            
+            1. **Know the sectors**
+               - Space, Nuclear, AI Infra, Quantum
+            
+            2. **Watch for catalysts**
+               - Launch windows
+               - Policy news
+               - Earnings
+               - Conferences
+            
+            3. **Enter early**
+               - Before news hits
+               - On pullbacks
+               - With insider buying
+            
+            4. **Exit strategy**
+               - Take profit on spike
+               - Hold core position
+               - Re-enter on pullback
+            
+            **Risk Management:**
+            - -8% stops always
+            - Size smaller on vol
+            - Never chase after +20%
+            """)
+    
+    except Exception as e:
+        st.error(f"Pattern hunter error: {e}")
+        st.info("Run: python3 pattern_hunter.py")
 
 #==========================================================================
 # TAB 6: WATCHLIST RANKINGS

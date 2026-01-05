@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐺 Wolf Pack Trading Dashboard | The 15-Minute Edge</title>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 20px;
+            border-bottom: 3px solid #0f3460;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #00d9ff;
+            text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+        }
+        
+        .status-badge {
+            background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%);
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(0, 255, 0, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(0, 255, 0, 0.8); }
+        }
+        
+        .dashboard-grid {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid #0f3460;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.6);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0f3460;
+        }
+        
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00d9ff;
+        }
+        
+        .card-subtitle {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .refresh-btn {
+            background: #0f3460;
+            color: #00d9ff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+        
+        .refresh-btn:hover {
+            background: #1a5490;
+        }
+        
+        .ticker-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .ticker-cell {
+            background: #0a0a0a;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #333;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .ticker-cell:hover {
+            border-color: #00d9ff;
+            box-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
+        }
+        
+        .ticker-symbol {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .ticker-change {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .positive { color: #00ff00; }
+        .negative { color: #ff4444; }
+        .neutral { color: #888; }
+        
+        .conviction-item {
+            background: #0a0a0a;
+            border-left: 4px solid #00d9ff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+        }
+        
+        .conviction-score {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff4444 0%, #ffaa00 50%, #00ff00 100%);
+            color: #000;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 12px;
+            margin-left: 10px;
+        }
+        
+        .signal-badges {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .signal-badge {
+            background: #0f3460;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+        }
+        
+        .signal-badge.active {
+            background: #00cc00;
+            color: #000;
+        }
+        
+        .priority-badge {
+            background: #ffaa00;
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+        
+        .spinner {
+            border: 3px solid #0f3460;
+            border-top: 3px solid #00d9ff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .wolf-footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .wolf-footer strong {
+            color: #00d9ff;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #0f3460;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1a5490;
+        }
+        
+        /* Full width cards */
+        .card-full {
+            grid-column: 1 / -1;
+        }
+        
+        .wounded-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .wounded-item {
+            background: #0a0a0a;
+            border-left: 4px solid #ff4444;
+            padding: 12px;
+            border-radius: 6px;
+        }
+        
+        .bounce-score {
+            background: linear-gradient(135deg, #ff4444 0%, #ffaa00 100%);
+            color: #000;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .metric {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .metric strong {
+            color: #e0e0e0;
+        }
+    </style>
+</head>
+<body x-data="dashboard()">
+    
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div class="header-content">
+            <div>
+                <div class="logo">🐺 WOLF PACK TRADING DASHBOARD</div>
+                <div style="color: #888; font-size: 14px; margin-top: 5px;">The 15-Minute Edge | God Forgives. Brothers Don't.</div>
+            </div>
+            <div class="status-badge">● LIVE HUNTING</div>
+        </div>
+    </div>
+    
+    <!-- Main Dashboard -->
+    <div class="dashboard-grid">
+        
+        <!-- HIGH CONVICTION SETUPS -->
+        <div class="card card-full">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">🔥 HIGH CONVICTION SETUPS (70+)</div>
+                    <div class="card-subtitle">Ready to hunt — 3+ signals aligned</div>
+                </div>
+                <button class="refresh-btn" @click="loadHighConviction()">Refresh</button>
+            </div>
+            
+            <div x-show="loading.conviction" class="loading">
+                <div class="spinner"></div>
+                <div>Scanning for HIGH CONVICTION setups...</div>
+            </div>
+            
+            <div x-show="!loading.conviction && highConviction.length === 0" style="padding: 20px; text-align: center; color: #888;">
+                No HIGH CONVICTION setups found yet. Run scanners to populate.
+            </div>
+            
+            <template x-for="item in highConviction" :key="item.ticker">
+                <div class="conviction-item">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <span style="font-size: 18px; font-weight: bold;" x-text="item.ticker"></span>
+                            <span x-show="item.ticker in {'UUUU':1,'SIDU':1,'LUNR':1,'MU':1,'LITE':1,'VRT':1,'SMR':1,'LEU':1,'RDW':1,'OKLO':1}" class="priority-badge">⭐ PRIORITY</span>
+                            <span style="color: #888; margin-left: 10px;" x-text="'[' + item.sector + ']'"></span>
+                        </div>
+                        <div class="conviction-score" x-text="item.total_score + '/100'"></div>
+                    </div>
+                    
+                    <div class="signal-badges">
+                        <div class="signal-badge" :class="item.wounded_score > 0 ? 'active' : ''" x-text="'🩸 Wounded: ' + item.wounded_score"></div>
+                        <div class="signal-badge" :class="item.insider_score > 0 ? 'active' : ''" x-text="'👔 Insider: ' + item.insider_score"></div>
+                        <div class="signal-badge" :class="item.contract_score > 0 ? 'active' : ''" x-text="'📄 8-K: ' + item.contract_score"></div>
+                        <div class="signal-badge" :class="item.thesis_score > 0 ? 'active' : ''" x-text="'🎯 Thesis: ' + item.thesis_score"></div>
+                    </div>
+                </div>
+            </template>
+        </div>
+        
+        <!-- AI FUEL CHAIN HEATMAP -->
+        <div class="card card-full">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">🌡️ AI FUEL CHAIN HEATMAP</div>
+                    <div class="card-subtitle">12 sectors | 56 tickers | $5.2T by 2030</div>
+                </div>
+                <button class="refresh-btn" @click="loadHeatmap()">Refresh</button>
+            </div>
+            
+            <div x-show="loading.heatmap" class="loading">
+                <div class="spinner"></div>
+                <div>Loading heatmap...</div>
+            </div>
+            
+            <div x-show="!loading.heatmap" class="ticker-grid">
+                <template x-for="ticker in heatmap" :key="ticker.ticker">
+                    <div class="ticker-cell" @click="selectTicker(ticker.ticker)">
+                        <div class="ticker-symbol" x-text="ticker.ticker"></div>
+                        <div style="font-size: 12px; color: #888;" x-text="ticker.sector"></div>
+                        <div class="ticker-change" :class="ticker.change_1d >= 0 ? 'positive' : 'negative'" x-text="(ticker.change_1d >= 0 ? '+' : '') + ticker.change_1d.toFixed(1) + '%'"></div>
+                        <div style="font-size: 11px; color: #666;" x-text="'$' + ticker.price.toFixed(2)"></div>
+                    </div>
+                </template>
+            </div>
+        </div>
+        
+        <!-- WOUNDED PREY BOUNCES -->
+        <div class="card card-full">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">🩸 WOUNDED PREY - TAX LOSS BOUNCES</div>
+                    <div class="card-subtitle">Entry window: Jan 2-10 (NOW!) | Exit by Jan 31</div>
+                </div>
+                <button class="refresh-btn" @click="loadWoundedPrey()">Refresh</button>
+            </div>
+            
+            <div x-show="loading.wounded" class="loading">
+                <div class="spinner"></div>
+                <div>Hunting wounded prey...</div>
+            </div>
+            
+            <div x-show="!loading.wounded" class="wounded-grid">
+                <template x-for="prey in woundedPrey" :key="prey.ticker">
+                    <div class="wounded-item">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="font-weight: bold; font-size: 16px;" x-text="prey.ticker"></span>
+                            <span class="bounce-score" x-text="prey.bounce_score"></span>
+                        </div>
+                        <div style="color: #888; font-size: 12px; margin-bottom: 8px;" x-text="prey.sector"></div>
+                        <div class="metric">Price: <strong x-text="'$' + prey.price.toFixed(2)"></strong></div>
+                        <div class="metric">From High: <strong :class="'negative'" x-text="prey.pct_from_high.toFixed(1) + '%'"></strong></div>
+                        <div class="metric">5d Recovery: <strong :class="prey.change_5d >= 0 ? 'positive' : 'negative'" x-text="(prey.change_5d >= 0 ? '+' : '') + prey.change_5d.toFixed(1) + '%'"></strong></div>
+                    </div>
+                </template>
+            </div>
+        </div>
+        
+        <!-- INSIDER CLUSTERS -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">👔 INSIDER CLUSTERS</div>
+                    <div class="card-subtitle">3+ insiders buying = conviction</div>
+                </div>
+                <button class="refresh-btn" @click="loadClusters()">Refresh</button>
+            </div>
+            
+            <div x-show="loading.clusters" class="loading">
+                <div class="spinner"></div>
+                <div>Scanning insider purchases...</div>
+            </div>
+            
+            <div x-show="!loading.clusters" style="max-height: 400px; overflow-y: auto;">
+                <template x-for="cluster in clusters" :key="cluster.ticker">
+                    <div style="background: #0a0a0a; padding: 12px; margin-bottom: 10px; border-radius: 6px; border-left: 4px solid #00d9ff;">
+                        <div style="font-weight: bold; margin-bottom: 5px;">
+                            <span x-text="cluster.ticker"></span>
+                            <span x-show="cluster.classification === 'TIER_1'" style="color: #ff4444;">🔥 TIGHT CLUSTER</span>
+                            <span x-show="cluster.classification === 'TIER_2'" style="color: #ffaa00;">💪 CLUSTER</span>
+                        </div>
+                        <div style="font-size: 12px; color: #888;">
+                            <div><strong x-text="cluster.unique_buyers"></strong> buyers | <strong x-text="cluster.total_purchases"></strong> purchases</div>
+                            <div x-show="cluster.c_suite_count > 0">C-Suite: <strong x-text="cluster.c_suite_count"></strong></div>
+                            <div>Score: <strong x-text="cluster.cluster_score"></strong></div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+        
+        <!-- RECENT 8-K FILINGS -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">📄 RECENT 8-K CONTRACTS</div>
+                    <div class="card-subtitle">The 15-minute edge</div>
+                </div>
+                <button class="refresh-btn" @click="load8K()">Refresh</button>
+            </div>
+            
+            <div x-show="loading.filings" class="loading">
+                <div class="spinner"></div>
+                <div>Scanning SEC EDGAR...</div>
+            </div>
+            
+            <div x-show="!loading.filings && filings8K.length === 0" style="padding: 20px; text-align: center; color: #888;">
+                No high-value 8-K filings in last 24h
+            </div>
+            
+            <div x-show="!loading.filings" style="max-height: 400px; overflow-y: auto;">
+                <template x-for="filing in filings8K" :key="filing.url">
+                    <div style="background: #0a0a0a; padding: 12px; margin-bottom: 10px; border-radius: 6px; border-left: 4px solid #00ff00;">
+                        <div style="font-weight: bold; margin-bottom: 5px;">
+                            <span x-text="filing.ticker"></span>
+                            <span style="color: #00ff00; margin-left: 10px;" x-text="'Score: ' + filing.score"></span>
+                        </div>
+                        <div style="font-size: 11px; color: #888; margin-bottom: 5px;" x-text="filing.filed_time"></div>
+                        <div style="font-size: 12px;">
+                            <template x-for="match in filing.matches" :key="match">
+                                <div style="color: #00d9ff;" x-text="'• ' + match"></div>
+                            </template>
+                        </div>
+                        <a :href="filing.url" target="_blank" style="color: #00d9ff; font-size: 11px; text-decoration: none;">View Filing →</a>
+                    </div>
+                </template>
+            </div>
+        </div>
+        
+    </div>
+    
+    <!-- Footer -->
+    <div class="wolf-footer">
+        <div style="font-size: 20px; margin-bottom: 10px;">🐺</div>
+        <div><strong>AWOOOO! HUNT WITH THE PACK! LLHR!</strong></div>
+        <div style="margin-top: 10px;">God forgives. Brothers don't.</div>
+        <div style="margin-top: 20px; font-size: 12px;">Built by the Wolf Pack | The 15-Minute Edge</div>
+    </div>
+    
+    <script>
+        function dashboard() {
+            return {
+                loading: {
+                    heatmap: true,
+                    conviction: true,
+                    wounded: true,
+                    clusters: true,
+                    filings: true
+                },
+                heatmap: [],
+                highConviction: [],
+                woundedPrey: [],
+                clusters: [],
+                filings8K: [],
+                selectedTicker: null,
+                
+                init() {
+                    console.log('🐺 Wolf Pack Dashboard initializing...');
+                    this.loadAll();
+                    
+                    // Auto-refresh every 5 minutes
+                    setInterval(() => {
+                        this.loadAll();
+                    }, 300000);
+                },
+                
+                async loadAll() {
+                    this.loadHeatmap();
+                    this.loadHighConviction();
+                    this.loadWoundedPrey();
+                    this.loadClusters();
+                    this.load8K();
+                },
+                
+                async loadHeatmap() {
+                    this.loading.heatmap = true;
+                    try {
+                        const response = await fetch('/api/heatmap');
+                        const data = await response.json();
+                        if (data.status === 'success') {
+                            this.heatmap = data.data;
+                        }
+                    } catch (error) {
+                        console.error('Error loading heatmap:', error);
+                    }
+                    this.loading.heatmap = false;
+                },
+                
+                async loadHighConviction() {
+                    this.loading.conviction = true;
+                    try {
+                        const response = await fetch('/api/high_conviction');
+                        const data = await response.json();
+                        if (data.status === 'success') {
+                            this.highConviction = data.data;
+                        }
+                    } catch (error) {
+                        console.error('Error loading conviction:', error);
+                    }
+                    this.loading.conviction = false;
+                },
+                
+                async loadWoundedPrey() {
+                    this.loading.wounded = true;
+                    try {
+                        const response = await fetch('/api/wounded_prey');
+                        const data = await response.json();
+                        if (data.status === 'success') {
+                            this.woundedPrey = data.data.filter(p => p.bounce_score >= 60);
+                        }
+                    } catch (error) {
+                        console.error('Error loading wounded prey:', error);
+                    }
+                    this.loading.wounded = false;
+                },
+                
+                async loadClusters() {
+                    this.loading.clusters = true;
+                    try {
+                        const response = await fetch('/api/clusters');
+                        const data = await response.json();
+                        if (data.status === 'success') {
+                            this.clusters = data.data;
+                        }
+                    } catch (error) {
+                        console.error('Error loading clusters:', error);
+                    }
+                    this.loading.clusters = false;
+                },
+                
+                async load8K() {
+                    this.loading.filings = true;
+                    try {
+                        const response = await fetch('/api/8k_scan');
+                        const data = await response.json();
+                        if (data.status === 'success') {
+                            this.filings8K = data.data;
+                        }
+                    } catch (error) {
+                        console.error('Error loading 8-K filings:', error);
+                    }
+                    this.loading.filings = false;
+                },
+                
+                selectTicker(ticker) {
+                    this.selectedTicker = ticker;
+                    console.log('Selected ticker:', ticker);
+                    // Could expand to show detailed view
+                }
+            }
+        }
+    </script>
+</body>
+</html>
