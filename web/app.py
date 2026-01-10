@@ -63,6 +63,95 @@ def index():
     """Main dashboard"""
     return render_template('dashboard.html')
 
+@app.route('/api/sector_rotation')
+def get_sector_rotation():
+    """Get 24-hour sector rotation monitor data"""
+    try:
+        sectors = {
+            'quantum': ['IONQ', 'RGTI', 'QBTS'],
+            'space': ['RKLB', 'ASTS', 'LUNR'],
+            'biotech_small': ['SAVA', 'ALNY'],
+            'biotech_large': ['MRNA', 'BNTX', 'NVAX'],
+            'uranium': ['CCJ', 'UEC', 'UUUU'],
+            'cybersecurity': ['CRWD', 'S', 'ZS'],
+            'ai_infrastructure': ['NVDA', 'AMD', 'AVGO'],
+            'ai_hype': ['AI', 'BBAI'],
+            'defense': ['LMT', 'RTX', 'BA'],
+            'semi': ['ASML', 'TSM', 'INTC']
+        }
+        
+        sector_status = []
+        
+        for sector_name, tickers in sectors.items():
+            try:
+                sector_returns = []
+                ticker_data = []
+                
+                for ticker in tickers:
+                    try:
+                        data = yf.Ticker(ticker).history(period='30d')
+                        if len(data) > 0:
+                            returns = data['Close'].pct_change() * 100
+                            sector_returns.append(returns)
+                            
+                            # Individual ticker info
+                            current_price = data['Close'].iloc[-1]
+                            prev_close = data['Close'].iloc[-2] if len(data) > 1 else current_price
+                            today_change = ((current_price / prev_close) - 1) * 100
+                            
+                            ticker_data.append({
+                                'ticker': ticker,
+                                'price': round(current_price, 2),
+                                'today': round(today_change, 2)
+                            })
+                    except:
+                        continue
+                
+                if len(sector_returns) > 0:
+                    sector_avg = pd.concat(sector_returns, axis=1).mean(axis=1)
+                    cumulative = (1 + sector_avg / 100).cumprod()
+                    
+                    current = cumulative.iloc[-1]
+                    high_30d = cumulative.max()
+                    from_high = ((current / high_30d) - 1) * 100
+                    
+                    # Today's performance
+                    today_ret = sector_avg.iloc[-1] if len(sector_avg) > 0 else 0
+                    
+                    # Status determination
+                    if from_high > -2:
+                        status = "AT_HIGH"
+                        status_emoji = "🔴"
+                    elif from_high > -10:
+                        status = "MIDDLE"
+                        status_emoji = "🟡"
+                    else:
+                        status = "BEATEN"
+                        status_emoji = "🟢"
+                    
+                    sector_status.append({
+                        'sector': sector_name,
+                        'from_high': round(from_high, 1),
+                        'today': round(today_ret, 2),
+                        'status': status,
+                        'status_emoji': status_emoji,
+                        'tickers': ticker_data
+                    })
+            except:
+                continue
+        
+        # Sort by distance from high
+        sector_status.sort(key=lambda x: x['from_high'])
+        
+        return jsonify({
+            'success': True,
+            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S ET'),
+            'sectors': sector_status
+        })
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
 @app.route('/api/heatmap')
 def get_heatmap():
     """Get AI Fuel Chain heatmap data"""

@@ -1,0 +1,27 @@
+THE 6-TICKER TRADING SYSTEM
+==================================================
+
+1. NVVE - $4.71
+   Combined: 78.7%
+   ORB: 89.3%, PDH: 80.0%, MR: 66.7%
+
+2. ARQQ - $27.28
+   Combined: 73.5%
+   ORB: 54.8%, PDH: 92.0%, MR: 73.7%
+
+3. PLUG - $2.32
+   Combined: 69.3%
+   ORB: 59.3%, PDH: 80.0%, MR: 68.6%
+
+4. CLSK - $11.99
+   Combined: 68.7%
+   ORB: 53.3%, PDH: 87.0%, MR: 65.9%
+
+5. APLD - $31.94
+   Combined: 68.3%
+   ORB: 64.7%, PDH: 82.8%, MR: 57.5%
+
+6. BBAI - $6.17
+   Combined: 68.0%
+   ORB: 59.3%, PDH: 76.2%, MR: 68.6%
+

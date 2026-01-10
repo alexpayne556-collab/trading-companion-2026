@@ -311,6 +311,97 @@
     <!-- Main Dashboard -->
     <div class="dashboard-grid">
         
+        <!-- 24-HOUR SECTOR ROTATION MONITOR -->
+        <div class="card card-full">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">📊 24-HOUR SECTOR ROTATION MONITOR</div>
+                    <div class="card-subtitle">Distance from 30d highs | 🟢 Beaten Down | 🟡 Middle | 🔴 At Highs</div>
+                </div>
+                <button class="refresh-btn" @click="loadSectorRotation()">Refresh</button>
+            </div>
+            
+            <div x-show="loading.rotation" class="loading">
+                <div class="spinner"></div>
+                <div>Loading sector rotation data...</div>
+            </div>
+            
+            <div x-show="!loading.rotation" style="padding: 20px;">
+                <!-- Beaten Down Sectors (Opportunities) -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #4ade80; margin-bottom: 15px;">✅ WATCH (Beaten Down - Entry Opportunity)</h3>
+                    <template x-for="sector in sectorRotation.filter(s => s.status === 'BEATEN')" :key="sector.sector">
+                        <div style="background: #1a2e1a; border-left: 4px solid #4ade80; padding: 15px; margin-bottom: 10px; border-radius: 6px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <div>
+                                    <span style="font-size: 16px; font-weight: bold; text-transform: uppercase;" x-text="sector.sector.replace('_', ' ')"></span>
+                                    <span style="color: #888; margin-left: 10px;" x-text="sector.from_high + '% from 30d high'"></span>
+                                </div>
+                                <div>
+                                    <span x-show="sector.today > 1" style="color: #4ade80;">⬆️</span>
+                                    <span x-show="sector.today < -1" style="color: #ef4444;">⬇️</span>
+                                    <span x-show="sector.today >= -1 && sector.today <= 1" style="color: #888;">➡️</span>
+                                    <span x-text="'Today: ' + sector.today.toFixed(2) + '%'" :style="'color: ' + (sector.today > 0 ? '#4ade80' : '#ef4444')"></span>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <template x-for="ticker in sector.tickers" :key="ticker.ticker">
+                                    <div style="background: #0a0a0a; padding: 8px 12px; border-radius: 4px; font-size: 13px;">
+                                        <span style="font-weight: bold;" x-text="ticker.ticker"></span>
+                                        <span style="color: #888;"> $</span><span x-text="ticker.price"></span>
+                                        <span :style="'color: ' + (ticker.today > 0 ? '#4ade80' : '#ef4444')" x-text="' (' + (ticker.today > 0 ? '+' : '') + ticker.today.toFixed(2) + '%)'"></span>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                
+                <!-- At Highs Sectors (Avoid) -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #ef4444; margin-bottom: 15px;">❌ AVOID (Extended - At Highs)</h3>
+                    <template x-for="sector in sectorRotation.filter(s => s.status === 'AT_HIGH')" :key="sector.sector">
+                        <div style="background: #2e1a1a; border-left: 4px solid #ef4444; padding: 15px; margin-bottom: 10px; border-radius: 6px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <div>
+                                    <span style="font-size: 16px; font-weight: bold; text-transform: uppercase;" x-text="sector.sector.replace('_', ' ')"></span>
+                                    <span style="color: #888; margin-left: 10px;" x-text="sector.from_high + '% from 30d high'"></span>
+                                </div>
+                                <div>
+                                    <span x-show="sector.today > 1" style="color: #4ade80;">⬆️</span>
+                                    <span x-show="sector.today < -1" style="color: #ef4444;">⬇️</span>
+                                    <span x-show="sector.today >= -1 && sector.today <= 1" style="color: #888;">➡️</span>
+                                    <span x-text="'Today: ' + sector.today.toFixed(2) + '%'" :style="'color: ' + (sector.today > 0 ? '#4ade80' : '#ef4444')"></span>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <template x-for="ticker in sector.tickers" :key="ticker.ticker">
+                                    <div style="background: #0a0a0a; padding: 8px 12px; border-radius: 4px; font-size: 13px;">
+                                        <span style="font-weight: bold;" x-text="ticker.ticker"></span>
+                                        <span style="color: #888;"> $</span><span x-text="ticker.price"></span>
+                                        <span :style="'color: ' + (ticker.today > 0 ? '#4ade80' : '#ef4444')" x-text="' (' + (ticker.today > 0 ? '+' : '') + ticker.today.toFixed(2) + '%)'"></span>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                
+                <!-- Middle Ground -->
+                <div>
+                    <h3 style="color: #fbbf24; margin-bottom: 15px;">🟡 MIDDLE (Wait for Setup)</h3>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <template x-for="sector in sectorRotation.filter(s => s.status === 'MIDDLE')" :key="sector.sector">
+                            <div style="background: #2e2a1a; padding: 10px 15px; border-radius: 6px; font-size: 14px;">
+                                <span style="font-weight: bold; text-transform: uppercase;" x-text="sector.sector.replace('_', ' ')"></span>
+                                <span style="color: #888; margin-left: 8px;" x-text="sector.from_high + '%'"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <!-- HIGH CONVICTION SETUPS -->
         <div class="card card-full">
             <div class="card-header">
@@ -498,13 +589,15 @@
                     conviction: true,
                     wounded: true,
                     clusters: true,
-                    filings: true
+                    filings: true,
+                    rotation: true
                 },
                 heatmap: [],
                 highConviction: [],
                 woundedPrey: [],
                 clusters: [],
                 filings8K: [],
+                sectorRotation: [],
                 selectedTicker: null,
                 
                 init() {
@@ -518,11 +611,26 @@
                 },
                 
                 async loadAll() {
+                    this.loadSectorRotation();
                     this.loadHeatmap();
                     this.loadHighConviction();
                     this.loadWoundedPrey();
                     this.loadClusters();
                     this.load8K();
+                },
+                
+                async loadSectorRotation() {
+                    this.loading.rotation = true;
+                    try {
+                        const response = await fetch('/api/sector_rotation');
+                        const data = await response.json();
+                        if (data.success) {
+                            this.sectorRotation = data.sectors;
+                        }
+                    } catch (error) {
+                        console.error('Error loading sector rotation:', error);
+                    }
+                    this.loading.rotation = false;
                 },
                 
                 async loadHeatmap() {

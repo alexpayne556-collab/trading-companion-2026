@@ -1,0 +1,11 @@
+{
+  "metadata": {
+    "created": "2026-01-06",
+    "starting_balance": 10000,
+    "description": "Wolf Pack Paper Trading Log - Track hypothetical trades to validate our theories"
+  },
+  "current_balance": 10000,
+  "trades": [],
+  "daily_signals": [],
+  "lessons_learned": []
+}
