@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🐺 Trading Companion 2026</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0e27;
+            color: #00ff41;
+            padding: 20px;
+        }
+        
+        .container { max-width: 1800px; margin: 0 auto; }
+        
+        header {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 2px solid #00ff41;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            text-shadow: 0 0 10px #00ff41;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle { color: #888; }
+        .timestamp { color: #666; margin-top: 10px; }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        
+        button {
+            padding: 12px 24px;
+            background: transparent;
+            border: 2px solid #00ff41;
+            color: #00ff41;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+        
+        button:hover { background: #00ff41; color: #000; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-box {
+            background: #111827;
+            border: 2px solid #00ff41;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #888;
+            font-size: 0.9em;
+        }
+        
+        .panel {
+            background: #111827;
+            border: 2px solid #00ff41;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .panel-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #00ff41;
+        }
+        
+        .movement {
+            padding: 15px;
+            margin: 10px 0;
+            background: #1a1f35;
+            border-left: 4px solid;
+        }
+        
+        .movement.WHALE { border-color: #ff4136; }
+        .movement.FISH { border-color: #ff851b; }
+        .movement.BASS { border-color: #0074d9; }
+        .movement.NIBBLE { border-color: #2ecc40; }
+        
+        .movement-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 1.2em;
+        }
+        
+        .tier-badge {
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #000;
+        }
+        
+        .tier-badge.WHALE { background: #ff4136; }
+        .tier-badge.FISH { background: #ff851b; }
+        .tier-badge.BASS { background: #0074d9; }
+        .tier-badge.NIBBLE { background: #2ecc40; }
+        
+        .movement-details { color: #888; font-size: 0.9em; }
+        
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+        
+        .status.active { background: #00ff41; color: #000; }
+        .status.inactive { background: #666; color: #fff; }
+        
+        .error { color: #ff4136; padding: 20px; text-align: center; }
+        .success { color: #00ff41; padding: 20px; text-align: center; }
+        
+        #movements-list { max-height: 600px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐺 TRADING COMPANION 2026</h1>
+            <p class="subtitle">Production Trading System • Live Sonar • Movement Detection</p>
+            <p class="timestamp" id="timestamp">Loading...</p>
+        </header>
+        
+        <div class="controls">
+            <button id="btn-start">Start Sonar</button>
+            <button id="btn-stop" disabled>Stop Sonar</button>
+            <button id="btn-refresh">Refresh Data</button>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-number" id="stat-total">-</div>
+                <div class="stat-label">Total Detections</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="stat-whales">-</div>
+                <div class="stat-label">🐋 Whales (+100%)</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="stat-fish">-</div>
+                <div class="stat-label">🐟 Fish (+20%)</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="stat-bass">-</div>
+                <div class="stat-label">🦐 Bass (+10%)</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="stat-nibbles">-</div>
+                <div class="stat-label">🎣 Nibbles (+5%)</div>
+            </div>
+        </div>
+        
+        <div class="panel">
+            <div class="panel-title">
+                📡 Live Sonar Scanner
+                <span class="status inactive" id="sonar-status">Inactive</span>
+            </div>
+            <div id="sonar-content">
+                <p style="color: #888; text-align: center; padding: 40px;">
+                    Click "Start Sonar" to begin scanning
+                </p>
+            </div>
+        </div>
+        
+        <div class="panel">
+            <div class="panel-title">📈 Today's Movements</div>
+            <div id="movements-list">
+                <p style="color: #888; text-align: center; padding: 40px;">Loading...</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const socket = io();
+        let sonarActive = false;
+        
+        // Update timestamp
+        function updateTimestamp() {
+            document.getElementById('timestamp').textContent = 
+                'Last Updated: ' + new Date().toLocaleString();
+        }
+        
+        // Load stats
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/movements/stats');
+                const data = await response.json();
+                
+                document.getElementById('stat-total').textContent = data.total || 0;
+                document.getElementById('stat-whales').textContent = data.whales || 0;
+                document.getElementById('stat-fish').textContent = data.fish || 0;
+                document.getElementById('stat-bass').textContent = data.bass || 0;
+                document.getElementById('stat-nibbles').textContent = data.nibbles || 0;
+                
+                console.log('Stats loaded:', data);
+            } catch (error) {
+                console.error('Stats error:', error);
+            }
+        }
+        
+        // Load movements
+        async function loadMovements() {
+            try {
+                const response = await fetch('/api/movements/today');
+                const movements = await response.json();
+                
+                console.log('Movements loaded:', movements.length);
+                
+                if (movements.length === 0) {
+                    document.getElementById('movements-list').innerHTML = 
+                        '<p class="error">No movements detected today</p>';
+                    return;
+                }
+                
+                let html = '';
+                movements.forEach(m => {
+                    const emoji = {
+                        'WHALE': '🐋',
+                        'FISH': '🐟',
+                        'BASS': '🦐',
+                        'NIBBLE': '🎣'
+                    }[m.tier] || '📊';
+                    
+                    const dir = m.movement_pct > 0 ? '↗️' : '↘️';
+                    const sign = m.movement_pct > 0 ? '+' : '';
+                    
+                    html += `
+                        <div class="movement ${m.tier}">
+                            <div class="movement-header">
+                                <strong>${emoji} ${m.symbol} ${dir} ${sign}${m.movement_pct}%</strong>
+                                <span class="tier-badge ${m.tier}">${m.tier}</span>
+                            </div>
+                            <div class="movement-details">
+                                Current: $${m.current_price} • Detected: ${new Date(m.detected_at).toLocaleTimeString()}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('movements-list').innerHTML = html;
+                
+            } catch (error) {
+                console.error('Movements error:', error);
+                document.getElementById('movements-list').innerHTML = 
+                    '<p class="error">Error loading movements</p>';
+            }
+        }
+        
+        // Start sonar
+        document.getElementById('btn-start').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/sonar/start', { method: 'POST' });
+                const data = await response.json();
+                
+                console.log('Start response:', data);
+                
+                if (data.status === 'started' || data.status === 'running') {
+                    document.getElementById('sonar-status').textContent = 'Active';
+                    document.getElementById('sonar-status').className = 'status active';
+                    document.getElementById('btn-start').disabled = true;
+                    document.getElementById('btn-stop').disabled = false;
+                    document.getElementById('sonar-content').innerHTML = 
+                        '<p class="success">🔄 Scanning ' + (data.baseline || data.tickers) + ' tickers...</p>';
+                } else if (data.status === 'warning') {
+                    document.getElementById('sonar-content').innerHTML = 
+                        '<p class="error">⚠️ ' + data.message + '</p>';
+                }
+            } catch (error) {
+                console.error('Start error:', error);
+                document.getElementById('sonar-content').innerHTML = 
+                    '<p class="error">Error starting sonar</p>';
+            }
+        });
+        
+        // Stop sonar
+        document.getElementById('btn-stop').addEventListener('click', async () => {
+            try {
+                await fetch('/api/sonar/stop', { method: 'POST' });
+                document.getElementById('sonar-status').textContent = 'Inactive';
+                document.getElementById('sonar-status').className = 'status inactive';
+                document.getElementById('btn-start').disabled = false;
+                document.getElementById('btn-stop').disabled = true;
+            } catch (error) {
+                console.error('Stop error:', error);
+            }
+        });
+        
+        // Refresh
+        document.getElementById('btn-refresh').addEventListener('click', () => {
+            loadStats();
+            loadMovements();
+            updateTimestamp();
+        });
+        
+        // WebSocket sonar updates
+        socket.on('sonar_ping', (data) => {
+            console.log('Sonar ping:', data);
+            
+            if (data.movements && data.movements.length > 0) {
+                let html = '<p class="success">🎯 New detections!</p>';
+                data.movements.forEach(m => {
+                    const emoji = {
+                        'WHALE': '🐋',
+                        'FISH': '🐟',
+                        'BASS': '🦐',
+                        'NIBBLE': '🎣'
+                    }[m.tier];
+                    html += `<p>${emoji} ${m.symbol} ${m.movement_pct > 0 ? '+' : ''}${m.movement_pct}%</p>`;
+                });
+                document.getElementById('sonar-content').innerHTML = html;
+            } else {
+                document.getElementById('sonar-content').innerHTML = 
+                    '<p style="color: #888">No movements detected (>5% threshold)</p>';
+            }
+            
+            // Reload data
+            loadStats();
+            loadMovements();
+        });
+        
+        // Initial load
+        updateTimestamp();
+        loadStats();
+        loadMovements();
+        
+        // Auto-refresh every 60 seconds
+        setInterval(() => {
+            loadStats();
+            loadMovements();
+            updateTimestamp();
+        }, 60000);
+        
+        console.log('🐺 Dashboard initialized');
+    </script>
+</body>
+</html>

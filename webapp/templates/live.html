@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trading Intelligence</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000;
+            color: #fff;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #333;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 13px;
+            color: #888;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #0f0;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+        }
+        
+        .whale { color: #ff0080; }
+        .fish { color: #00bfff; }
+        .bass { color: #ffa500; }
+        .nibble { color: #90ee90; }
+        
+        .movements {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .movements-header {
+            padding: 20px;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .movements-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .refresh-btn {
+            background: #0080ff;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .refresh-btn:hover {
+            background: #0066cc;
+        }
+        
+        .refresh-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .movements-table {
+            width: 100%;
+        }
+        
+        .movements-table th {
+            text-align: left;
+            padding: 15px 20px;
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            border-bottom: 1px solid #222;
+        }
+        
+        .movements-table td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+        
+        .movements-table tr:hover {
+            background: #0a0a0a;
+        }
+        
+        .tier-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .badge-whale { background: rgba(255, 0, 128, 0.2); color: #ff0080; }
+        .badge-fish { background: rgba(0, 191, 255, 0.2); color: #00bfff; }
+        .badge-bass { background: rgba(255, 165, 0, 0.2); color: #ffa500; }
+        .badge-nibble { background: rgba(144, 238, 144, 0.2); color: #90ee90; }
+        
+        .change-positive { color: #0f0; }
+        .change-negative { color: #f00; }
+        
+        .symbol {
+            font-weight: 700;
+            font-size: 15px;
+        }
+        
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+            color: #666;
+        }
+        
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #333;
+            border-top-color: #0080ff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Trading Intelligence</h1>
+            <div class="status">
+                <div class="status-dot"></div>
+                <span id="statusText">Scanning...</span>
+                <span>|</span>
+                <span id="lastUpdate">—</span>
+            </div>
+        </header>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Movers</div>
+                <div class="stat-value" id="totalStat">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Whales (≥100%)</div>
+                <div class="stat-value whale" id="whaleStat">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Fish (≥20%)</div>
+                <div class="stat-value fish" id="fishStat">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Bass (≥10%)</div>
+                <div class="stat-value bass" id="bassStat">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Nibbles (≥5%)</div>
+                <div class="stat-value nibble" id="nibbleStat">—</div>
+            </div>
+        </div>
+        
+        <div class="movements">
+            <div class="movements-header">
+                <div class="movements-title">Live Movements</div>
+                <button class="refresh-btn" onclick="forceRefresh()">
+                    <span id="refreshText">Refresh Now</span>
+                </button>
+            </div>
+            <table class="movements-table">
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Price</th>
+                        <th>Change</th>
+                        <th>Volume</th>
+                        <th>Tier</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody id="movementsBody">
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <div class="empty-state-icon">📡</div>
+                            <div>Loading market data...</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        function formatTime(isoString) {
+            if (!isoString) return '—';
+            const date = new Date(isoString);
+            return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        }
+        
+        function formatNumber(num) {
+            if (num >= 1000000000) return (num / 1000000000).toFixed(1) + 'B';
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+        
+        function updateUI(data) {
+            // Update stats
+            document.getElementById('totalStat').textContent = data.stats.total || 0;
+            document.getElementById('whaleStat').textContent = data.stats.whale || 0;
+            document.getElementById('fishStat').textContent = data.stats.fish || 0;
+            document.getElementById('bassStat').textContent = data.stats.bass || 0;
+            document.getElementById('nibbleStat').textContent = data.stats.nibble || 0;
+            
+            // Update status
+            document.getElementById('lastUpdate').textContent = formatTime(data.last_scan);
+            document.getElementById('statusText').textContent = 'Live';
+            
+            // Update movements table
+            const tbody = document.getElementById('movementsBody');
+            
+            if (!data.movements || data.movements.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <div class="empty-state-icon">📊</div>
+                            <div>No significant movements detected (threshold: ≥5%)</div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            // Sort by absolute change
+            const sorted = data.movements.sort((a, b) => Math.abs(b.change_pct) - Math.abs(a.change_pct));
+            
+            tbody.innerHTML = sorted.map(m => `
+                <tr>
+                    <td class="symbol">${m.symbol}</td>
+                    <td>$${m.price.toFixed(2)}</td>
+                    <td class="${m.change_pct >= 0 ? 'change-positive' : 'change-negative'}">
+                        ${m.change_pct >= 0 ? '+' : ''}${m.change_pct.toFixed(1)}%
+                    </td>
+                    <td>${formatNumber(m.volume)}</td>
+                    <td>
+                        <span class="tier-badge badge-${m.tier.toLowerCase()}">${m.tier}</span>
+                    </td>
+                    <td>${formatTime(m.detected_at)}</td>
+                </tr>
+            `).join('');
+        }
+        
+        async function loadData() {
+            try {
+                const response = await fetch('/api/data');
+                const data = await response.json();
+                updateUI(data);
+            } catch (error) {
+                console.error('Load error:', error);
+            }
+        }
+        
+        async function forceRefresh() {
+            const btn = document.getElementById('refreshText');
+            btn.innerHTML = '<span class="loading"></span>';
+            
+            try {
+                const response = await fetch('/api/scan');
+                const data = await response.json();
+                updateUI(data);
+            } catch (error) {
+                console.error('Refresh error:', error);
+            } finally {
+                btn.textContent = 'Refresh Now';
+            }
+        }
+        
+        // Initial load
+        loadData();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(loadData, 30000);
+    </script>
+</body>
+</html>

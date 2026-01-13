@@ -1,0 +1,85 @@
+# POSITION TRACKER
+# Current swing positions - Update daily
+
+=== ACTIVE POSITIONS ===
+
+Position 1: [TICKER]
+Entry Date: 
+Entry Price: 
+Current Price: 
+Pattern: [GPU Whale / Clinical Binary / Defense Runner / etc]
+Catalyst: 
+Exit Plan: [Trailing stop / Target / Event date]
+Days Held: 
+Status: [HOLD / WATCH / EXIT]
+Notes: 
+
+Position 2: [TICKER]
+Entry Date: 
+Entry Price: 
+Current Price: 
+Pattern: 
+Catalyst: 
+Exit Plan: 
+Days Held: 
+Status: 
+Notes: 
+
+Position 3: [TICKER]
+Entry Date: 
+Entry Price: 
+Current Price: 
+Pattern: 
+Catalyst: 
+Exit Plan: 
+Days Held: 
+Status: 
+Notes: 
+
+Position 4: [TICKER]
+Entry Date: 
+Entry Price: 
+Current Price: 
+Pattern: 
+Catalyst: 
+Exit Plan: 
+Days Held: 
+Status: 
+Notes: 
+
+Position 5: [TICKER]
+Entry Date: 
+Entry Price: 
+Current Price: 
+Pattern: 
+Catalyst: 
+Exit Plan: 
+Days Held: 
+Status: 
+Notes: 
+
+=== WATCHLIST (SETUPS) ===
+
+Setup 1: [TICKER]
+Why: [Catalyst coming / Volume building / Pattern forming]
+Entry Signal: 
+Target Entry: 
+
+Setup 2: [TICKER]
+Why: 
+Entry Signal: 
+Target Entry: 
+
+Setup 3: [TICKER]
+Why: 
+Entry Signal: 
+Target Entry: 
+
+=== RECENT EXITS ===
+
+Exit 1: [TICKER]
+Exit Date: 
+Exit Price: 
+Reason: [Pattern complete / Stop hit / Rotation]
+Gain/Loss: 
+Pattern Result: [Worked / Failed]

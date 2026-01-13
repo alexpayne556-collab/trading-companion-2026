@@ -1,0 +1,204 @@
+# TRADING UNIVERSE - 150+ Tickers
+# Organized by sector for rotation trading
+
+# === BIOTECH / PHARMA (50) ===
+
+# Gene Editing / CRISPR
+NTLA  # JPM Wed 12PM, FDA hold overhang
+CRSP
+BEAM  # JPM Mon done, may fade
+EDIT
+VERV
+BLUE
+
+# Rare Disease
+RARE
+RCKT  # PDUFA Mar 28
+SGMO
+QURE
+SRPT
+BMRN
+ALNY
+
+# Oncology
+KZIA
+ARVN
+IMVT
+NUVB
+RXRX
+EXAI
+CDNA
+
+# Immunology / Inflammation
+ALMS  # Phase 3 winner
+TVTX  # PDUFA TODAY Jan 13
+ANAB
+
+# Small Cap Biotech (High volatility)
+OCGN  # JPM Thu 9:45AM
+ATRA  # PDUFA was Jan 10
+AQST  # PDUFA Jan 31
+BNTC
+CRDF
+VRNA
+XBIO
+IONS
+EXAS
+VRTX
+REGN
+BIIB
+ATXI
+
+# === DEFENSE / AEROSPACE (30) ===
+
+# Major Primes
+LMT
+NOC
+RTX
+GD
+BA
+LHX
+
+# Drones / Autonomous
+AVAV  # BlueHalo deal
+RCAT
+KTOS  # Golden Dome
+UAVS
+EVTL
+JOBY
+ACHR
+
+# Defense Tech / AI
+PLTR
+LDOS
+BAH
+CACI
+SAIC
+
+# === SPACE (20) ===
+
+# Launch Providers
+RKLB  # Earnings Feb 26, Neutron coming
+ASTR
+LUNR
+RDW
+
+# Satellites
+ASTS
+GSAT
+IRDM
+VSAT
+
+# Earth Observation
+PL
+SPIR
+BKSY
+
+# Infrastructure
+MNTS  # Vigoride-7 Q1
+SIDU
+LLAP
+
+# === GPU / AI / DATA CENTER (30) ===
+
+# Microcap GPU Plays
+EVTV  # GPU whale, +442% last move
+ATON  # NVIDIA relationship
+VCIG  # GPU facility operational
+DGXX
+
+# Chip Designers
+NVDA
+AMD
+AVGO
+QCOM
+MRVL
+
+# Memory
+MU    # HBM for AI
+WDC
+STX
+
+# Data Center Infrastructure
+APLD  # 600MW signed
+VRT
+ANET
+DELL
+HPE
+
+# AI Infrastructure
+ALAB
+CRDO
+FN
+COHR
+
+# === NUCLEAR / URANIUM (20) ===
+
+# SMRs
+SMR   # NRC approved
+OKLO  # Meta PPA
+NNE
+BWXT
+
+# Uranium Miners
+CCJ
+UEC
+LEU   # HALEU, DOE contract
+DNN
+URG
+UUUU
+NXE
+
+# Utilities
+CEG
+VST
+NRG
+PCG
+
+# === QUANTUM (10) ===
+IONQ  # Trapped ion leader
+RGTI  # Superconducting
+QBTS  # D-Wave annealing
+QUBT
+ARQQ
+
+# === CANNABIS (10) ===
+TLRY
+CGC
+ACB
+SNDL
+CRON
+OGI
+
+# === CRYPTO MINERS (10) ===
+MARA
+RIOT
+CLSK
+HUT
+BITF
+IREN
+CORZ
+WULF
+CIFR
+
+# === EV / CLEAN ENERGY (15) ===
+BLNK  # +19% yesterday
+CHPT
+EVGO
+WKHS
+RIVN
+LCID
+NIO
+XPEV
+QS
+SLDP
+LAC
+ALB
+
+# === MISC HIGH VOLATILITY ===
+DAWN
+PASW
+LVLU  # +80% yesterday
+OMH
+SATL
+ARDX

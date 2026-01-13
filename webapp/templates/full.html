@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trading Intelligence - Full System</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000;
+            color: #fff;
+            line-height: 1.6;
+        }
+        
+        .container { max-width: 1800px; margin: 0 auto; padding: 20px; }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #333;
+            margin-bottom: 30px;
+        }
+        
+        h1 { font-size: 24px; font-weight: 600; }
+        h2 { font-size: 18px; font-weight: 600; margin-bottom: 15px; }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .stat-value { font-size: 32px; font-weight: 700; }
+        .stat-label { font-size: 12px; color: #888; text-transform: uppercase; margin-bottom: 8px; }
+        
+        .whale { color: #ff0080; }
+        .fish { color: #00bfff; }
+        .bass { color: #ffa500; }
+        .nibble { color: #90ee90; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            text-align: left;
+            padding: 15px 20px;
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            border-bottom: 1px solid #222;
+        }
+        td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+        tr:hover { background: #0a0a0a; }
+        
+        .symbol { font-weight: 700; font-size: 15px; }
+        .change-positive { color: #0f0; }
+        .change-negative { color: #f00; }
+        
+        .tier-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .badge-whale { background: rgba(255, 0, 128, 0.2); color: #ff0080; }
+        .badge-fish { background: rgba(0, 191, 255, 0.2); color: #00bfff; }
+        .badge-bass { background: rgba(255, 165, 0, 0.2); color: #ffa500; }
+        .badge-nibble { background: rgba(144, 238, 144, 0.2); color: #90ee90; }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #222;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: #888;
+        }
+        
+        .tab.active {
+            border-bottom-color: #0080ff;
+            color: #fff;
+        }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .alert-item {
+            padding: 10px;
+            margin-bottom: 5px;
+            background: #0a0a0a;
+            border-left: 3px solid #0080ff;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        .catalyst-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #0a0a0a;
+            border-left: 3px solid #ffa500;
+            border-radius: 4px;
+        }
+        
+        .catalyst-ticker {
+            font-weight: 700;
+            color: #ffa500;
+            margin-right: 10px;
+        }
+        
+        .btn {
+            background: #0080ff;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        
+        .btn:hover { background: #0066cc; }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #0f0;
+            display: inline-block;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Trading Intelligence System</h1>
+            <div>
+                <span class="status-dot"></span>
+                <span id="lastUpdate">Loading...</span>
+            </div>
+        </header>
+        
+        <div class="grid">
+            <div class="card">
+                <div class="stat-label">Total Movers</div>
+                <div class="stat-value" id="totalStat">—</div>
+            </div>
+            <div class="card">
+                <div class="stat-label">Whales (≥100%)</div>
+                <div class="stat-value whale" id="whaleStat">—</div>
+            </div>
+            <div class="card">
+                <div class="stat-label">Fish (≥20%)</div>
+                <div class="stat-value fish" id="fishStat">—</div>
+            </div>
+            <div class="card">
+                <div class="stat-label">Bass (≥10%)</div>
+                <div class="stat-value bass" id="bassStat">—</div>
+            </div>
+            <div class="card">
+                <div class="stat-label">Nibbles (≥5%)</div>
+                <div class="stat-value nibble" id="nibbleStat">—</div>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('movements')">Live Movements</div>
+            <div class="tab" onclick="switchTab('catalysts')">Catalysts (24h)</div>
+            <div class="tab" onclick="switchTab('positions')">Positions</div>
+            <div class="tab" onclick="switchTab('alerts')">Alert Log</div>
+            <div class="tab" onclick="switchTab('patterns')">Pattern Learning</div>
+        </div>
+        
+        <div id="movements-content" class="tab-content active">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2>Live Movements</h2>
+                    <button class="btn" onclick="forceRefresh()">Refresh Now</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Price</th>
+                            <th>Change</th>
+                            <th>Volume</th>
+                            <th>Tier</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="movementsBody">
+                        <tr><td colspan="6" style="text-align:center; padding: 40px;">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="catalysts-content" class="tab-content">
+            <div class="card">
+                <h2>Catalysts Detected (Last 24 Hours)</h2>
+                <div id="catalystsList">Loading...</div>
+            </div>
+        </div>
+        
+        <div id="positions-content" class="tab-content">
+            <div class="card">
+                <h2>Active Positions</h2>
+                <div id="positionsList">Loading...</div>
+            </div>
+        </div>
+        
+        <div id="alerts-content" class="tab-content">
+            <div class="card">
+                <h2>Alert Log</h2>
+                <div id="alertsList">Loading...</div>
+            </div>
+        </div>
+        
+        <div id="patterns-content" class="tab-content">
+            <div class="card">
+                <h2>Pattern Learning Statistics</h2>
+                <div id="patternsList">Loading...</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tab + '-content').classList.add('active');
+            
+            // Load data for that tab
+            if (tab === 'catalysts') loadCatalysts();
+            if (tab === 'positions') loadPositions();
+            if (tab === 'alerts') loadAlerts();
+            if (tab === 'patterns') loadPatterns();
+        }
+        
+        function formatTime(isoString) {
+            if (!isoString) return '—';
+            const date = new Date(isoString);
+            return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        }
+        
+        function formatNumber(num) {
+            if (num >= 1000000000) return (num / 1000000000).toFixed(1) + 'B';
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+        
+        function updateMovements(data) {
+            document.getElementById('totalStat').textContent = data.stats.total || 0;
+            document.getElementById('whaleStat').textContent = data.stats.whale || 0;
+            document.getElementById('fishStat').textContent = data.stats.fish || 0;
+            document.getElementById('bassStat').textContent = data.stats.bass || 0;
+            document.getElementById('nibbleStat').textContent = data.stats.nibble || 0;
+            
+            document.getElementById('lastUpdate').textContent = formatTime(data.last_scan);
+            
+            const tbody = document.getElementById('movementsBody');
+            
+            if (!data.movements || data.movements.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 40px;">No significant movements detected</td></tr>';
+                return;
+            }
+            
+            const sorted = data.movements.sort((a, b) => Math.abs(b.change_pct) - Math.abs(a.change_pct));
+            
+            tbody.innerHTML = sorted.map(m => `
+                <tr>
+                    <td class="symbol">${m.symbol}</td>
+                    <td>$${m.price.toFixed(2)}</td>
+                    <td class="${m.change_pct >= 0 ? 'change-positive' : 'change-negative'}">
+                        ${m.change_pct >= 0 ? '+' : ''}${m.change_pct.toFixed(1)}%
+                    </td>
+                    <td>${formatNumber(m.volume)}</td>
+                    <td><span class="tier-badge badge-${m.tier.toLowerCase()}">${m.tier}</span></td>
+                    <td>${formatTime(m.detected_at)}</td>
+                </tr>
+            `).join('');
+        }
+        
+        async function loadCatalysts() {
+            const response = await fetch('/api/intelligence/catalysts');
+            const catalysts = await response.json();
+            
+            const div = document.getElementById('catalystsList');
+            
+            if (catalysts.length === 0) {
+                div.innerHTML = '<p style="color: #666; padding: 20px;">No catalysts detected in last 24 hours</p>';
+                return;
+            }
+            
+            div.innerHTML = catalysts.map(c => `
+                <div class="catalyst-item">
+                    <span class="catalyst-ticker">${c.ticker}</span>
+                    <span style="color: #888; font-size: 12px;">${formatTime(c.time)}</span>
+                    <div style="margin-top: 5px;">${c.headline}</div>
+                    <div style="margin-top: 5px; font-size: 12px; color: #888;">
+                        Type: ${c.type} | Initial Move: ${c.move ? c.move.toFixed(1) + '%' : 'N/A'}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        async function loadPositions() {
+            const response = await fetch('/api/intelligence/positions');
+            const positions = await response.json();
+            
+            const div = document.getElementById('positionsList');
+            
+            if (positions.length === 0) {
+                div.innerHTML = '<p style="color: #666; padding: 20px;">No active positions</p>';
+                return;
+            }
+            
+            div.innerHTML = '<table><thead><tr><th>Ticker</th><th>Entry Date</th><th>Entry Price</th><th>Pattern</th><th>Catalyst</th><th>Days Held</th></tr></thead><tbody>' +
+                positions.map(p => `
+                    <tr>
+                        <td class="symbol">${p.ticker}</td>
+                        <td>${new Date(p.entry_date).toLocaleDateString()}</td>
+                        <td>$${p.entry_price.toFixed(2)}</td>
+                        <td>${p.pattern}</td>
+                        <td>${p.catalyst || '—'}</td>
+                        <td>${p.days_held}</td>
+                    </tr>
+                `).join('') + '</tbody></table>';
+        }
+        
+        async function loadAlerts() {
+            const response = await fetch('/api/intelligence/alerts');
+            const alerts = await response.json();
+            
+            const div = document.getElementById('alertsList');
+            
+            if (alerts.length === 0) {
+                div.innerHTML = '<p style="color: #666; padding: 20px;">No alerts yet</p>';
+                return;
+            }
+            
+            div.innerHTML = alerts.slice(0, 50).map(a => `
+                <div class="alert-item">
+                    <span style="color: #888;">${formatTime(a.time)}</span> | 
+                    <span style="color: #0080ff; font-weight: 600;">${a.type}</span> | 
+                    <span style="font-weight: 600;">${a.ticker}</span> | 
+                    ${a.message}
+                </div>
+            `).join('');
+        }
+        
+        async function loadPatterns() {
+            const response = await fetch('/api/intelligence/patterns');
+            const patterns = await response.json();
+            
+            const div = document.getElementById('patternsList');
+            
+            if (Object.keys(patterns).length === 0) {
+                div.innerHTML = '<p style="color: #666; padding: 20px;">No pattern data yet - system is learning</p>';
+                return;
+            }
+            
+            div.innerHTML = '<table><thead><tr><th>Pattern</th><th>Total Trades</th><th>Win Rate</th><th>Avg Peak Gain</th><th>Avg Peak Day</th></tr></thead><tbody>' +
+                Object.entries(patterns).map(([name, stats]) => `
+                    <tr>
+                        <td style="font-weight: 600;">${name}</td>
+                        <td>${stats.total}</td>
+                        <td class="${stats.win_rate >= 50 ? 'change-positive' : 'change-negative'}">${stats.win_rate.toFixed(1)}%</td>
+                        <td class="change-positive">+${stats.avg_peak_gain.toFixed(1)}%</td>
+                        <td>${stats.avg_peak_day.toFixed(1)}</td>
+                    </tr>
+                `).join('') + '</tbody></table>';
+        }
+        
+        async function loadData() {
+            const response = await fetch('/api/data');
+            const data = await response.json();
+            updateMovements(data);
+        }
+        
+        async function forceRefresh() {
+            const response = await fetch('/api/scan');
+            const data = await response.json();
+            updateMovements(data);
+        }
+        
+        loadData();
+        setInterval(loadData, 30000);
+    </script>
+</body>
+</html>
